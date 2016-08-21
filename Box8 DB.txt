@@ -1,0 +1,19 @@
+Create table Main_Menu_Category
+(
+CategoryID int identity(1,1) primary key,
+CategoryName nvarchar(250) not null,
+CategoryImage nvarchar(max)
+)
+
+create table SubCategory_menuItem
+(
+ItemID int identity (1,1) primary key,
+CategoryID int references Main_Menu_Category(CategoryID),
+ItemType int,--Enum value 0- Classic,1-Supreme,
+MenuName nvarchar(max) not null,
+MenuDescription nvarchar(max) not null,
+Status int,--Enum value-0 - Coming Soon
+Price decimal not null,
+Currency nvarchar(5) not null,
+ItemImage nvarchar(max) 
+)

@@ -1,3 +1,28 @@
+create table Country
+(
+CountryID int identity (1,1) primary key,
+CountryName nvarchar(max) not null
+)
+create table State
+(
+StateID int identity (1,1) primary key,
+CountryID int references Country(CountryID),
+StateName nvarchar(max) not null
+)
+create table District
+(
+DistrictID int identity (1,1) primary key,
+StateID int references State (StateID),
+DistrictName nvarchar(max) not null
+)
+
+Create table LocalArea
+(
+LocalAreaID int identity(1,1) primary key,
+DistrictID int references District(DistrictID),
+AreaName nvarchar(max) not null
+)
+
 Create table Main_Menu_Category
 (
 CategoryID int identity(1,1) primary key,
@@ -15,5 +40,6 @@ MenuDescription nvarchar(max) not null,
 Status int,--Enum value-0 - Coming Soon
 Price decimal not null,
 Currency nvarchar(5) not null,
-ItemImage nvarchar(max) 
+ItemImage nvarchar(max),
+LocationID int references LocalArea(LocalAreaID) 
 )

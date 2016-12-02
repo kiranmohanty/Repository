@@ -1,0 +1,22 @@
+// defining derective in angular JS
+<body ng-app="myApp">
+
+<w3-test-directive></w3-test-directive>
+
+<script>
+var app = angular.module("myApp", []);
+app.directive("w3TestDirective", function() {
+    return {
+        template : "<h1>Made by a directive!</h1>"
+    };
+});
+</script>
+
+</body>
+
+//Invoking directive in angular js
+Derictives can be invoked by 4 ways
+1. By Element name (ex- <w3-test-directive></w3-test-directive>)
+2. by attribute (ex- <div w3-test-directive></div>)
+3. By Class name (ex- <div class="w3-test-directive"></div>)
+4. By comment (ex- <!-- directive: w3-test-directive -->0

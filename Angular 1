@@ -16,7 +16,34 @@ app.directive("w3TestDirective", function() {
 
 //Invoking directive in angular js
 Derictives can be invoked by 4 ways
-1. By Element name (ex- <w3-test-directive></w3-test-directive>)
-2. by attribute (ex- <div w3-test-directive></div>)
-3. By Class name (ex- <div class="w3-test-directive"></div>)
-4. By comment (ex- <!-- directive: w3-test-directive -->0
+1. By Element name (
+       ex- <w3-test-directive></w3-test-directive>
+       var app = angular.module("myApp", []);
+       app.directive("w3TestDirective", function() {
+       return {
+         template : "<h1>Made by a directive!</h1>"
+       };
+       });
+       )
+2. by attribute (ex- <div w3-test-directive></div> script code same as By Element name)
+3. By Class name (
+       ex- <div class="w3-test-directive"></div>
+       var app = angular.module("myApp", []);
+       app.directive("w3TestDirective", function() {
+       return {
+         restrict : "C", // this is required for defining derective by class
+         template : "<h1>Made by a directive!</h1>"
+       };
+       });
+       )
+4. By comment (
+      ex- <!-- directive: w3-test-directive -->
+       var app = angular.module("myApp", []);
+       app.directive("w3TestDirective", function() {
+       return {
+         restrict : "M", // this is required for defining derective by comment
+         replace : true, // this is required to make comment line in html to be visible
+         template : "<h1>Made by a directive!</h1>"
+       };
+       });
+       )

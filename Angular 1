@@ -131,6 +131,13 @@ app.filter('myFormat', function() {
               $scope.myWelcome = response.data;
          });
          });
+         
+         Properties:
+           .config:        the object used to generate the request.
+           .data:          a string, or an object, carrying the response from the server.
+           .headers:       a function to use to get header information.
+           .status:        a number defining the HTTP status.
+           .statusText:    a string defining the HTTP status.
  3.$timeout :- for managing timeout property of timmer
          var app = angular.module('myApp', []);
          app.controller('myCtrl', function($scope, $timeout) {

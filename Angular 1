@@ -47,3 +47,124 @@ Derictives can be invoked by 4 ways
        };
        });
        )
+
+//Application status
+<form ng-app="" name="myForm" ng-init="myText = 'post@myweb.com'">
+
+Email:
+<input type="email" name="myAddress" ng-model="myText" required>
+<p>Edit the e-mail address, and try to change the status.</p>
+<h1>Status</h1>
+<p>Valid: {{myForm.myAddress.$valid}} (if true, the value meets all criteria).</p>
+<p>Dirty: {{myForm.myAddress.$dirty}} (if true, the value has been changed).</p>
+<p>Touched: {{myForm.myAddress.$touched}} (if true, the field has been in focus).</p>
+
+</form>
+
+//ng-model directive must be defined for any kind of error message validation.
+//AngularJS controllers are regular JavaScript Objects.
+// $scope is the application object (the owner of application variables and functions).
+//All applications have a $rootScope which is the scope created on the HTML element that contains the ng-app directive.
+    The rootScope is available in the entire application.
+    
+//accessing root scope object in angular
+var app = angular.module('myApp', []);
+app.run(function($rootScope) {
+    $rootScope.color = 'blue';
+});
+app.controller('myCtrl', function($scope) {
+    $scope.color = "red";
+});
+<div ng-app="myApp">
+<label style="background color:{{color}}"/> ///this will access root scope oject
+<div ng-controller="myctrl">
+<label style="background color:{{color}}"/> ///this will access controller scope oject
+</div>
+</div>
+
+//Angular Filters
+1.currency: Format a number to a currency format.
+2.date: Format a date to a specified format.
+3.filter: Select a subset of items from an array.
+4.json: Format an object to a JSON string.
+5.limitTo: Limits an array/string, into a specified number of elements/characters.
+6.lowercase: Format a string to lower case.
+7.number: Format a number to a string.
+8.orderBy: Orders an array by an expression.
+9.uppercase: Format a string to upper case.
+
+ex- <h1>Price: {{ price | currency: '£' }}</h1>
+    <li ng-repeat="x in names | orderBy:'country'">
+ 
+ 
+ // Adding custom filter to Angular
+ var app = angular.module('myApp', []);
+app.filter('myFormat', function() {
+    return function(x) {
+        var i, c, txt = "";
+        for (i = 0; i < x.length; i++) {
+            c = x[i];
+            if (i % 2 == 0) {
+                c = c.toUpperCase();
+            }
+            txt += c;
+        }
+        return txt;
+    };
+});
+<li ng-repeat="x in names">
+        {{x | myFormat}}
+    </li>
+
+
+ //Angular JS Service
+ In AngularJS, a service is a function, or object, that is available for, and limited to, your AngularJS application.
+ 1.$location serivice- return information about the location of the current web page.
+       var app = angular.module('myApp', []);
+       app.controller('customersCtrl', function($scope, $location) {
+              $scope.myUrl = $location.absUrl();
+       });
+ 2.$http service:- is a service to request data from service.
+         var app = angular.module('myApp', []);
+         app.controller('myCtrl', function($scope, $http) {
+         $http.get("welcome.htm").then(function (response) {
+              $scope.myWelcome = response.data;
+         });
+         });
+ 3.$timeout :- for managing timeout property of timmer
+         var app = angular.module('myApp', []);
+         app.controller('myCtrl', function($scope, $timeout) {
+         $scope.myHeader = "Hello World!";
+         $timeout(function () {
+               $scope.myHeader = "How are you today?";
+         }, 2000);
+         });
+4.$interval : $interval service runs a function every specified millisecond.
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope, $interval) {
+        $scope.theTime = new Date().toLocaleTimeString();
+        $interval(function () {
+             $scope.theTime = new Date().toLocaleTimeString();
+        }, 1000);
+        });
+5. Custom service creation
+       app.service('hexafy', function() {
+          this.myFunc = function (x) {
+                  return x.toString(16);
+          }
+       });
+       app.controller('myCtrl', function($scope, hexafy) {
+              $scope.hex = hexafy.myFunc(255);
+       });
+6. Using custom service inside a filter
+       app.filter('myFormat',['hexafy', function(hexafy) {
+                return function(x) {
+                        return hexafy.myFunc(x);
+                };
+       }]);
+       <ul>
+          <li ng-repeat="x in counts">{{x | myFormat}}</li>
+       </ul>
+7.       
+         
+         

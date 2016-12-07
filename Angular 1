@@ -241,5 +241,154 @@ app.controller('myCtrl', function($scope) {
 //Angular SQL
 AngularJS is perfect for displaying data from a Database. Just make sure the data is in JSON format.
 
-         
-         
+
+
+//Angular Events
+ng-blur
+ng-change
+ng-click
+ng-copy
+ng-cut
+ng-dblclick
+ng-focus
+ng-keydown
+ng-keypress
+ng-keyup
+ng-mousedown
+ng-mouseenter
+ng-mouseleave
+ng-mousemove
+ng-mouseover
+ng-mouseup
+ng-paste
+
+
+//$event object contains info like browser events and properties.
+/
+
+//Angular Forms
+Copy content :
+  $scope.master = {firstName: "John", lastName: "Doe"};
+  $scope.user = angular.copy($scope.master);
+
+ //Validation
+ Required field validation
+ <form name="myForm">
+<input name="myInput" ng-model="myInput" required>
+</form>
+
+<p>The input's valid state is:</p>
+<h1>{{myForm.myInput.$valid}}</h1>
+
+//Form State and input state
+Input fields have the following states:
+$untouched The field has not been touched yet
+$touched The field has been touched
+$pristine The field has not been modified yet
+$dirty The field has been modified
+$invalid The field content is not valid
+$valid The field content is valid
+They are all properties of the input field, and are either true or false.
+
+Forms have the following states:
+
+$pristine No fields have been modified yet
+$dirty One or more have been modified
+$invalid The form content is not valid
+$valid The form content is valid
+$submitted The form is submitted
+They are all properties of the form, and are either true or false.
+
+
+//Defining custom validation
+<form name="myForm">
+<input name="myInput" ng-model="myInput" required my-directive>
+</form>
+
+<script>
+var app = angular.module('myApp', []);
+app.directive('myDirective', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attr, mCtrl) {
+      function myValidation(value) {
+        if (value.indexOf("e") > -1) {
+          mCtrl.$setValidity('charE', true);
+        } else {
+          mCtrl.$setValidity('charE', false);
+        }
+        return value;
+      }
+      mCtrl.$parsers.push(myValidation);
+    }
+  };
+});
+</script>
+
+
+
+//Angular Global API (Application programming interface)
+Angular API is a set of global angular JS function that is accessable using angular object
+
+angular.lowercase()	Converts a string to lowercase
+angular.uppercase()	Converts a string to uppercase
+angular.isString()	Returns true if the reference is a string
+angular.isNumber()	Returns true if the reference is a number
+   
+Ex:-
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+$scope.x1 = "JOHN";
+$scope.x2 = angular.lowercase($scope.x1);
+});
+
+//Angular routing
+ng-route module helps in making an application as single page application.
+ngRoute module routes your application to different pages without reloading the entire application.
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+<body ng-app="myApp">
+
+<p><a href="#/">Main</a></p>
+
+<a href="#london">City 1</a>
+<a href="#paris">City 2</a>
+
+<p>Click on the links.</p>
+
+<p>Note that each "view" has its own controller which each gives the "msg" variable a value.</p>
+
+<div ng-view></div>
+
+<script>
+var app = angular.module("myApp", ["ngRoute"]);
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/", {
+        templateUrl : "main.htm",
+    })
+    .when("/london", {
+        templateUrl : "london.htm",
+        controller : "londonCtrl"
+    })
+    .when("/paris", {
+        templateUrl : "paris.htm",
+        controller : "parisCtrl"
+    })
+     .otherwise({
+        template : "<h1>None</h1><p>Nothing has been selected,</p>"
+    });
+});
+app.controller("londonCtrl", function ($scope) {
+    $scope.msg = "I love London";
+});
+app.controller("parisCtrl", function ($scope) {
+    $scope.msg = "I love Paris";
+});
+
+</script>
+
+</body>
+
+*ng-route directive is the directive which helps routing from one html to another.
+*ng-view is the section where rendered content will be appended to the div/span or any control.
+

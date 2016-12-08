@@ -392,3 +392,4 @@ app.controller("parisCtrl", function ($scope) {
 *ng-route directive is the directive which helps routing from one html to another.
 *ng-view is the section where rendered content will be appended to the div/span or any control.
 
+//Angular Autocomplete feature

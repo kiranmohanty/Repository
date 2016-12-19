@@ -1,1 +1,12 @@
 
+//Steps for running Angular 2 code
+  1. Create a project folder
+  2.run command on commend prompt
+    cd project path
+    npm install
+    npm start
+    
+ //interpolation (a kind of one-way data binding)  in Angular 2 by using {{}}
+ <h2>{{hero.name}} details!</h2>
+ 
+ //

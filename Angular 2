@@ -9,4 +9,28 @@
  //interpolation (a kind of one-way data binding)  in Angular 2 by using {{}}
  <h2>{{hero.name}} details!</h2>
  
- //
+ //Why Angular 2
+  * Faster
+  *Powerfull
+  *Clean code
+  *Simple
+  
+  
+ * ngIf and ngFor are called “structural directives” because they can change the structure of portions of the DOM. In other words,
+  they give structure to the way Angular displays content in the DOM.
+
+
+<li *ngFor="let hero of heroesList" (click)="onHeroSelect(hero)" [class.selected]="hero===selectedHero">ID :  {{hero.id}} and Name : {{hero.name}} </li>
+Notice in the template that the class.selected is surrounded in square brackets ([]). This is the syntax for a property binding, a binding in which data flows one way from the data source (the expression hero === selectedHero) to a property of class.
+
+
+[hero]="selectedHero"- > [] represents one way data binding.
+
+//Angular Service
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class HeroService {
+}
+TypeScript sees the @Injectable() decorator and emits metadata about our service, 
+metadata that Angular may need to inject other dependencies into this service.

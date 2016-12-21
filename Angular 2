@@ -34,3 +34,26 @@ export class HeroService {
 }
 TypeScript sees the @Injectable() decorator and emits metadata about our service, 
 metadata that Angular may need to inject other dependencies into this service.
+
+//Data binding
+1. INterpolation:-   <h3>{{ name }}</h3>
+2. One way data binding- <input type="text" [value]="name"/>  '[]' defines one way binding.
+3.Event Binding :- <button (click)="ANyONclickMethod()" (blur)="AnyBlurEvent()" />  '()' defines events in amgular JS 2.
+4. 2 Way data binding:-  <input [(ngModel)]="nameProperyOfComponent" />
+
+
+//Dependency injection in angular 2
+export class AppComponent  { 
+   //module properties
+   title = 'Tour of Heroes';
+   heroesList = this.heroService.getHeroes();
+   selectedHero:Hero; 
+
+   //constructor
+   constructor(private heroService:HeroService){
+      
+    }
+ 
+ Dependency can be injected only via constructor. Above line of code states that constructor will create a private instance of HeroService class
+ and will be available for the class.
+ 

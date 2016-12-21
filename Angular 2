@@ -57,3 +57,31 @@ export class AppComponent  {
  Dependency can be injected only via constructor. Above line of code states that constructor will create a private instance of HeroService class
  and will be available for the class.
  
+ 
+ //Angular components
+ 1. Modules
+ 2.Component
+ 3.Template
+ 4.Matadata
+ 
+ 
+ //Keywords and their meaning
+ 1. export:- key word is used to expose class to other files.
+ 2. import:-  keyword is used for importing component / module from other files.
+ 3. ngModule- used to organise our application into different blocks  with related functionality.
+              Inside @ngModule we can import other modules,components, services.
+              Ex:-
+              @NgModule({
+                        imports:      [ BrowserModule,FormsModule ],  // import modules from angular framework
+                        declarations: [ AppComponent,HeroDetailsComponent ], // register all components here
+                        bootstrap:    [ AppComponent ],  // from where to start aplly style sheet
+                        providers:    [HeroService]  // register all services
+                       })
+              export class AppModule { }
+   4. Component:- is a section that contains data n event for the specified template.
+   
+              
+      
+ 
+ 
+ 

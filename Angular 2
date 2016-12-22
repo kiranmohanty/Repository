@@ -78,7 +78,46 @@ export class AppComponent  {
                         providers:    [HeroService]  // register all services
                        })
               export class AppModule { }
-   4. Component:- is a section that contains data n event for the specified template.
+   4. Component:- is a section that contains data n event for the specified template. It contains specified logic that controls the user interface.
+   
+   
+   //Binding html file with .ts file that holds angular code.
+  x .html
+  -------------------------------------
+  <script>
+     system.import('systemjs.config.js')
+           .then (function(){system.import('main')}) //main is the main.ts file , entry point of an app
+           .catch(console.error.bind(console));
+  </srcipt>
+  
+  
+  @ is the decorator that provides metadata describing the component.
+  @Component represents a class
+  
+  //Injecting a service to an object
+  service can  be injected only through constructor
+  Ex- export class xComponent{
+     constructor(private serviceObject: xService) {}
+  }
+  
+  //Input & output parameter for a component (class)
+  export class xClass implements OnInit{
+     @Output changedEvent=new EventEmitter<character>();
+     @Input inputParam: number;
+     
+     constructor(private serviceObject :xService){}
+     
+     
+     ngOnInit(){
+        this.serviceObject.AnyServiceMethod(this.inputParam);
+        this.changed.emit(changedEvent);
+     }
+  }
+   
+   
+   template:`<story-character [inputParam]='7' (changed)="changedEvent($event)"></story-character>`
+   
+   
    
               
       

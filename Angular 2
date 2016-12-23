@@ -117,8 +117,23 @@ export class AppComponent  {
    
    template:`<story-character [inputParam]='7' (changed)="changedEvent($event)"></story-character>`
    
+   //accessing child property from parent controller
    
    
+   
+   //@NgModel-  ngModel is the parent module of any Angular2 app.
+import { NgModule }      from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+@NgModule({
+  imports:      [ BrowserModule ],
+  providers:    [ Logger ],       // defines all services here.
+  declarations: [ AppComponent ],  // we can declare all components,directives,filters/pipes here.
+  exports:      [ AppComponent ], // exposed classes that will be visible in template.
+  bootstrap:    [ AppComponent ]   // entry module of an application.
+})
+export class AppModule { }
+  
+*****The export of AppComponent is just to show how to export; it isn't actually necessary in this example. A root module has no reason to export anything because other components don't need to import the root module.
               
       
  

@@ -468,6 +468,25 @@ and all propagation of $digest call will be stopped for the scope then garbage c
             ng-click etc registers a listener in DOM. Whenever the listener is called, $apply() method will be called internally to reflect the DOM.
 
 
+//Dependency Injection
+defining service
+angular.module('myModule', [])
+.factory('ServiceName',  function(depService) {
+  // ...
+})
+.controller("controllerName"['ServiceName','$scope',function(service,$scope)]){
+//.....
+}
+
+
+Scecify functions to run durring configuration or run time
+angular.module('myModule', [])
+.config(['depProvider', function(depProvider) {
+  // ...
+}])
+.run(['depService', function(depService) {
+  // ...
+}]);
 
 
   

@@ -531,4 +531,10 @@ angular.module('myModule', [])
   
   //$route
   $route keeps linking Between URL to controller-view pair as per route config .
-  
+$route.reload()- will reload the html even if current URL has not changed.
+$route.updateParama(newParam)- to update current URL query string . (complete query string and the method argument is a key value pair of qury string key and it's corresponding  value).
+
+
+
+
+

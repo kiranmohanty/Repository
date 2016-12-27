@@ -489,7 +489,41 @@ angular.module('myModule', [])
 }]);
 
 
-  
+//Dependency Annotation
+1. Inline array anotaion
+   ex- someModule.controller('MyController', ['$scope', 'greeter', function($scope, greeter) {
+        // ...
+      }]);
+2.$inject property annotation
+   ex-var MyController = function($scope, greeter) {
+            // ...
+         }
+          MyController.$inject = ['$scope', 'greeter'];
+          someModule.controller('MyController', MyController);
+3.Implicit Anotation
+   ex-
+     someModule.controller('MyController', function($scope, greeter) {
+      // ...
+      });
+  This anotaion will not work with JavaScript minifiers/obfuscators because of how they rename parameters.
+4.Strict dipendency injection
+   Angular will throw exception when we use implicit annotation and ng-strict-di tag together.
+   ex-
+  <!doctype html>
+    <html ng-app="myApp" ng-strict-di>
+      <body>
+         I can add: {{ 1 + 2 }}.
+         <script src="angular.js"></script>
+      </body>
+   </html>
+   
+   angular.module('myApp', [])
+   .factory('willBreak', function($rootScope) {
+        // $rootScope is implicitly injected
+   })
+  .run(['willBreak', function(willBreak) {
+         // Angular will throw when this runs
+   }]);
   
   
   

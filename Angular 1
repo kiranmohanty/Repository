@@ -525,6 +525,10 @@ angular.module('myModule', [])
          // Angular will throw when this runs
    }]);
   
+  //Template
+  <ng-view></ng-view>-  directives can Be used to Bind partial view in a page.
   
   
+  //$route
+  $route keeps linking Between URL to controller-view pair as per route config .
   

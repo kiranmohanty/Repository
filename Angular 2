@@ -167,3 +167,29 @@ ex {
  (input)="$event.target.value" piece of code represents - on change of textbox value label text will also change as they are linked via id.
  
  
+//Directives:
+[ngClass]="{active:isActive, color:showColor}"
+[ngStyle]="{color: backColor}"
+[style.color]="backColor"
+[ngStyle]="getStyles()"
+
+*ngFor- "let x of xArray, let i = index " // i will give index position
+*ngIf- "isValid"
+*ngSwitch
+
+//Pipes
+{{name | uppercase}}
+{{startDate | date:'yyyy-mm-dd'}}
+
+*cusrom pipes:-
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({name: 'capitalize'})
+export class CapitalizePipe implements PipeTransform {
+  transform(value: string, args: string[]): any {
+    if (!value) return value;
+    return value.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
+}

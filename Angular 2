@@ -134,8 +134,36 @@ import { BrowserModule } from '@angular/platform-browser';
 export class AppModule { }
   
 *****The export of AppComponent is just to show how to export; it isn't actually necessary in this example. A root module has no reason to export anything because other components don't need to import the root module.
-              
-      
  
+ //Data Binding
+ 1. Interpolation -> {{}}
+ 2.One way data binding-> [model]="model" or bind-target="model" (from componet to template)
+ 3.Event Binding->  (click)="anyFunction()" or on-target="anyFunction()"
+ 4.Two way data binding- [(model)]="model"
+ 
+ Angular 2 follows Unidirectional data binding (either component to template or template to component). Below are the benifits.
+ 1.No more $apply API call required
+ 2. No more $digest cycle
+ 3. No more $watch cycle to be executed
+ 4. Hence no performance issue with digest and wather cycle.
+ 
+ ** {{model | json}} will display complete object details of that property. (ex- {"id":1, "name":"xyz"})
+** <pre>{{model | json}}</pre>    will format the data in JSON format.
+ex {
+     "id":1,
+     "name":"xyz"
+   }
+** when ever we want to define any html attribute or class or style dynamically, we have to write code like
+<button [attr.visible]="isVisible">ok</button>
+<input type="text" [class.red]="isDanger"/> // if isDanger property is true then red css class will be applied to the textbox.
+<input type="text" [style.coror]="isDanger?'red':'green'"/>
+ 
+ **EventEmitter raises a new event. and the emit function inside the EventEmitted function will process that event emitting an output.
+ 
+ *changing label text on change of textbox value in one way binding
+ <label for="txtName"/>
+ <input type="text" id="txtName" [value]="model.name" (input)="$event.target.value"/>
+ 
+ (input)="$event.target.value" piece of code represents - on change of textbox value label text will also change as they are linked via id.
  
  

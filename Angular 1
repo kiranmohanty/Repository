@@ -534,6 +534,16 @@ angular.module('myModule', [])
 $route.reload()- will reload the html even if current URL has not changed.
 $route.updateParama(newParam)- to update current URL query string . (complete query string and the method argument is a key value pair of qury string key and it's corresponding  value).
 
+//Expression
+{{}} or ng-bind
+One time binding- Expressions with '::' signifies one time data binding
+ex - <p id="one-time-binding-example">One time binding: {{::name}}</p>
+The main purpose of one-time binding expression is to provide a way to create a binding that gets deregistered and frees up resources once the binding is stabilized.
+Reducing the number of expressions being watched makes the digest loop faster and allows more information to be displayed at the same time.
+
+
+
+
 
 
 

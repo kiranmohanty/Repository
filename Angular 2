@@ -193,3 +193,58 @@ export class CapitalizePipe implements PipeTransform {
     });
   }
 }
+
+//DefiningService in Angular 2
+******CharacterService.service.ts
+import {Injectable} from '@angular/core'
+@injectable()
+export class CharacterService{
+   getCharacters(){
+     return ['x','y','z'];
+  }
+}
+***** app.component.ts
+import {CharacterService} from './CharacterService.service';
+@ngModule{
+  providers: [CharacterService]
+}
+** vehicle.complonent.ts(service consumer class)
+import {CharacterService} from './CharacterService.service';
+export class Vehicle{
+  characters: Array<character> ;
+  constructor(private serviceObject: CharacterService){
+   this.characters= this.serviceObject.getCharacters();
+  }
+}
+
+//Dependency Injection 
+Dependency injection is the process how we provide an instance of a class to another anular feature.
+Service can be injected only via constructor.
+
+//Injectors
+Service should be provided in main ngModule so that all child components in the tree can access and only one instance of the service will be created through out the app (singleton service).
+@ngModule{
+  providers: [CharacterService]
+}
+
+//Component lifecycle
+1.ngOnInit()
+2.ngOnChanges()
+3.ngAfterViewInit()
+4.ngOnchanges() (for control label changes)
+5.ngOnDestroy()
+
+
+//Data with http
+
+
+
+
+
+
+
+
+
+
+
+

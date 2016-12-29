@@ -236,7 +236,47 @@ Service should be provided in main ngModule so that all child components in the 
 
 
 //Data with http
+******app.component.ts
+imoprt {HttpModule} from '@angualr/core'
+@ngModule{
+  imports [HttpModule]
+}
 
+****VehicleService.servicve.ts
+import {Injectable} from '@angular/core';
+import {Http, Response} from '@angualr/http';
+import 'rxjs/add/operator/map';  // for importing map() method
+
+@Injectable()
+export class VehicleService{
+  constructor(private htttp: Http) {}
+  getVehicles(){
+     return this.http.get('api/vehicleJSOnFile')
+     .map((response: Response)=> <Vehicle[]> response.json().data)  //data is the object name in json file.
+     .catch((error: Response)=> function(error) {
+       console.log(error);
+       return observable.throw(error.json().error || 'Server Error');
+     })
+  }
+}
+
+********Vehicle-list.component.ts
+export class VehicleListComponents implements onInit{           // onInit is an interface that has method ngOnInit()
+   vehicles : Vehicle[],
+   errorMessage:string,
+      
+   constructor(private objVehicleService: VehicleService) {
+   
+   getVehicles(){
+     this.objVehicleService.getVehicles().subscribe(          // subsribe method points to observable method error or map method of the service
+         vehicles => this.vehicles=vehicles,
+         error=> this.errorMessage=<any>error
+     );
+   }
+   ngOnInit(){
+      this.getVehicles();
+   }
+}
 
 
 

@@ -245,7 +245,9 @@ imoprt {HttpModule} from '@angualr/core'
 ****VehicleService.servicve.ts
 import {Injectable} from '@angular/core';
 import {Http, Response} from '@angualr/http';
+import {Observable} from 'rxjs/observable';
 import 'rxjs/add/operator/map';  // for importing map() method
+import 'rxjs/observable/throw'; // for importing throw() method
 
 @Injectable()
 export class VehicleService{
@@ -254,7 +256,8 @@ export class VehicleService{
      return this.http.get('api/vehicleJSOnFile')
      .map((response: Response)=> <Vehicle[]> response.json().data)  //data is the object name in json file.
      .catch((error: Response)=> function(error) {
-       console.log(error);
+       let errMsg='Satus code ${error.status} on url ${error.url}'; // error mesg will be like 'Satus code 404 on url http:/localhost/3000/service'
+       console.log(errMsg);
        return observable.throw(error.json().error || 'Server Error');
      })
   }
@@ -279,9 +282,33 @@ export class VehicleListComponents implements onInit{           // onInit is an 
 }
 
 
+//Rxjs
+rxjs stands for Reactive JS that implements asynchronous observable patterns.
 
 
+//Async pipes
+Async pipe takes promise or observable as input and then subscribes input and eventually emits value whenever there is changes in input.
+ex-
+import {Observable} from 'rxjs/observable';
+export class VehicleListComponents implements onInit{         
+   vehicles : Observable< Vehicle[]>,   // Observable makes that property to be observed on change
+   errorMessage:string,
+      
+   constructor(private objVehicleService: VehicleService) {
+   
+   getVehicles(){
+     this.objVehicleService.getVehicles().subscribe(       
+         vehicles => this.vehicles=vehicles,
+         error=> this.errorMessage=<any>error
+     );
+   }
+   ngOnInit(){
+      this.getVehicles();
+   }
+}
 
+<li *ngFor="let v of vehicles | async"> // '|async' will create a async pipe
+</li>
 
 
 

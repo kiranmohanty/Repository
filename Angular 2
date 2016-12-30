@@ -311,6 +311,90 @@ export class VehicleListComponents implements onInit{
 </li>
 
 
+//Routing
+Routing allows navigating through different components, passing parameter where needed.
+Steps:
+1. import Routermodule
+2. import '@angular/router'
+3. define the routes configuration
+4. declare a <router-outlet>  // for appending conent returned by router.
+5.add [routerLink] binding if any navigation is required.
+
+******Route-config.module.ts
+import {NgModule} from '@angualr/core';
+import {RouterModule, Routes} from '@angualr/router';
+
+//RouterModule proves access to routing feature
+//Routes helps us defining route
+
+
+//defining route
+const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'characters', },
+  { path: 'characters', component: CharacterListComponent },
+  { path: 'characters/:id', component: CharacterComponent },
+  { path: 'vehicles', component: VehicleListComponent },
+  { path: 'vehicles/:id', component: VehicleComponent },
+  { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
+];
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+
+export class AppRoutingModule { }
+
+export const routableComponents = [  // all components that r going to use routing
+  CharacterListComponent,
+  CharacterComponent,
+  VehicleListComponent,
+  VehicleComponent,
+  PageNotFoundComponent
+];
+
+** app.component.ts
+import { AppComponent } from './app.component';
+import { CharacterService } from './characters/character.service';
+import { VehicleService } from './vehicles/vehicle.service';
+import { AppRoutingModule, routableComponents } from './app-routing.module';
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    AppRoutingModule  //import custom routing module class
+  ],
+  declarations: [AppComponent, routableComponents], // import components array constant
+  providers: [CharacterService, VehicleService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+**** app.component.ts
+      <div>
+  <header>
+    <h1>Storyline Tracker</h1>
+    <h3>Router Demo</h3>
+    <nav>
+      <ul>
+        <li><a [routerLink]="['/characters']" href="">Characters</a></li> //['/characters']:- path is inside [] to notify that value inside squire bracket in not dynamic
+        <li><a [routerLink]="['/vehicles']" href="">Vehicles</a></li>     // [routerLink] should match with path of route defination.
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <router-outlet></router-outlet>  //
+    </section>
+  </main>
+</div>
+      
+//Passing data through routing
+Three ways we can pass parameters to route.
+1. Subscribing to route parameter
+2. Route resolver
+3.Route guards
 
 
 

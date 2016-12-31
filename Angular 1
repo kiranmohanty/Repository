@@ -542,6 +542,10 @@ The main purpose of one-time binding expression is to provide a way to create a 
 Reducing the number of expressions being watched makes the digest loop faster and allows more information to be displayed at the same time.
 
 
+//Interpolation- {{}} use of this expression is called interpolation
+During compilation if compiler finds any {{}} expression , then it adds interpolateDirective to that node and adds a watch to track changes
+of that node or model. If any changes occurs, then it under goes regular digest cycle for reflecting DOM changes.
+
 
 
 

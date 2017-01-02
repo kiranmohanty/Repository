@@ -570,7 +570,11 @@ novalidate directive on form control- to avoid any kind of contol validation. Ex
                user is not giving valid email format then , browser will not give any validation error message.
 
 
-
+//Custom model update triggers
+by default angular model gets updated synchronously as input data changes in DOM. but we can control this auto update feature by overriding 
+ ngModelOptions directive.
+ ex- ng-model-options="{ updateOn: 'blur' }" or ng-model-options="{ updateOn: 'mousedown blur' }" adding this directive to any html control.
+ 
 
 
 

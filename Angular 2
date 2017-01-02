@@ -399,3 +399,46 @@ Three ways we can pass parameters to route.
 
 
 
+//Guard
+   Guard allows us in taking key decission in routing life cycle. It helps to decide whether to redirect 
+   or to abort or to take a new direction as per specified route.
+   
+Types:
+  1. Resolve
+  2. CanActivate
+  3. CanAcivateChild
+  4.CanDeactivate
+  5.CanLoad
+
+************auth-guard.service.ts
+export class AuthGuard implements CanActivate{           // CanActivate implementation is required.
+  constructor(private loginService : LogInService, private router : Router){}
+  CanActivate(next : ActivatedRouteSnapshot, state: RouterStateSnapshot){
+    if(this.loginService.isValidUser){
+      return true;                                 //return statement is required in order to decide whether to redirect or not !
+    }
+    else{
+       this.router.navigate(['/Login'],queryParams: {redirectTo: state.url});
+       return false;
+    }
+  }
+}
+*********app-routing.module.ts
+{
+path:'DashBoard',
+component: DashBoardComponent,
+canActivate: [AuthGuard]
+}
+//Types of Modules
+1.Angular Module:- helps us to build different corelated blocks of functionality or components for building compelete application.
+2.Domain Module:
+3.Routing Module:- these are ngModule that are being defined for routing purpose.
+4.Service:- it's a block of code that can be re-used for more than one components or services or blocks.
+5.Widget module:- Angualr module that is used for defining custom controls.
+
+
+
+
+
+
+

@@ -565,6 +565,9 @@ angular.module('myStatefulFilterApp', [])
   return decorateFilter;
 }])
 
+{{expression | json }} will display data in JSON object format.
+novalidate directive on form control- to avoid any kind of contol validation. Ex - <input type="email" value="" /> for this control if 
+               user is not giving valid email format then , browser will not give any validation error message.
 
 
 

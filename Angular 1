@@ -547,6 +547,26 @@ During compilation if compiler finds any {{}} expression , then it adds interpol
 of that node or model. If any changes occurs, then it under goes regular digest cycle for reflecting DOM changes.
 
 
+//Filters
+{{ expression | filter }}
+{{ expression | filter1 | filter2 | ... }}
+{{ 12 | currency }}- output:- $12
+{{ 1234 | number:2 }} formats the number - output:-1,234.00.
+
+///defining statefull filter
+angular.module('myStatefulFilterApp', [])
+.filter('decorate', ['decoration', function(decoration) {
+
+  function decorateFilter(input) {
+    return decoration.symbol + input + decoration.symbol;
+  }
+  decorateFilter.$stateful = true;
+
+  return decorateFilter;
+}])
+
+
+
 
 
 

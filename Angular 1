@@ -575,7 +575,7 @@ by default angular model gets updated synchronously as input data changes in DOM
  ngModelOptions directive.
  ex- ng-model-options="{ updateOn: 'blur' }" or ng-model-options="{ updateOn: 'mousedown blur' }" adding this directive to any html control.
  
-
+**we can delay model update by adding delay update timmer. ex- add  ng-model-options="{ debounce: 500 }" to any control.
 
 
 

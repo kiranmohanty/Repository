@@ -51,5 +51,32 @@ REPL stands for Read Eval Print Loop. It represents a computer environment like 
   3.Print- prints the result.
   4.Loop- Loops the above command until the user presses ctrl-c twice.
 
+REPL commands:-
+ctrl + c − terminate the current command.
+ctrl + c twice − terminate the Node REPL.
+ctrl + d − terminate the Node REPL.
+Up/Down Keys − see command history and modify previous commands.
+tab Keys − list of current commands.
+.help − list of all commands.
+.break − exit from multiline expression.
+.clear − exit from multiline expression.
+.save filename − save the current Node REPL session to a file.
+.load filename − load file content in current Node REPL session.
+
+//NPM package manager
+ it does two things
+1. Online repository for node.js packages/modules.
+2. Manages node.js package install, version changes and dependency management of node.js package.
+
+**npm install express :- command for installing node express.
+
+
+
+
+
+
+
+
+
 
 

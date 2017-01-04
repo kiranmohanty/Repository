@@ -70,7 +70,25 @@ tab Keys − list of current commands.
 
 **npm install express :- command for installing node express.
 
+**we can delay model update by adding delay update timmer. ex- add  ng-model-options="{ debounce: 500 }" to any control.
 
+npm ls -> command for listing all modules installed in the system.
+npm install express -g :- command for globaly installed modules list.
+
+//Call back concepts
+call back functions are asynchronous functions that will be called after completion of perticular task.
+
+****blocking code example- synchronous code
+var fileSystem = require("fs");
+console.log(fileSystem.readFileSync('input.txt').toString()); // for reading file content
+
+** non  blocking code- asynchronous
+var fs=require("fs");
+fs.readFile('input.txt',function(error,data){
+  if(error)
+    return console.error(error);
+  console.log(data.toString());
+})
 
 
 

@@ -1,0 +1,55 @@
+//Pre-installaion  -> node JS (cmd -> node -> enter -> console.log('hello')-> enter -> output:-> hello: undefined
+*Node.js is a server-side platform built on Google Chrome's JavaScript  Engine (V8 Engine).
+Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient,
+perfect for data-intensive real-time applications that run across distributed devices.
+
+*Node.js is an open source, cross-platform runtime environment for developing server-side and networking applications. 
+
+**Features of node.js
+ 1.Asynchronous and event driven- all r asynchronous call 
+ 2.Vaery fast- response is very faster than normal server response.
+ 3.Single threaded but highly scalable (only one thread servers all request, it can server 1000+ requests at a time)
+ 4.No buffering- it never used to buffer data. It simply use to output data in chunk.
+ 5.License - MIT license.
+ 
+ ** Where to use Node.js
+   1.I/O bound Applications
+   2.Data Streaming Applications
+   3.Data Intensive Real-time Applications (DIRT)
+   4.JSON APIs based Applications
+   5.Single Page Applications
+   
+   **It is not advisable to use Node.js for CPU intensive applications.
+   
+   ** First application in Node.js
+   Components of Node.js:-
+   1. import all required modules- use 'require' directive to load node.js modeules
+   2. create a server- a server that keeps listening to client's request.
+   3.read request and return response- basic log implementation
+    
+ Ex- 
+ var http = require("http");     // http module is imported
+ http.createServer(function (request, response) {    //createServer method will create a node server that keeps listening to the specified port
+   // Send the HTTP header 
+   // HTTP Status: 200 : OK
+   // Content Type: text/plain
+   response.writeHead(200, {'Content-Type': 'text/plain'});
+   
+   // Send the response body as "Hello World"
+   response.end('Hello World\n');
+ }).listen(8081);         //8081 is the port where application is running
+
+// Console will print the message
+console.log('Server running at http://localhost:8081/');
+
+//command for running node- cmd-> .js folder location->  node main.js
+
+//REPL terminals
+REPL stands for Read Eval Print Loop. It represents a computer environment like windows console.
+  1.Read- reads the input, parses it to javascript data-structure and stored it in memory.
+  2.Eval- takes and evaluates the data structure.
+  3.Print- prints the result.
+  4.Loop- Loops the above command until the user presses ctrl-c twice.
+
+
+

@@ -142,8 +142,39 @@ console.log('Program ends here.');
   ,hence second as data of the request.
   
   ********************* Event Emitter********************************
+  EventEmitter class lies inside events module.
   
-
-
-
+  EventEmitter events
+  ------------------------
+  1.error:-          If EventEmitter instance faces any error, it emits an error event.
+  2.newListener:-    When new listener is added to the instance, newListener event gets fired.
+  3.removeListener:- When any listener is removed, removeListener events gets fired.
+  
+  
+  EventEmitter Properties:-
+  ----------------------------
+ 1. on :- is used to bind event handler to any event.
+ 2.emit:- to fire an event.
+ 
+ EventEmitter Methods
+ -------------------
+ 1.addListener(event, listener):- Adds a listener at the end of the listeners array for the specified event.
+ 2.on(event, listener):-   adds event listener.
+ 3.once(event, listener)- adds one time listener to the event, after that it will be removed automatically.
+ 4.removeListener(event, listener):- Removes a listener from the listener array for the specified event. 
+ 5.removeAllListeners([event]):- if removeAllListeners() will remove all listener events and removeAllListeners([event]) will remove all listener that are being attached to this event in listener array.
+ 6.setMaxListeners(n) : - By default 10 listeners can be added for a perticular event. we can reset this limit as per requirement.
+ 7.listeners(event)- Returns an array of listeners for the specified event.
+ 8.emit(event, [arg1], [arg2], [...])- Execute each of the listeners in order with the supplied arguments. Returns true if the event had listeners, false otherwise.
+ 9.listenerCount(emitter, event)- Returns the number of listeners for a given event.
+ 
+ ******************************  Buffers  *****************************
+ Buffer class is a global class that can be accessed in an application without importing the buffer module.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 

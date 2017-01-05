@@ -170,7 +170,100 @@ console.log('Program ends here.');
  
  ******************************  Buffers  *****************************
  Buffer class is a global class that can be accessed in an application without importing the buffer module.
- 
+ Creating Buffer:-
+1.create uninitiated Buffer of  10 octates  
+     var x= new Buffer(10); // i.e 10 byte 
+2.create a Buffer from given array
+     var x= new Buffer([10,5,12,13]);
+3.create a Buffer from a given string and optional encoding 
+     var x= new Buffer(["xyz  srt",'utf-8');
+
+
+* writing something into node buffer
+  var buf=new Buffer(10);
+  buf.write(string[, offset][, length][, encoding])
+  
+	 string − This is the string data to be written to buffer.
+	 offset − This is the index of the buffer to start writing at. Default value is 0.
+	 length − This is the number of bytes to write. Defaults to buffer.length.
+	 encoding − Encoding to use. 'utf8' is the default encoding.
+	 This method returns the number of octets written.
+	 If there is not enough space in the buffer to fit the entire string, it will write a part of the string.
+	
+*syntax for reading from node Buffer 	 
+  buf.toString([encoding][, start][, end]);
+	 encoding − Encoding to use. 'utf8' is the default encoding.
+     start − Beginning index to start reading, defaults to 0.
+     end − End index to end reading, defaults is complete buffer.
+     This method decodes and returns a string from buffer data encoded using the specified character set encoding.
+
+*converting from Buffer to JSON
+    buf.toJSON() // returns a json data 
+* concatinate 	Buffer
+    Buffer.concat(list[, totalLength])
+	   list − Array List of Buffer objects to be concatenated.
+	   totalLength − This is the total length of the buffers when concatenated.
+	   This method returns a Buffer instance.
+	       ex:-
+		      var buffer1 = new Buffer('TutorialsPoint ');
+              var buffer2 = new Buffer('Simply Easy Learning');
+              var buffer3 = Buffer.concat([buffer1,buffer2]);
+              console.log("buffer3 content: " + buffer3.toString());
+
+* compare two Buffers
+    buf.compare(otherBuffer);
+        otherBuffer − This is the other buffer which will be compared with buf
+        Returns a number indicating whether it comes before or after or is the same as the otherBuffer in sort order.
+          ex:-
+            var buffer1 = new Buffer('ABC');
+            var buffer2 = new Buffer('ABCD');
+            var result = buffer1.compare(buffer2);
+
+            if(result < 0) {
+                console.log(buffer1 +" comes before " + buffer2);
+            }else if(result == 0){
+                console.log(buffer1 +" is same as " + buffer2);
+            }else {
+                console.log(buffer1 +" comes after " + buffer2);
+            }		  
+
+* copy Buffer
+    buf.copy(targetBuffer[, targetStart][, sourceStart][, sourceEnd])  //content copied to target content
+        targetBuffer − Buffer object where buffer will be copied.
+        targetStart − Number, Optional, Default: 0, where to start copy in target Buffer
+        sourceStart − Number, Optional, Default: 0, where to start copy caracter from source Buffer
+        sourceEnd − Number, Optional, Default: buffer.length, where to end copy from source Buffer
+        No return data.
+          ex:-
+             var buffer1 = new Buffer('ABC');
+
+             //copy a buffer
+             var buffer2 = new Buffer(3);
+             buffer1.copy(buffer2);
+             console.log("buffer2 content: " + buffer2.toString());		  
+
+* Slice Buffer
+     buf.slice([start][, end])
+         start:- start index to slice, default 0, optional
+         end - index of end slice character, default - max length, optional	
+         Returns a new buffer which references the same memory as the old one, but offset and cropped by the start (defaults to 0) and end (defaults to buffer.length) indexes. 
+		 Negative indexes start from the end of the buffer.		 
+		  ex:-
+		     var buffer1 = new Buffer('TutorialsPoint');
+
+             //slicing a buffer
+             var buffer2 = buffer1.slice(0,9);
+             console.log("buffer2 content: " + buffer2.toString());
+			 
+*Buffer Length
+      buf.length;
+      ex:-
+         var buffer = new Buffer('TutorialsPoint');
+
+         //length of the buffer
+         console.log("buffer length: " + buffer.length);	  
+
+		 
  
  
  

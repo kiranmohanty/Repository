@@ -90,10 +90,59 @@ fs.readFile('input.txt',function(error,data){
   console.log(data.toString());
 })
 
+************************************  Event Loop   *******************************************************************
+Not uses single threaded async function calls in order to meet concurrency (multiple users updating records in database at a time).
+It uses observe pattern (keeps lookin for task completion so that it can execute call back function). It keeps an event loop which keeps checking 
+whether task got completed or not, once completed then it calls callback function as defined in listener.
+
+  As soon as node starts its server , it starts initialzing variables, functions and then waits for event calls.
+**Node evemt cycle:-
+  Event emitter -> Actual Event-> Event loop -> event handler
+  
+steps:-
+1. import events module
+2. create EventEmitter instance
+3. Define handler function
+4. bind the event to event handler
+5. then fire the same event
+Ex:_
+    var events=require("events");
+    var eventEmitter= new events.EventEmitter();
+    eventEmitter.on('customEvent','eventHadlerFunction');
+    eventEmitter.emit('customEvent');
+
+Real time example:-
+*******************************************************
+// import events module
+var events= require("events");
+
+//create event emitter instance
+var eventEmitter=new events.EventEmitter();
+
+//define handler functions
+var connectionHandler=function(){
+    console.log("connected successfully.");
+    eventEmitter.emit("Data_fetch");
+}
+var dataFetchHandler=function(){
+    console.log('data fetched successfully.');
+}
+
+//links events with event listener by attaching events with event emitter
+eventEmitter.on('connect',connectionHandler);
+eventEmitter.on('Data_fetch',dataFetchHandler);
+
+//start an event manually
+eventEmitter.emit('connect');
+
+console.log('Program ends here.');
 
 
-
-
+** In node JS application any async function accepts a call back method and each call backmethod accepts error as first argument 
+  ,hence second as data of the request.
+  
+  ********************* Event Emitter********************************
+  
 
 
 

@@ -264,7 +264,78 @@ console.log('Program ends here.');
          console.log("buffer length: " + buffer.length);	  
 
 		 
+ *****************************  Streaming ***********************************
+ Streams are objects that let you read data from a source or to write data to a destination on continuous fashion.
+ Types of Stream:-
+ ----------------
+ 1.Readable - stream to read data
+ 2.Writable- stream to write data
+ 3.Duplex- stream that can do both read and write operation.
+ 4.Transform- is a  kind of Duplex stream where output is computed based on input.
  
+ Each type of stream is an EventEmitter instance and throws different types of event at different point of time.
+ ex:-
+ 1.data- this event wil fire when there is data to read .
+ 2. error- this event will fire when there is any error during receiving/writting data.
+ 3.end- this event will fire when there is no more data to read.
+ 4.finish-  this event will fire when all the data is being flushed to underlying system.
+ 
+ ex:- reading a stream
+// ////Streaming
+var fs=require("fs");
+//create reader stream instance
+var readerStream=fs.createReadStream('input.txt');
+var data='';
+
+readerStream.setEncoding('UTF8');
+//define reader stream events
+readerStream.on('data',function(chunck){  //received data
+    data +=chunck;
+});
+readerStream.on('end',function(){
+    console.log(data);
+});
+readerStream.on('error', function(error){
+    console.log(error.stack);
+});
+
+console.log('streaming ends here');
+ 
+ ex:- (writting a stream)
+ /// Writter stream
+var fs=require('fs');
+var writterStream=fs.createWriteStream('output.txt');
+var data='simply write something';
+
+//write data to file
+writterStream.write(data,'UTF8');
+writterStream.end();
+
+//define events
+writterStream.on('error',function(error){
+    console.log(error.stack);
+});
+
+console.log('program ends here');
+ 
+*** Piping stream
+Piping is a mechanism where output of one stream is treated as input to another stream.
+ex:- (reading from one file and writting it to another file) 
+ var fs = require("fs");
+
+// Create a readable stream
+var readerStream = fs.createReadStream('input.txt');
+
+// Create a writable stream
+var writerStream = fs.createWriteStream('output.txt');
+
+// Pipe the read and write operations
+// read input.txt and write data to output.txt
+readerStream.pipe(writerStream);
+
+console.log("Program Ended");
+
+*** chanining the stream
  
  
  

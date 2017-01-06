@@ -335,10 +335,30 @@ readerStream.pipe(writerStream);
 
 console.log("Program Ended");
 
-*** chanining the stream
+*** chaining the stream
+ it is the mechanism of connecting one output of one stream to another stream
  
- 
- 
+ //compressing text file to zip
+var fs = require("fs");
+var zlib = require('zlib');
+
+// Compress the file input.txt to input.txt.gz
+fs.createReadStream('input.txt')
+   .pipe(zlib.createGzip())
+   .pipe(fs.createWriteStream('input.txt.gz'));
+  
+console.log("File Compressed.");
+
+//uncompressing zip to text file
+var fs = require("fs");
+var zlib = require('zlib');
+
+// Decompress the file input.txt.gz to input.txt
+fs.createReadStream('input.txt.gz')
+   .pipe(zlib.createGunzip())
+   .pipe(fs.createWriteStream('input.txt'));
+  
+console.log("File Decompressed.");
  
  
 

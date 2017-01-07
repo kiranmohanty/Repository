@@ -556,7 +556,75 @@ No need to include any directive for using those objects.
 5.console :- used to print information.
 6. process:- used to get info about current process.
 
- 
+****** Utility modules***********
+1.OS Module :- Provides basic operating-system related utility functions.
+2.Path Module :- Provides utilities for handling and transforming file paths.
+3.Net Module :- Provides both servers and clients as streams. Acts as a network wrapper.
+4.DNS Module :- Provides functions to do actual DNS lookup as well as to use underlying operating system name resolution functionalities.
+5.Domain Module :- Provides ways to handle multiple different I/O operations as a single group.
+
+****** Web Module***************************
+web server is a software application that receives http request from client and returns a page as response.
+
+Creating web server using node.js
+--------------------------------
+http module helps in creating http client which can listen to a specific port number.
+ex:- requesting a html page from client
+
+//console.log(__filename);
+var http = require("http");
+var fs = require("fs");
+var url = require("url");
+
+http.createServer(function (request, response) {
+    //url path
+    var path = url.parse(request.url).pathname;
+    console.log("request received from " + path);
+
+    //read  htm file returned by URL
+    fs.readFile(path.substr(1), function (error, data) {
+        console.log(error);
+        console.log(data);
+        if (error) {
+            response.writeHead(404, { 'Content-Type': 'text/html' }); //page not found
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': 'text/html' }); //response ok
+        }
+
+        //write response in body
+        response.write(data.toString());
+        response.end();
+    });    
+
+}).listen(8081);
+
+console.log("server is running on http:/localhost:8081/index.htm");
+
+Creating web client in Node
+---------------------------
+var http = require("http");
+var option = {
+    host: "localhost",
+    port: "8081",
+    path: "/index.htm"
+
+};
+
+var callback = function (response) {
+    var body = '';
+    response.on('data', function (chuck) {
+        body += chuck;
+    });
+    response.on('end', function () {
+        console.log(body);
+    });
+}
+
+//make a request to server
+var request = http.request(option, callback);
+request.end();
+console.log(' http client is ready'); 
  
  
  

@@ -372,7 +372,161 @@ Asynchronous file read
 	  console.log(data.toString());
      });
     
+** open a file
+fs.open(path, flags[, mode], callback)   
+     path:- fie name include exact deirectory path
+	 flags - (r -> to open file for reading, r+ open file for read / write, 
+	         w, w+ -> open file for wite , read/write, wx- it will open a new file if path does not exist, else if path exists , it will just ignore the task
+			 a, a+, aw -> opens file for append operation)
+
+** get file info
+fs.stat(path, callback)
+     callback function contains fs.stats class object which has few info regarding file specified in the path.
+     path:- directory path
+     callback:- asynch callback function 
+ex-	 
+var fs = require("fs");
+
+console.log("Going to get file info!");
+fs.stat('input.txt', function (err, stats) {
+   if (err) {
+       return console.error(err);
+   }
+   console.log(stats);
+   console.log("Got file info successfully!");
+   
+   // Check file type
+   console.log("isFile ? " + stats.isFile());
+   console.log("isDirectory ? " + stats.isDirectory());    
+});
+
+** Writting to a file
+fs.writeFile(filename, data[, options], callback)
+   path:- directory path
+   data:- data to write in file
+   options:- optionals, it takes arguments like encoding
+   callback:- asynch function
+ ex:- fs.writeFile('input.txt', 'Simply Easy Learning!',  function(err) { }
  
+** Reading a file
+fs.read(fd, buffer, offset, length, position, callback
+    fd:- this is the file descripture returned by fs.open()
+	buffer:- this is the buffer that the data will be written to // read from a file and write to it
+	offset:- offset position of buffer, where to start writting
+	length:- length of data to read
+	position:- at what position to start reading
+	callback:- async result function
+	
+ex:-
+var fs = require("fs");
+var buf = new Buffer(1024);
+
+console.log("Going to open an existing file");
+fs.open('input.txt', 'r+', function(err, fd) {
+   if (err) {
+      return console.error(err);
+   }
+   console.log("File opened successfully!");
+   console.log("Going to read the file");
+   fs.read(fd, buf, 0, buf.length, 0, function(err, bytes){
+      if (err){
+         console.log(err);
+      }
+      console.log(bytes + " bytes read");
+      
+      // Print only read bytes to avoid junk.
+      if(bytes > 0){
+         console.log(buf.slice(0, bytes).toString());
+      }
+   });
+});
+	
+** closing a file
+fs.close(fd, callback)
+   fd:- this is the file descripture returned by fs.open();
+    callback: asynch function
+ex:-
+fs.close(fd, function(err){
+}
+
+** Truncate file
+fs.ftruncate(fd, len, callback)
+    fd: fs.open() returned 
+    len:- length of the file after which file will get truncated
+    callback: async function  taking exception as argument
+ex:-
+fs.open('input.txt','r+',function(error, fd){
+fs.ftruncate(fd, 10, function(err){
+}	
+}
+
+** delete a file
+fs.unlink(path, callback)
+ 
+ex:-
+fs.unlink('input.txt', function(err) {
+   if (err) {
+      return console.error(err);
+   }
+   console.log("File deleted successfully!");
+});
+
+
+** creating a directory
+fs.mkdir(path[, mode], callback)
+    path: directory path
+	mode: optional, directory permission
+	callback: async function
+	
+ex-
+var fs = require("fs");
+
+console.log("Going to create directory /tmp/test");
+fs.mkdir('/tmp/test',function(err){
+   if (err) {
+      return console.error(err);
+   }
+   console.log("Directory created successfully!");
+});
+
+
+** Read a directory
+fs.readdir(path, callback)
+
+ex:
+var fs = require("fs");
+
+console.log("Going to read directory /tmp");
+fs.readdir("/tmp/",function(err, files){
+   if (err) {
+      return console.error(err);
+   }
+   files.forEach( function (file){
+      console.log( file );
+   });
+});
+
+** remove directory
+fs.rmdir(path, callback)
+var fs = require("fs");
+
+console.log("Going to delete directory /tmp/test");
+fs.rmdir("/tmp/test",function(err){
+   if (err) {
+      return console.error(err);
+   }
+   console.log("Going to read directory /tmp");
+   
+   fs.readdir("/tmp/",function(err, files){
+      if (err) {
+         return console.error(err);
+      }
+      files.forEach( function (file){
+         console.log( file );
+      });
+   });
+});
+	 
  
  
  

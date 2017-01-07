@@ -360,5 +360,29 @@ fs.createReadStream('input.txt.gz')
   
 console.log("File Decompressed.");
  
+ ******************************************** File System *****************************
+import file system in application
+    var fs=require("fs");
+synhcronous file read 
+     var output=fs.readFileSync('input.txt');
+Asynchronous file read
+     var data= fs.readFile('input.txt',function(error,data){
+         if(error)
+	   console.error(error.stack);
+	  console.log(data.toString());
+     });
+    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
 

@@ -527,6 +527,35 @@ fs.rmdir("/tmp/test",function(err){
    });
 });
 	 
+************ Global object********************
+global objects are modules r functions or properties or objects that gloally available for all modules.
+No need to include any directive for using those objects.
+
+1.__filename:- it will give complete path of the file is being  executed.
+      console.log(__filename);
+2. setTimeout(cb, ms)
+    cb: callback functions
+    ms: millisecond
+   ex:-
+       function printHello(){
+          console.log( "Hello, World!");
+       }
+       // Now call above function after 2 seconds
+       setTimeout(printHello, 2000);   
+3.clearTimeout(t): to stop a timer that was previously set.
+     t: timer instnace returned by setTimeout() function.
+4. setInterval(cb, ms)- will call callback function after certain interval
+    cb: callback function
+    ms: millisecond duration
+	ex:-
+	 function printHello(){
+        console.log( "Hello, World!");
+     }
+     // Now call above function after 2 seconds
+     setInterval(printHello, 2000);
+5.console :- used to print information.
+6. process:- used to get info about current process.
+
  
  
  

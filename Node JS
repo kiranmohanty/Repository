@@ -882,7 +882,123 @@ PUT - This is used to create a new resource.
 DELETE - This is used to remove a resource.
 POST - This is used to update a existing resource or create a new resource.
  
- 
+var express=require("express");
+var fs=require("fs");
+var _=require("underscore");
+//var restClient=require("node-rest-client");
+
+var app=express();
+//var client=restClient();
+
+//local variable
+var jsonFilePath=__dirname+'/data.json';
+
+//register all http requests
+app.get('/',function(request,response){
+    response.sendFile(__dirname+'/userlist.html');
+});
+
+app.get('/location_list',function(request,response){
+    fs.readFile(jsonFilePath,'utf8',function(error,data){
+       if(error){
+           console.log('error while loading the list');
+       }
+       else{ 
+           var dataInJson= JSON.parse(data);
+           console.log("Location list loaded");
+        //    console.log(dataInJson.LocationList);
+           response.end(JSON.stringify(dataInJson.LocationList));
+       }
+
+    });
+});
+
+app.get('/location/:id',function(request,response){
+    fs.readFile(jsonFilePath,'utf8',function(error,data){
+        var id= request.params.id;
+         var d=JSON.parse(data);
+         var filteredLocation=_.where(JSON.parse( d.LocationList),{ID:id});
+         if(!filteredLocation)
+         {
+             response.end("no record found");
+         }
+         else{
+             console.log("id:"+ id);
+             console.log("locations: "+JSON.parse( d.LocationList));
+             console.log("filtered list:"+ filteredLocation);
+             console.log("filtered location is being displayed");
+             response.end(JSON.stringify(filteredLocation));
+         }
+    });
+});
+
+app.post('/addLocation',function(request,response){
+    var updateValid=true;
+    fs.readFile(jsonFilePath,'utf8',function(error,data){
+        if(error){
+            console.log("error occured while adding location");
+        }
+        else{
+            var d = JSON.parse(data);
+            location1 = {
+                "ID": 16,
+                "name": "Grape garden",
+                "Type": "DelivLocation",
+                "ParentID": 5
+            }
+            d.LocationList.push(location1);
+        
+            var actualData=JSON.stringify(d);
+            fs.writeFile(jsonFilePath,actualData,function(err){
+                if(err){
+                    updateValid=false;
+                    console.log('error while updating json file');
+                }
+            });
+                
+            if(updateValid){
+                console.log(' record added successfully');               
+                 response.end(d.locationList); 
+            }
+           else{
+               console.log('failed to add data');
+               response.end('failed to add data');
+           }
+        }
+    });
+});
+
+app.delete('/deleteLocation',function(request,response){
+    var updateValid=true;
+    fs.readFile(jsonFilePath,'utf8',function(error,data){
+         if(error){
+            console.log("error occured while deleting location");
+         }
+
+         var d=JSON.parse(data);
+         delete _.where(d.locationList,{"ID":16});
+         fs.writeFile(jsonFilePath,'utf8',function(err){
+             if(err){
+                  updateValid=false;
+                    console.log('error while deleting location');
+             }             
+         });
+
+         if(updateValid){
+                console.log(' record deleted successfully');
+                 response.end(JSON.stringify(d.locationList)); 
+            }
+           else{
+               console.log('failed to delete data');
+               response.end('failed to delete data');
+           }
+    });
+});
+
+//create server
+var server=app.listen(8081,function(){
+    console.log('server is running on port : '+server.address().port);
+}); 
  
  
  

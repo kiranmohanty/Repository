@@ -872,7 +872,15 @@ app.get('/', function(req, res) {
 })
 app.listen(8081) 
  
- 
+************************ REST API ********************************
+REST server provides access to resources (all components) and REST client gives access to modify the resource using HTTP request.
+REST uses  text, JSON, XML but JSON representations to represent a resource.
+REST methods
+----------------------
+GET - This is used to provide a read only access to a resource.
+PUT - This is used to create a new resource.
+DELETE - This is used to remove a resource.
+POST - This is used to update a existing resource or create a new resource.
  
  
  

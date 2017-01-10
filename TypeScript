@@ -1,1 +1,46 @@
+TypeScript is a strongly typed, object oriented, compiled language.
+Features of typescript:
+1. Typescript is just javascript.
+2. typescript supports other js library:- any javascript can consume compiled .ts file.
+3. java script is typescript:-any js file can be renamed to .ts and can be complied along with other ts files.
+4.typescript is portable:- any device that supports javascript , will support typescript.
+5. compilation time error:- it will give complitaion time error if any syntax error found.
+6.Strong Static Typing
+7.TypeScript supports Object Oriented Programming concepts like classes, interfaces, inheritance, etc.
 
+
+//Components of typescript
+1.Language :- combinationof syntax, keywords and type annotation.
+2. Typescript compiler (tsc)- that converts .ts code to .js code .
+3. The TypeScript Language Service : 
+
+
+//command for installing typescript globally
+npm install -g typescript
+
+* A typescript program composed of
+1. Modules
+2. Functions
+3. Variables
+4. Statements and Expressions
+5. Comments
+
+*to complie code -> node comand prompt-> tsc test.ts
+ to run the code-> windows command promp-> node test.js
+ Multiple files can be compiled at once.-> tsc file1.ts, file2.ts, file3.ts
+ 
+ *Identifiers:- variables, functions etc (indentifier can include alphabet , digit & underscore & it should not start with digit)
+ TypeScript is case-sensitive.
+ 
+ * comments
+ 1.Single-line comments ( // )
+ 2.Multi-line comments (/* */) 
+ 
+ ex:-
+ class Greeting { 
+   greet():void { 
+      console.log("Hello World!!!") 
+   } 
+} 
+var obj = new Greeting(); 
+obj.greet();

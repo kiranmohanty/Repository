@@ -437,6 +437,12 @@ canActivate: [AuthGuard]
 5.Widget module:- Angualr module that is used for defining custom controls.
 
 
+********************* Angular CLI commands***********************
+Angular CLI-> command line interface.
+npm install -g angular-cli  -> will install all dependencies related to angualr js globally
+ng new project-name -> will create a project with package.json file
+cd project-name -> navigate to project directory.
+ng serve -> will run the application on 4200 port.
 
 
 

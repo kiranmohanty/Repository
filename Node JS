@@ -882,6 +882,7 @@ PUT - This is used to create a new resource.
 DELETE - This is used to remove a resource.
 POST - This is used to update a existing resource or create a new resource.
  
+////********************** REST API*******************************
 var express=require("express");
 var fs=require("fs");
 var _=require("underscore");
@@ -915,19 +916,18 @@ app.get('/location_list',function(request,response){
 
 app.get('/location/:id',function(request,response){
     fs.readFile(jsonFilePath,'utf8',function(error,data){
-        var id= request.params.id;
-         var d=JSON.parse(data);
-         var filteredLocation=_.where(JSON.parse( d.LocationList),{ID:id});
+        var id = request.params.id;
+         var d = JSON.parse(data);         
+         var filteredLocation=d.LocationList.filter(function(loc){
+             return loc.ID==id;
+         });         
          if(!filteredLocation)
          {
              response.end("no record found");
          }
          else{
-             console.log("id:"+ id);
-             console.log("locations: "+JSON.parse( d.LocationList));
-             console.log("filtered list:"+ filteredLocation);
-             console.log("filtered location is being displayed");
-             response.end(JSON.stringify(filteredLocation));
+            console.log("filtered location is being displayed");
+            response.end(JSON.stringify(JSON.stringify( filteredLocation)));           
          }
     });
 });
@@ -957,8 +957,9 @@ app.post('/addLocation',function(request,response){
             });
                 
             if(updateValid){
-                console.log(' record added successfully');               
-                 response.end(d.locationList); 
+                console.log(' record added successfully'); 
+                console.log(d.LocationList);              
+                 response.end(JSON.stringify(d.LocationList)); 
             }
            else{
                console.log('failed to add data');
@@ -968,6 +969,7 @@ app.post('/addLocation',function(request,response){
     });
 });
 
+//not tested since it needs rest client
 app.delete('/deleteLocation',function(request,response){
     var updateValid=true;
     fs.readFile(jsonFilePath,'utf8',function(error,data){
@@ -998,7 +1000,7 @@ app.delete('/deleteLocation',function(request,response){
 //create server
 var server=app.listen(8081,function(){
     console.log('server is running on port : '+server.address().port);
-}); 
+});
  
  
  

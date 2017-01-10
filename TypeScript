@@ -44,3 +44,47 @@ npm install -g typescript
 } 
 var obj = new Greeting(); 
 obj.greet();
+
+**Data types
+ 1. Any- super type all datatypes
+ 2. Built-in data types (numBer, string, null , undefined etc)
+ 3. User defined (array, enum, class, interface etc)
+ 
+ 
+ A variable initialized with undefined means that the variable has no value or object assigned to it while null 
+ means that the variable has been set to an object whose value is undefined.
+ 
+ A variable, by definition, is “a named space in the memory” that stores values. 
+ 
+ **variable declaration
+    var variableName: dataType = value;
+    var variableName: dataType;
+	var variableName= value;
+	var variableName; // dataType is any
+**type assertions
+      changing variable from one dataType to another.
+ex:-var str = '1';
+    var str2:number = <number> <any> str   //str is now of type number 	  
+
+this is not called as type casting, since this data type conversion is not during run time, it's compile time change.
+
+**Inferred Typing
+     same as dynamic keyword in c#
+ex- var num = 2;    // data type inferred as  number  (datatype of num is not defined,once  it 2 is assigned to it means it's data type will v number)
+
+**Variable Scope
+1. Global variable:-  Global variables are declared outside the programming constructs.
+2. Class scope:- called fields in a class. it supports  static properties too.
+3. Local scope:- local variable.
+ex:
+var global_num = 12          //global variable 
+class Numbers { 
+   num_val = 13;             //class variable 
+   static sval = 10;         //static field 
+   
+   storeNum():void { 
+      var local_num = 14;    //local variable 
+   } 
+} 
+
+	 

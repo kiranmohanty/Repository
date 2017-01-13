@@ -453,3 +453,82 @@ Benifits of typescript
 interface is a   specification that represents set of properties and methods.
 The class can support those specification by implementing the interface. 
 
+**************   Angular component life cycle  ************
+How angular works:-
+1. create :- add demplate to dom by creating component class 
+2. Render:- renders all one was or two way binding expressions.
+3. Create and render children:- renders child component if any.
+4. Process changes:- processes request if there is any change in component property .
+5. Destroy:- destroy the component before removing the template from the DOM.
+
+angular life cycle:-
+1. OnInit:- to initialize component & tempplate.
+2. OnChange- to update model properties whenever there is a change in template input fields.
+3. OnDestroy- to perform clean up of memory allocated for the component and template.
+
+to use this life cycle events we have to implement interfaces like OnInit, OnChange, OnDestroy.
+
+
+*************** Custom Pipes *************************
+import {Pipe, PipeTransform} from '@angular/core';
+import {employee} from './employee';
+
+@Pipe({
+    name: 'empFilter'
+})
+export class EmployeePipe implements PipeTransform {
+    // value is the actual list of data, exponent is filter condition
+   transform(value:employee[], exponent:string, field:string){                   
+        // logic behind the filter
+   }
+}
+
+html
+-----------------
+<tr *ngFor="let emp of employees | empFilter : seachBySkill :'skill' | empFilter :seachByDesignation :'designation' | experienceFilter :seachByExperience :decimalPrecision , let i=index"
+[style.background-color]="(i % 2)  ? '#CCC':'#FFF'">					
+					</tr>
+
+aap.modules.ts
+-------------------------
+import {EmployeePipe,ExperiencePipe} from './bench/employee-pipes.pipe';
+
+
+@NgModule({
+  declarations: [ EmployeePipe ,ExperiencePipe],
+})
+
+************* relative path ***********
+instead of giving absolute path ('app/bench/x.component') we need to give only file name ('x.componet') , once we add moduleId in component.
+ex:- 
+
+@Component({
+    selector: 'bench-employee',
+    moduleId:module.id,
+    templateUrl:'bench-employee-list.component.html',
+    styleUrls: ['bench.css']
+})
+
+******* Nested Component *****************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

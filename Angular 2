@@ -444,7 +444,12 @@ ng new project-name -> will create a project with package.json file
 cd project-name -> navigate to project directory.
 ng serve -> will run the application on 4200 port.
 
+**********************  *************************************
+Benifits of typescript
+1. strong typing
+2.
 
-
-
+****** Interface**************
+interface is a   specification that represents set of properties and methods.
+The class can support those specification by implementing the interface. 
 

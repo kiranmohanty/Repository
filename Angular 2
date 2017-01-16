@@ -510,9 +510,58 @@ ex:-
 })
 
 ******* Nested Component *****************
+calling one component inside another is called component nesting.
+We can pass data to child componet by decorating child component property with Input() and we can receive response from child component 
+by raising an event and decorating that method with Output() decorator.
+
+index.html
+-----------------------
+<body>
+    <pm-app>Loading...</pm-app>   
+</body>
 
 
+app.componnet.ts:
+----------------------
+@Component({
+    selector: 'pm-app',
+    template:`<h3> {{pageTitle}} </h3>
+             <bench-employee [inputParam]='inputToChild' (emitOutput)="outputEventHandler($event)"></bench-employee>`
+})
+export class AppComponent {
+   pageTitle:string ="Tavant Bench";
+   inputToChild='input param';
+  
+   outputEventHandler(event:string):void{
+        console.log(event);
+        console.log('in output handler');
+   }
+ }
 
+
+bench-employee.component.ts
+-------------------------
+import {Component, Input,Output, EventEmitter, OnInit} from '@angular/core';
+@Component({
+    selector: 'bench-employee',
+    moduleId:module.id,
+    templateUrl:'bench-employee-list.component.html',
+    styleUrls: ['bench.css']
+})
+
+export class BenchEmployeeComponent implements OnInit{
+     @Input()
+     inputParam:string='';
+     OutputParam:string='hello';
+
+     @Output()
+     emitOutput: EventEmitter<string> =new EventEmitter<string>();
+
+     ngOnInit(){
+         this.emitOutput.emit(this.OutputParam);
+     }
+     
+}
 
 
 

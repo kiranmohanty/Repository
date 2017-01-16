@@ -563,7 +563,21 @@ export class BenchEmployeeComponent implements OnInit{
      
 }
 
+********************** Angular Service **********************
+Service is a class with focused purpose.
+Features:-
+1. independ from any other component.
+2. contains reusable logic that can be shared accross components.
+3. encapsulates external interaction.
 
+Observable:- It manages asynchronous data. It's an item array whose items arrive asynchronously with time. It is defined in Reactive extension (RxJS).
+            It can return array of items.
+	    It's  lazy as it returns data asynchronously.
+	    Request is cancellable.
+	    It supports map, filter,reduce, similar operators.
+Promise:- It returns data continuously and it will return max of one item ,not array of items.
+          It's not lazy as it returns data continuously. 
+	  Request is not cancellable. Either success or abort.
 
 
 

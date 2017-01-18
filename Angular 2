@@ -580,7 +580,42 @@ Promise:- It returns data continuously and it will return max of one item ,not a
 	  Request is not cancellable. Either success or abort.
 
 
+********************* Routing ***************************
+Navigating from one component to other.
 
+
+app.module
+--------------------
+import {RouterModule} from '@angular/router';
+@NgModule({
+  imports: [ BrowserModule,FormsModule,HttpModule
+             ,RouterModule.forRoot([
+               {path:'product', component:ProductListComponent},
+               {path:'welcome',component:WelcomeComponent},
+               {path:'product/:id',component:ProductDetailsComponent},
+               {path:'',redirectTo:'welcome',pathMatch:'full'},
+               {path:'**',redirectTo:'welcome',pathMatch:'full'}
+             ],{useHash:false}) ],
+
+})
+
+app.component.ts
+----------------------------
+@Component({
+    selector: 'pm-app',
+    template: ` <div>
+    <div class='navbar navbar-default'>
+        <div class='container-fluid'>
+            <a class='navbar-brand' >{{pageTitle}}</a>
+            <ul class='nav navbar-nav'>
+                <li> <a [routerLink]="['welcome']"> Home </a> </li>       //[routerLink]- for defining routing  url   
+                <li> <a [routerLink]="['product']"> Product List </a> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>`          ///router-outlet tag is required for routing
+})
 
 
 

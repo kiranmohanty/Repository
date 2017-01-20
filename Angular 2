@@ -617,6 +617,77 @@ app.component.ts
 <router-outlet></router-outlet>`          ///router-outlet tag is required for routing
 })
 
+bench-employee-list.component.html
+--------------------------------------------
+<td><a href="" class="cursor-pointer" [routerLink]="['/details',emp.id]">{{emp.id}}</a></td>
+
+
+index.html
+---------------------------
+<head lang='en'>
+  <base href='/'>
+</head>
+
+
+
+Protecting a Route navigation in angular
+-------------------------------------------
+     In order to check user access or any other condition before navigating to new URL, we can validate user previlage by adding angular guards.
+     Ex:-
+ bench-guard.service.ts
+----------------------------
+ import {Injectable} from '@angular/core'; 
+import {Router, CanActivate, ActivatedRouteSnapshot} from '@angular/router';
+
+@Injectable()
+export class BenchGuardServicce implements CanActivate{
+    
+    constructor(private _router:Router){}
+
+    canActivate(routeSnapShot:ActivatedRouteSnapshot):boolean{
+         let id= +routeSnapShot.url[1].path;
+         if(isNaN(id) || id<1){
+            alert("Invalid employee id: "+ id);
+             this._router.navigate(['/employee']);
+             return false;
+         }
+
+         return true;
+    }
+
+}
+
+app.module.ts
+-----------------------------------------------
+import {BenchGuardServicce} from './bench/bench-guard.service';
+
+@NgModule({
+  providers: [
+              BenchGuardServicce
+  ]
+})
+export class AppModule { }
+
+bench.module.ts
+----------------------------
+@NgModule({
+    imports:[ 
+              RouterModule.forChild([
+                   
+                    {path:'details/:id', component:EmployeeDetailsComponent, canActivate:[BenchGuardServicce]}              
+               ])
+    ],
+})
+
+
+
+Types of Guards:-
+------------------------
+1.CanActivate- Guard navigates to a route if specified logic returns true.
+2.CanDeactivate- guard navigation from a route.
+3.Resolve:- prefetch data before navigating to a route.
+4.CanLoad:- prevent asynchronous routing
+
 
 
 

@@ -688,7 +688,19 @@ Types of Guards:-
 3.Resolve:- prefetch data before navigating to a route.
 4.CanLoad:- prevent asynchronous routing
 
+******************** Angular Modules***********************************
+Angular module is a class decorated with @NgModule() meta data.
+1.bootstrap:- every module must define atleast one component in bootstarp array, so that compiler will come to know where to start execution.
+              and it should be defined only in root module, not in any child modules.
+2.declarations:- All components, pipes , filters etc that are defined for the module must be registered inside declaration array.
+                 All components, pipes etc defined in a module is private to that module. If any module that imports another module, can't use its components or pipes directly.
+3.Exports:-  Any component/pipe that are declared in export array of 'A' module, will be available to 'B' module if 'B' module imports module 'A'.
+4.Providers- All services are registerd here. We should add services only in root module in order to have Singleton design pattern.
+             Once it is registered in main module , it is available through out the application.
+	     Never export any service.
+5.Imports:- All supporting modules can be imported in this array.
 
+	      
 
 
 

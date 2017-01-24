@@ -1,0 +1,10 @@
+REST style architecture :- (architectural principle of the web)
+   1. States and functionalities are being devided into distributed resources.
+   2.Every resource is  uniquely addressable and with uniform and minimium commands ( example- protocol-http, request type- GET/PUT/POST etc..)
+   3.The protocol is client/ server, stateless and support caching.
+   
+   
+   In HTTP request , request header contains 
+   'Content-Type'='appplication/json' => data sent from client to server in JSON format.
+   'Accept'='appication/XML' (or dataTyle in $.ajax)=> data sent from server to client in XML format. 
+   

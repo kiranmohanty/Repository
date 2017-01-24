@@ -26,4 +26,9 @@ When to use WCF over Web API:-
     WCF needs lot more configuration to make it REST full, where as Web API is restfull by default.
     When any application needs to use protocol except http, then we should go with WCF. (in WCF we need to define two end points for same serviece.)
     
-ApiController resides under System.Web.http namespace.    
+ApiController resides under System.Web.http namespace.   
+
+Content Negotiation:-
+   Whenever a client send a request, it has to set 'Accept' property of request header. Ex- Accept: application/json (default is json)
+Based on this property server will send data either in xml or json or any other format as specified in the Accept header property.
+

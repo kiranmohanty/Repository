@@ -8,3 +8,22 @@ REST style architecture :- (architectural principle of the web)
    'Content-Type'='appplication/json' => data sent from client to server in JSON format.
    'Accept'='appication/XML' (or dataTyle in $.ajax)=> data sent from server to client in XML format. 
    
+REST constrains:-
+1.Client server -> In application , there should be client to send request and a server to response to the request.
+2.Stateless-> Server should not store any information related to client. Hence each request can be treated as a new request 
+              and hence stateless.
+3. Cacheable:-  We can cache data that does not change frequently, so that client does not need to generate request each time.
+4. Uniform Interface:- Any data that is requested by client is called resource. So for getting any resource, Web API exposes uniform 
+                       URI (uniform resoure interface) .
+                       
+Http Verbs:
+1.Get:- get request
+2.Post- create new resource
+3. Put- Update existing resource.
+4. Delete- Delete a resource.
+
+When to use WCF over Web API:-
+    WCF needs lot more configuration to make it REST full, where as Web API is restfull by default.
+    When any application needs to use protocol except http, then we should go with WCF. (in WCF we need to define two end points for same serviece.)
+    
+ApiController resides under System.Web.http namespace.    

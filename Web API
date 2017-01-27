@@ -32,3 +32,96 @@ Content Negotiation:-
    Whenever a client send a request, it has to set 'Accept' property of request header. Ex- Accept: application/json (default is json)
 Based on this property server will send data either in xml or json or any other format as specified in the Accept header property.
 
+**Custom methods names:--
+     By default Web API calls requests that matches the verb type. Ex- if it is a get request , web API will look for Get or GetAntyName.
+     If anything found, it will server the request even though methos signature is different.
+     
+  ** Quesry string parameter:-
+     localhost:8080/api/employee?gender=male       is the URL to filter data by gender, by reading value of gender from query string.
+     
+** FromBody & FromUri
+    if input paramter of API method is of simple data type (like int, float,bool etc), web API tries to read those values either fron
+    route data or from query string, but if input parameter is a complex type (ex- Employee, Customer etc) then web API tries to 
+    read it from request body.
+    
+    FromUri attribute forces Web API to read data either from query string or from route data.
+    
+** calling Web API from jQuery
+    $.ajax('http://localhost:8080/api/employee'). This will work if both client & servie are into same project.
+
+** Same origin policy:-    Browser allows webpage to make AJAX call inside same domain (i.e in same app domain, main URL must match including protocol type, port number, site name etc) and browser security 
+                        blocks a AJAX call if AJAX is being called to any other domain. This policy is called Same Origin Policy.
+
+** cross domain AJAX:-
+     We can fix cross AJAX problem by below two ways.
+     1. Using JSONP (JSON with Padding)
+     2.Enabling CORS (Cross Origin Resource Sharing).
+
+JSONP
+---------------
+    It wraps output data inside a function.
+ex:-
+  CallbackFunction({
+   "firstName":"Mark",
+   "lastName":"xyz",   
+  })
+
+1.install WebApiContrib.Formatting.Jsonp from Nuget.
+2. add below line of code in App-Start method
+        GlobalConfiguration.Configuration.Formatters.Insert(0,  new JsonpMediaTypeFormatter(new JsonMediaTypeFormatter()));
+  or
+  add below code in RegisterFormatters method in WebApiConfig file
+         var jsonpFormatter =   new JsonpMediaTypeFormatter(formatters.JsonFormatter);  
+         formatters.Insert(0, jsonpFormatter);  
+3.change response format to JSONP in ajax request.
+         $.ajax({
+            type:"POST",
+            url:'...',
+            data: JSON.stringify({x:anyObject}),
+            contentType:"application/json; charset=utf-8",          
+            dataType:"jsonp',                                       
+            complete:function(data){},
+            error:function(response,error){}
+          });
+
+
+Cross Origin Resource Sharing
+---------------------------------------------
+1. install package - > Microsoft.AspNet.WebApi.Cors
+2. aad below codes in WebApiConfig Register method
+        EnableCorsAttribute cors=new EnableCorsAttribute("*","*","*");
+        config.EnableCors(cors);
+        
+
+************Note**************************
+ $.ajax({
+type:"POST",
+data: JSON.stringify({x:anyObject}),
+contentType:"application/json; charset=utf-8",          // type of data that client sends to the server
+dataType:"json',                                        // in which data is expected from server
+complete:function(data){},
+error:function(response,error){}
+});
+
+in HTML header:-
+Content-Type: type of data request send to server
+Accept: format in which brower needs response data.
+
+*************** Note *******************************
+************ Enable SSL in Visual studio (ie using HTTP request)*************************
+1.Project-> Properties-> EnableSSL-> true
+2. run-> mmc.exe -> Enter
+3. Files->Add/Remove Snap-in -> cerificates-> add
+4. Personal-> cerificates , export the file to any local folder
+5. Import the exported file to Trusted Root certification Autherities- > certificates
+
+
+
+
+
+
+
+
+
+
+

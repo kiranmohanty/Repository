@@ -1,0 +1,40 @@
+In order for jQuery DataTable to work, three components are important
+Table ID
+<thead>
+<tbody>
+
+step 2:
+   add reference of below files.
+   
+<script src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">   
+
+step 3:
+script code
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table_id').dataTable({
+           "pagingType": "full_numbers",
+           "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], //10, 25, 50, "All" options will come in dropdown
+           "scrollY"  : "400px",
+           "paging" : false,
+          "ordering" : false,
+          "info"  : false,
+          "searching" : false ,
+          "bServerSide": true,
+         "sAjaxSource": "ajax URL"
+         });
+    });
+</script>
+
+***********Note ********************
+pagingType:- how pagination should look like.
+     full_numbers:" first ,prev, 1 ,2 ,3 ,next ,last " link format
+     lengthMenu: data for pagination drop down.
+     scrollY: vertical scroll bar
+     paging,ordering,info,searching:- for disabling any feature, default is true.
+     bServerSide: whether to load data from server side or not.
+     sAjaxSource: ajax service url
+     
+     

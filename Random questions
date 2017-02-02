@@ -1,0 +1,29 @@
+1. Passing datadatable to sql SP.
+ans:
+
+create a custom type table 
+create type EmployeeTable as table(
+Id	int,Name	nvarchar,Designation	nvarchar,Skill	nvarchar,YOE	decimal,JoiningDate	nvarchar,TrainedIn	nvarchar,Image	nvarchar
+)
+
+
+create a procedure passing custom table type as "ReadOnly" parameter.
+
+create procedure dbo.UpdateEmployeeDetails(
+@empData EmployeeTable readonly
+)
+as
+begin
+   update e set  e.Name=t.Name,e.Designation=t.Designation,e.Skill=t.Skill,e.YOE=t.YOE,e.TrainedIn=t.TrainedIn, e.Image=t.Image
+   from Employee e
+   inner join @empData t on e.Id=t.Id
+  
+end
+
+.cs file
+-------------
+DataTable dtDetails
+cmdProc.Parameters.AddWithValue("@empData", dtDetails);
+
+
+2.

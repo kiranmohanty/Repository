@@ -114,6 +114,15 @@ Accept: format in which brower needs response data.
 3. Files->Add/Remove Snap-in -> cerificates-> add
 4. Personal-> cerificates , export the file to any local folder
 5. Import the exported file to Trusted Root certification Autherities- > certificates
+******************************************
+
+If a request is made from http , we can redirect it to https by overridding OnAutherization method of AuthorizationFilterAttribute .
+then register CORs and the class that implements AutherizationFilterAttribute class in WebApiConfig.cs file.
+
+[RequireHttps]- can be decorated over action or controller , to restrict access using any other protocol except https.
+
+*********************** Authentication *********************************************
+
 
 
 

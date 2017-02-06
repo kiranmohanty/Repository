@@ -23,18 +23,122 @@ script code
           "info"  : false,
           "searching" : false ,
           "bServerSide": true,
-         "sAjaxSource": "ajax URL"
+         "sAjaxSource": "ajax URL",
+		 "dom": '<"top"i>rt<"bottom"flp><"clear">',
+		 "order": [[ 1, "asc" ],[ 4, "desc" ]],
+		 stateSave: true,
+		 "scrollY":        "200px", // or scrollY:        '50vh',
+        "scrollCollapse": true,
+		"scrollX": true,
+		"language": {
+            "decimal": ",",   // decimal place separator
+            "thousands": ".", // thousand place separator
+			"lengthMenu": "Display _MENU_ records per page", // pagination dropdown
+            "zeroRecords": "Nothing found - sorry",         // message if no data for the table as per search
+            "info": "Showing page _PAGE_ of _PAGES_",       //pagination details label
+            "infoEmpty": "No records available",            //message if empty data source for the table
+            "infoFiltered": "(filtered from _MAX_ total records)"   // filterd message
+        },
+		  "columnDefs": [
+            {
+                "targets": [ 2 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 3 ],
+                "visible": false
+            }
+        ],
+		"ajax": "http://localhost:55338/api/employee/GetAllEmployees",
+		"columns": [
+                { 'data': 'Image',title: "Image" },
+                { 'data': 'Id' },
+                { 'data': 'Name' },
+                { 'data': 'Designation' },
+                { 'data': 'Skill' },
+                { 'data': 'YOE' },
+                { 'data': 'LastProjectDay' },
+                { 'data': 'TrainedIn' }
+            ],
+			 "processing": false,
+            "serverSide": true
          });
     });
 </script>
 
 ***********Note ********************
-pagingType:- how pagination should look like.
+     pagingType:- how pagination should look like.
      full_numbers:" first ,prev, 1 ,2 ,3 ,next ,last " link format
      lengthMenu: data for pagination drop down.
      scrollY: vertical scroll bar
      paging,ordering,info,searching:- for disabling any feature, default is true.
      bServerSide: whether to load data from server side or not.
      sAjaxSource: ajax service url
-     
-     
+	 order: for default ordering
+	 columnDefs: for customizing columns . (index wise starting from 0)
+	 dom: for positioning pagination, drop down and /or page size drop down
+	 stateSave: wheather to save state of a table or not.
+	 scrollY: for adding vertical scroll bar.
+	 scrollCollapse: if set to true, it will reduce the height of div, if table has lesser data as per scrollY height.
+	 scrollY:        '50vh':  it will automatically re-size the table depending on screen resolution & size , both in vertical & horiezontal direction.
+	 scrollX: for adding horiezontal scroll bar
+	 language: is the section where we can define decimal separator, thousand separator etc.
+	 ajax: for binding data table via ajax request.
+	 columns: data source for each column (index based) and we can define title of the column too
+	 processing: progess bar
+	 serverSide: pagination & Ordering in server side
+	 
+******************** Complex header ****************
+html for table with multiple header 	 
+
+ <thead>
+            <tr>
+                <th rowspan="2">Name</th>
+                <th colspan="2">HR Information</th>
+                <th colspan="3">Contact</th>
+            </tr>
+            <tr>
+                <th>Position</th>
+                <th>Salary</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>E-mail</th>
+            </tr>
+        </thead>
+****************** DOM positioning ********************************
+positioning search control, paging drop down in DOM ,is called DOM positioning.	
+	
+The built-in options available are:
+
+l - Length changing
+f - Filtering input
+t - The Table!
+i - Information
+p - Pagination
+r - pRocessing
+< and > - div elements
+<"#id" and > - div with an id
+<"class" and > - div with a class
+<"#id.class" and > - div with an id and class	 
+
+ex:- "dom":"<"wrapper"flipt>"  -> will generate below code
+<div class="wrapper">
+    { filter }
+    { length }
+    { info }
+    { paging }
+    { table }
+</div>
+****************** Sate Saving ********************
+ we can save state of a table in jquery dataTable i.e saving current page index, page size etc.
+********** Paging type *******************
+pagingType ->  option.
+numbers - Page number buttons only
+simple - 'Previous' and 'Next' buttons only
+simple_numbers - 'Previous' and 'Next' buttons, plus page numbers
+full - 'First', 'Previous', 'Next' and 'Last' buttons
+full_numbers - 'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers
+first_last_numbers - 'First' and 'Last' buttons, plus page numbers
+
+

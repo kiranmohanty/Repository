@@ -23,7 +23,11 @@ script code
           "info"  : false,
           "searching" : false ,
           "bServerSide": true,
-         "sAjaxSource": "ajax URL",
+         "sAjaxSource": "ajax URL",   //sAjaxSource or ajax , but not the both
+		 "ajax": {
+            "url": "http://localhost:55338/api/employee/GetAllEmployees",
+            "dataSrc": "demo"
+        }
 		 "dom": '<"top"i>rt<"bottom"flp><"clear">',
 		 "order": [[ 1, "asc" ],[ 4, "desc" ]],
 		 stateSave: true,
@@ -50,7 +54,6 @@ script code
                 "visible": false
             }
         ],
-		"ajax": "http://localhost:55338/api/employee/GetAllEmployees",
 		"columns": [
                 { 'data': 'Image',title: "Image" },
                 { 'data': 'Id' },
@@ -62,7 +65,8 @@ script code
                 { 'data': 'TrainedIn' }
             ],
 			 "processing": false,
-            "serverSide": true
+            "serverSide": true,
+			"deferRender": true
          });
     });
 </script>
@@ -88,6 +92,8 @@ script code
 	 columns: data source for each column (index based) and we can define title of the column too
 	 processing: progess bar
 	 serverSide: pagination & Ordering in server side
+	 dataSrc: for binding a perticular property , if more than one property is defined in json file.
+	 deferRender: for improving performance. it will draw tr & td of specific records that is going to  appear on the screen , not for complete grid.
 	 
 ******************** Complex header ****************
 html for table with multiple header 	 

@@ -26,4 +26,9 @@ DataTable dtDetails
 cmdProc.Parameters.AddWithValue("@empData", dtDetails);
 
 
-2.
+2.Why FaultContract is required in WCF?
+ans:
+    By default WCF does not allow parsing of exceptions from service to client. In order to pass any fault, we have to define fault contract 
+as a type of contract that can be parsed to client. The same way we can throw FaultExceprion instance , so that client can read the excception details.
+
+    Fault contract gives the option to customise error message, instead of parsing it direct exception.

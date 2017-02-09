@@ -32,3 +32,40 @@ ans:
 as a type of contract that can be parsed to client. The same way we can throw FaultExceprion instance , so that client can read the excception details.
 
     Fault contract gives the option to customise error message, instead of parsing it direct exception.
+    
+3.Multiple inheritance with same method name and accessing each methods?
+public interface I1
+{
+    void Test();
+}
+
+public interface I2
+{
+    void Test();
+}
+
+public class X:I1,I2 {
+     void I1.Test()
+    {
+        throw new NotImplementedException();
+    }
+
+    void I2.Test()
+    {
+        throw new NotImplementedException();
+    }
+
+
+}
+
+public class y
+{
+   public void TestInterface()
+    {
+        I1 a = new X();
+        a.Test(); // I1 implementation
+
+        I2 b = new X();
+        b.Test(); //I2 implementation    
+    }  
+} 

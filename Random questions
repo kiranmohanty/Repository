@@ -89,6 +89,10 @@ public class y
 6.Can we host WCF service without interface?
   Yes. We have to decorate Service contract over the class and have to define class name as contraact in web.config.
   
+7. WCF types of security?
+   two type- transport security & message security.
+    Transport security secures the entire communication channel (e.g., by using SSL), while message security secures each message individually.
+    
   
   
   

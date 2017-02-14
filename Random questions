@@ -92,7 +92,9 @@ public class y
 7. WCF types of security?
    two type- transport security & message security.
     Transport security secures the entire communication channel (e.g., by using SSL), while message security secures each message individually.
-    
+
+8. Difference between @@IDENTITY,SCOPE_IDENTITY and IDENT_CURRENT in sql?
+   
   
   
   

@@ -94,6 +94,51 @@ public class y
     Transport security secures the entire communication channel (e.g., by using SSL), while message security secures each message individually.
 
 8. Difference between @@IDENTITY,SCOPE_IDENTITY and IDENT_CURRENT in sql?
+   @@indentity
+   It returns the last identity value generated for any table in the current session, across all scopes.
+   Let me explain this... suppose we create an insert trigger on table which inserts a row in another table with generate an identity column, then @@IDENTITY returns that identity record which is created by trigger.
+   
+   SCOPE_IDENTITY
+   It returns the last identity value generated for any table in the current session and the current scope.
+   
+   Ident_current
+   It returns the last identity value generated for a specific table in any session and any scope.
+   
+   ex:- SELECT @@IDENTITY;:- will return last identity got generated in the sequence (if any trigger is set), only if any insert is written for the table in the session.
+        SELECT SCOPE_IDENTITY();:- will return identity value that is being insterted in current table, only if any insert is written for the table in the session.
+		SELECT IDENT_CURRENT('Child');:- Returns the last value inserted into Child, irrespective of session.
+
+9. auto redirection from http to https (web.config code)
+  <rewrite>
+      <rules>
+        
+        <rule name="xyz">
+          <match url="(.*)"/>
+          <conditions>
+            <add input="{HTTPS}" ignoreCase="true" pattern="^OFF$"/>
+
+          </conditions>
+          <action  type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="Permanent"/>
+        </rule>
+      </rules>
+    </rewrite>
+	
+10.delegate declaration?
+   delegate int MyDelegate (string s);
+    MyDelegate obj=new MyDelegate(Method1);
+   public int Method1(string x){}
+
+11.connection string encryption web.config?
+   for encrypting connection string, open command prompt with admin access,then type
+   ASPNET_REGIIS -pef "connectionStrings" "D:\Articles\EncryptWebConfig"   //D:\Articles\EncryptWebConfig: web.config file path
+   
+12. Authentication in MVC?
+    web.config
+        <authentication mode="Forms">
+            <forms loginUrl="~/Account/Login" timeout="2880" />
+        </authentication>	
+		
+		decorate [Authorize] over controller or any specific action.
    
   
   

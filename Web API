@@ -121,6 +121,21 @@ then register CORs and the class that implements AutherizationFilterAttribute cl
 
 [RequireHttps]- can be decorated over action or controller , to restrict access using any other protocol except https.
 
+**************** http status code ***************************************************
+204- no content
+201- new item created
+404- not found (item/url)
+200- ok
+500- internal server error
+405- method not allowed
+******************* Custom method name in Web API ****************************
+we can customise method name by decorating methods with attribute httpGet, httpPost,httpDelete, httpPut.
+
+if input paramter for a method is of simple data type (int, bool etc), then web API tries to read it from route or querystring.
+But if input paramter is of complex type, then web API tries to read it from request body.
+
+Parameter binding process- process of binding data to input parameters to api method. ex- FromBody, FromUri.
+
 *********************** Authentication *********************************************
 
 

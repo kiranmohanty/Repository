@@ -140,7 +140,12 @@ public class y
 		
 		decorate [Authorize] over controller or any specific action.
    
-  
+13. Advantage of Angular 2 over Angular1?
+   1. angular 2 is better in performance.
+   2.Angular 2 is using zone.js to detect changes.
+   3.Angular 2 is entirely component based, means separation of concern.
+   4. Dynamic loading
+   5.simpler routing
   
   
   

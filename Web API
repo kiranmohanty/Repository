@@ -128,6 +128,7 @@ then register CORs and the class that implements AutherizationFilterAttribute cl
 200- ok
 500- internal server error
 405- method not allowed
+401- unauthorized
 ******************* Custom method name in Web API ****************************
 we can customise method name by decorating methods with attribute httpGet, httpPost,httpDelete, httpPut.
 
@@ -137,7 +138,15 @@ But if input paramter is of complex type, then web API tries to read it from req
 Parameter binding process- process of binding data to input parameters to api method. ex- FromBody, FromUri.
 
 *********************** Authentication *********************************************
+1. class must inherit from AutherizationFilterAttribute.
+2.Override OnAutherization method. (logic for  authization)
+3. apply the clas as attribute over controller/action method.
+4. add headers field inside ajax .
+ex- headers: {
+ 'Authorization':'Basic'+ btoa(username+':'+password)
+}
 
+Token Authentication:-
 
 
 

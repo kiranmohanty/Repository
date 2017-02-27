@@ -147,6 +147,17 @@ ex- headers: {
 }
 
 Token Authentication:-
+  when user tries to log in in any site, application will send username & password for validation. Once validated , server will send
+  a tocked that is valid for specified duration (session time out duration) and the same tocken can be used for further validation.
+  
+  
+Identity server with web API:-
+ A default database that gets created by entity framework. both default and actual database can be pointed to same, if we chnage data source
+ of both the connection strings to same db(in web.config).
+
+Use of Fidler to test Web API:-
+
+  
 
 
 

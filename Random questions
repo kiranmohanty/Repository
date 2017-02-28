@@ -147,9 +147,12 @@ public class y
    4. Dynamic loading
    5.simpler routing
   
+14. Concurrancy mode in WCF?
+
   
-  
-  
+15. Replace all letters except first 3 letters of a column in sql ?
+     select SUBSTRING( ColumnName,1,3)+ REPLICATE('*',len(ColumnName)-3)
+     from tableName
   
   
   

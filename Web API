@@ -165,8 +165,31 @@ sessionStorage.setItem('accessToken','any value')// for storing data in session 
 session data will be lost , when browser is closed. (other methos:- sessionStorage.setItem,sessionStorage.getItem('key'),sessionStorage.removeItem('key')
 
 bearer Token Authentication:-
-
+    In AJAX we need to set header like:
+     
+     $.ajax({
+     header:{
+      'Autherization':'Bearer'+ sessionStarage.getToken('key')
+     }
+     })
   
+using local storage to save token id in session:_
+     localStorage.setItem('key','value')
+     
+sessionStorage data exists till the browser is active. Once we close it, we will loose sessionStorage data. But in case of localStorage
+, even if we close the browser & re-lunch it, session will be still active. it will expire only after it reaches expire limit.
+
+
+get authenticated user identity name:-
+success:funstion(response){
+   response.username // will have username of logge
+}
+
+
+Web APi:-
+User.Identity.Name  or RequestContext.Principle.Identity.Name
+
+
 
 
 

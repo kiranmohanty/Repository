@@ -172,6 +172,10 @@ public class y
        SP:- it's a group of transaction statements that is required to execute together.Any kind of operation(s) we can do.
        Function:-It can,t perform DML operation. Used for writing reusable logic, that will return data in the form of scalar, table and inline multi statement.
        
-  
+19 . Filters in MVC?
+    Authorization filters:- logic before & after autherization
+    Action filters:- logic before action executed and after executed
+    Result filters.  OnResultExecuting runs before the ActionResult object is executed.  OnResultExecuted runs after the result and can perform additional processing of the result, such as modifying the HTTP response. 
+    Exception filters- OnException logic
   
   

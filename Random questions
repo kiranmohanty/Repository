@@ -153,9 +153,25 @@ public class y
 15. Replace all letters except first 3 letters of a column in sql ?
      select SUBSTRING( ColumnName,1,3)+ REPLICATE('*',len(ColumnName)-3)
      from tableName
+16. Can static constructor fire 2 time?  
+    For normal class, static construstor will fire only once. But for generic class, static constructor will fire as  when data type is changed.
+17. What is CTE in sql?
+    Common table expression . 
+    ;with TableName (Column1,Column2) as (
+     select x1, x2 
+     from 
+     originalTable
+     )
+     select * from TableName
+     
+     It is usefull when we need to execute a query repeatedly.i.e reusability.
+     No prior defination is required to be defined in meta data.
   
-  
-  
+  18.Difference between View, Procedure and Function?
+       View:- is a virtual table, that can have only select statement and we can't pass any argument to the view.
+       SP:- it's a group of transaction statements that is required to execute together.Any kind of operation(s) we can do.
+       Function:-It can,t perform DML operation. Used for writing reusable logic, that will return data in the form of scalar, table and inline multi statement.
+       
   
   
   

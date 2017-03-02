@@ -178,4 +178,129 @@ public class y
     Result filters.  OnResultExecuting runs before the ActionResult object is executed.  OnResultExecuted runs after the result and can perform additional processing of the result, such as modifying the HTTP response. 
     Exception filters- OnException logic
   
+20. Assembly types?
+   Private Assembly-The dll or exe which is sole property of one application only. It is generally stored in application root folder.
+   Public/Shared Assembly-It is a dll which can be used by multiple applications at a time. A shared assembly is stored in GAC. (C:\Windows\Assembly)
+   Satellite Assembly- Satellite assembly contains only static objects like image file and non-executable files.
+
+21.dependency injection c#?
+    Dependency injection is the process of removing dependency of object, hence helps in creating independent application or loose coupling .  
+    Object dependency means one object need another object for propper execution of logic.
+    
+    
+    The process of injecting/ convrting cooupled object to decoupled object is called dependency injetion.
+    1.Constructor Injection- keep Interface in constructor. While initializing the class, we need to pass instance of the specified class.
+      ex:-
+      public  class BusinessLogicImplementation
+      {  
+      private IService client;
+      public BusinessLogicImplementation(IService client)
+      {
+       this.client = client;       
+      } 
+      }
+      BusinessLogicImplementation  ConInjBusinessLogic = 
+                      new BusinessLogicImplementation(new ClaimService());
+		      
+    2.Setter Injection- Setter return type must be interface. During implementation we have to set the property.
+      public  class BusinessLogicImplementation
+      {
+      private IService  _client;
+ 
+      public IService  Client
+      {
+       get { return _client; }
+       set { _client = value; }
+     }
+     }
+     ConInjBusinessLogic.Client = new ClaimService();
+     
+    3.Interface-based injection:- Method will be accepting interface as parameter and consuming class will pass appropriate class to the method.
+       public class BusinessLogicImplementationInterfaceDI : ISetService
+       {
+        public void setServiceRunService(IService client)
+        {
+      
+        }
+      }
+      BusinessLogicImplementationInterfaceDI objInterfaceDI =  new BusinessLogicImplementationInterfaceDI();
+      objInterfaceDI= new ClaimService();
+      objInterfaceDI.setServiceRunService(serviceObj);
+      
+    4.Service Locator Injection
+      public  class BusinessLogicImplementation
+    {
+   private static IService _clientLocator;
+ 
+   public static IService getService()
+   {
+       return _clientLocator;
+   }
+ 
+   public static void setService(IService clientSL)
+   {
+       _clientLocator = clientSL; 
+   }
+   }
+   BusinessLogicImplementation.setService(new PaymentService());
+  IService client2 = BusinessLogicImplementation.getService();
+   Console.WriteLine("Service Locator => Current Service : {0}",client2.ServiceMethod());
+  
+21. Difference between union and union all?
+     Union removes duplicate records (like distinct on all column , no duplicate row), Union all selects duplicate rows as well.
+     Union does an additional work of distinct, which Union all does not do. Hence Union All is performance wise better.
+
+22. Can we do polymorphism without overriding or overloading?
+     Polymorphism can be achieved through Generic concept. 
+
+23. Singleton pattern?
+    class Singleton
+    {
+    private static Singleton _instance;
+ 
+    // Constructor is 'protected'
+    protected Singleton()
+    {
+    }
+ 
+    public static Singleton Instance()
+    {
+      // Uses lazy initialization.
+      // Note: this is not thread safe.
+      if (_instance == null)
+      {
+        _instance = new Singleton();
+      }
+ 
+      return _instance;
+    }
+    }
+    
+    static void Main()
+    {
+      // Constructor is protected -- cannot use new
+      Singleton s1 = Singleton.Instance();
+      Singleton s2 = Singleton.Instance();
+ 
+      // Test for same instance
+      if (s1 == s2)
+      {
+        Console.WriteLine("Objects are the same instance");
+      }
+ 
+      // Wait for user
+      Console.ReadKey();
+    }
+   }
+
+24.How to restrict Type for a generic method?
+    public class GenericList<T> where T : IEmployee
+    {
+    }
+    
+    this class can be accessed by the class which implements IEmployee.
+
+
+  
+  
   

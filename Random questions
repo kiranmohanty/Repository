@@ -300,7 +300,14 @@ public class y
     
     this class can be accessed by the class which implements IEmployee.
 
-
+25. Can we see polymerphism whithout overloading & overriding?
+   Yes. By using generic concept .
+   
+26.Types of view in SQL?
+   standard view- combining one or more tables in a view.
+   indexed view:- view with unique clustured index on it. It's helpfull whenever we are aggregate multiple rows.
+   partitioned view:-A partitioned view joins horizontally partitioned data from a set of member tables across one or more servers.
+   
   
   
   

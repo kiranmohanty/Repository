@@ -1,0 +1,10 @@
+Authentication 
+-----------------------------
+1. Authentication
+2.Autherization
+3.Principal
+4.Identity
+
+
+Authentication:- whether user is valid
+Autherization- whether user has permission to access the resource.

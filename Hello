@@ -1,1 +1,9 @@
 <div > Hello</div>
+jq data table
+lambda -> take & skip
+SQL-> offset, fetch
+custom routing in mvc
+
+
+select CONVERT(VARCHAR(32), HashBytes('MD5', 'I@W/ll!gi\/3'), 2)
+select CONVERT(VARCHAR(128), HashBytes('SHA2_256', '!26MAAv>Wy!5)}VJ'),2)

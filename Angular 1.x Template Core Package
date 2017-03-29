@@ -137,3 +137,42 @@ You can use the component like so:
     data3="Just a string"
     on-event="vm.handleTheEvent()">
 </my-component>
+
+State Decorator
+***********************
+State decorator helps in string data either in session or in local storage.
+@state.session - Stores the data in browser session storage, which is persisted till the browser session is closed.
+@state.persisted - Stores the data in browser local storage, which is persisted permanently until manually cleared.
+
+export class MyDataService {
+    // The default - in-memory storage
+    public inMemory: string;
+
+    // Session storage
+    @state.session
+    public inSession: number;
+
+    // Local storage
+    @state.persisted
+    public inLocal: boolean;
+}
+
+
+Storage Service
+****************
+is the service provided in angular core package, that helps in storing data either in local or session storage.
+export class MyPage {
+    constructor(private storageService: ng1Template.core.StorageService) {
+    }
+
+    public $onInit() {
+        // Read data from session storage
+        let sampleData = this.storageService.getSession('sample');
+
+        // Write data to local storage
+        this.storageService.setLocal('sample', sampleData);
+
+        // Remove entry from session storage
+        this.storageService.removeSession('sample');
+    }
+}

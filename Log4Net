@@ -1,0 +1,56 @@
+This is the external dll used for logging files on occurance of error/ any request.
+Logging level:- when this dll is supposed to log a file.
+1.OFF - nothing gets logged (cannot be called)
+2.FATAL
+3.ERROR
+4.WARN
+5.INFO
+6.DEBUG
+7.ALL - everything gets logged (cannot be called)
+
+Configurations:-
+
+web.config
+---------------------
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /> //main configuration for log4net
+   </configSections>
+
+    
+ <log4net>
+    <!-- file appender -->
+    <appender name="RollingFileAppender" type="log4net.Appender.RollingFileAppender">//appender for loogin file (how, where, in what cercumstance)
+      //RollingFileAppender will log files upto certain size.
+      <file value="C:/Wholesale_logs/CMG_log_file.log" />
+      <appendToFile value="true" />
+      <rollingStyle value="Date" />
+      <maxSizeRollBackups value="30" />
+      <datePattern value=".yyyy-MM-dd" />
+      <staticLogFileName value="true" />
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" /> // in what pattern message should be logged.
+        //%date - server date  [%thread]-name of the thread
+      </layout>
+    </appender>
+    <root>
+      <!--Log Levels in order of increasing priority-->
+      <!--ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF-->
+      <level value="INFO" /> // for what it should log error
+      <appender-ref ref="RollingFileAppender" />
+    </root>
+  </log4net>  
+  </configuration>
+  
+  Global.ascx.cs
+  ----------------------- (code before namespace)
+  [assembly: log4net.Config.XmlConfigurator(Watch = true)]
+  this will watch all the request comes, all events that happens under the app pool.
+  
+  
+  any class:- CommonException: IException
+  ------------------------
+   private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+   log.Error("This is my error", ex);
+ 
+   

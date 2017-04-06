@@ -47,8 +47,12 @@ web.config
   [assembly: log4net.Config.XmlConfigurator(Watch = true)]
   this will watch all the request comes, all events that happens under the app pool.
   
+  webApi.config
+  -----------------------------
+  config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
   
-  any class:- CommonException: IException
+  
+  any class:- CustomExceptionHandler: IExceptionHandler
   ------------------------
    private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
    log.Error("This is my error", ex);

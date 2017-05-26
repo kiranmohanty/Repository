@@ -1,0 +1,54 @@
+codes written in .net core can run in all kinds of OS without any extra modification.
+
+StartUp.cs (like Global.asax)
+-----------------------------------------------------------------------
+// to configure API service settings
+//ConfigureServicce method will excute before Configure method (if defined).
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add entity framework SQL connection.
+    services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+    services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+
+    services.AddMvc();
+
+    // Add application services.
+    services.AddTransient<IEmailSender, AuthMessageSender>();
+    services.AddTransient<ISmsSender, AuthMessageSender>();
+}
+
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+{
+    loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+    loggerFactory.AddDebug();
+
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+        app.UseDatabaseErrorPage();
+        app.UseBrowserLink();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Home/Error");
+    }
+
+    app.UseStaticFiles();
+
+    app.UseIdentity();
+
+    //MVC routing
+    app.UseMvc(routes =>
+    {
+        routes.MapRoute(
+            name: "default",
+            template: "{controller=Home}/{action=Index}/{id?}");
+    });
+}
+Adding services to the services container makes them available within your application via dependency injection.
+
+-----------------------------Middleware------------------------------------------------------------

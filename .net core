@@ -40,6 +40,21 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
     app.UseStaticFiles();
 
     app.UseIdentity();
+    
+    //each http response will be generated based on this anonymous method logic
+    // app.Run delegate terminates the pipeline.
+    app.Run(async context =>
+        {
+            await context.Response.WriteAsync("Hello, World!");
+        });
+        
+       //can chain multiple request delegates together with app.Use 
+      app.Use(async (context, next) =>
+        {
+            // Do work that doesn't write to the Response.
+            await next.Invoke();
+            // Do logging or other work that doesn't write to the Response.
+        });
 
     //MVC routing
     app.UseMvc(routes =>
@@ -52,3 +67,20 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 Adding services to the services container makes them available within your application via dependency injection.
 
 -----------------------------Middleware------------------------------------------------------------
+It consists of multiple delegates, that gets executed one by one. If any condition failed, it will not execute next pipeline delegate.
+Response will be sent back once that delegate is executed. This mechanism is called short-circuit pipeline.
+
+app.Run() method (in startUp-> configure method) :- each http response will be generated based on this anonymous method logic 
+                                                    and terminates the pipeline.
+ app.Use()- > can chain multiple request delegates together .
+ 
+ 
+ Ordering of middleware delegate execution:-
+1. Exception/error handling:-  1st exception will be executed :- app.UseExceptionHandler("/Home/Error");
+2. Static file server :- 2nd static file request:- app.UseStaticFiles();     
+3. Authentication:- 3rd authentication :-  app.UseIdentity();      
+4. MVC:-  4th routing :- app.UseMvcWithDefaultRoute(); or app.Mvc()
+
+
+
+

@@ -700,7 +700,50 @@ Angular module is a class decorated with @NgModule() meta data.
 	     Never export any service.
 5.Imports:- All supporting modules can be imported in this array.
 
-	      
+
+*************************Angular Template ******************************
+1.safe navigation operator:-(?.)
+     a?.b?.c?.d. :- it ignores child call, if parent is null and appends empty value to DOM, instead of breaking the page.
+2.non-null assertion operator ( ! )
+     {{hero!.name}} :- this operator tells the typescript type checker not to do strict null check for the property "name" of "hero" object.
+3.Data interpolation :- {{variable}}
+4. One way Binding- [value]="name"
+5. Two way binding- [(ngModel)]= "name"
+6.Event Binding:- (click)="anymethod()"
+7. template reference variable :- (#temp)
+      <app #temp ....></app>
+      scope of template reference variable:- accessible through out the template.
+8. reference variable:- (ref-)
+    <app ref-temp .....></app>
+    scope of  reference variable:- accessible through out the template.
+    
+**********************Lifecycle **********************************************
+1.constructor
+2.ngOnChanges:- this event fires when one or more propery value changes in DOM. This event keeps info of both old & new value of 
+                that property.
+3.ngOnInit:- fires after ngOnChange. This event initializes property value of component or directive once the default value of 
+              all properties gets initialized. it is called only once.
+4.ngDoCheck:- Detect and act upon changes that Angular can't or won't detect on its own. fires after ngOnChanges & ngOnInit.
+5.ngAfterContentInit:- this event fires when angular tries to put external content into a view.
+6.ngAfterContentChecked:- Respond after Angular checks the content projected into the component.
+7.ngAfterViewInit:- Respond after Angular initializes the component's views and child views.
+8.ngAfterViewChecked:- Respond after Angular checks the component's views and child views.
+9.ngOndestroy:- Cleanup just before Angular destroys the directive/component.  Unsubscribe Observables and detach event handlers 
+                to avoid memory leaks. Called just before Angular destroys the directive/component.
+
+
+Angular instead inspects directive and component classes and calls the hook methods if they are defined. 
+Angular finds and calls methods like ngOnInit(), with or without the interfaces.
+
+
+******************* inbuilt directive *************************
+@Directive({selector: '[numberonly]'})
+@Component({selector: '', templateUrl: '', styles: ['',''], style: '' })
+ @ViewChild('templateID') temp: ChildViewComponent; :- used to get referencial variable instance.
+
+
+   
+
 
 
 

@@ -742,6 +742,32 @@ Angular finds and calls methods like ngOnInit(), with or without the interfaces.
  @ViewChild('templateID') temp: ChildViewComponent; :- used to get referencial variable instance.
 
 
+********************* Architecture ***********************************
+Modules:- Multiple components grouped together to form a Module, for a specific purpose.
+   @Module({
+    imports:      [ BrowserModule ], // any module can be imported to the current module
+    providers:    [ Logger ], // All services of current module can be registered here.
+    declarations: [ AppComponent ],// all components , pipes of current module is registered here.
+    exports:      [ AppComponent ], // what & all components / pipes/ services are exported to other modules.
+    bootstrap:    [ AppComponent ] // define bootstrap component (application will start from this component)
+   })
+   
+Directive:- 
+     Structural- *ngFor, *ngIf
+     Attribute:- numberOnly
+     
+     @Directive({
+     
+     })
+     
+Templates:-
+Metadata:-
+Data binding:-
+Directives:-
+Services:-
+Dependency injection:-
+
+     
    
 
 

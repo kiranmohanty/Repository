@@ -767,7 +767,24 @@ Directives:-
 Services:-
 Dependency injection:-
 
-     
+************************* Component Interaction ***************
+1. Passing data from parent to child
+     @Input('master') masterName: string;
+     <app-home [master]="data"></app-home>
+
+2.Passing data from child to parent:- it's an event declared in child component, defined in parent component , and is decored with @Output
+                                      decorator.
+     @Output() onVoted = new EventEmitter<boolean>();  // EventEmitter<T> :- T : is the input parameter to the method.
+
+3. Parent interaction with child via local variable:-     
+    <button (click)="child.stop()">Stop</button> // "child" refers to template referencial variable of child component
+    <app-child #child></app-child> // child component with ID
+
+4.Parent calls an @ViewChild():- (is required if child instance is specific to each parent instance)
+      @ViewChild(ChildComponent)
+      private childInstance: ChildComponent;
+
+5.Parent and children communicate via a service
    
 
 

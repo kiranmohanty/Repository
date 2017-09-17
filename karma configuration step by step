@@ -1,0 +1,1 @@
+{pattern: 'dist/dev/**/*.html', included: false, watched: true} to avoid templateUrl issue in jasmine.

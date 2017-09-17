@@ -1,1 +1,24 @@
 {pattern: 'dist/dev/**/*.html', included: false, watched: true} to avoid templateUrl issue in jasmine.
+describe('hello', () => {  
+  myComponent: AppComponent;  
+  beforeEachProviders(() => {  
+    //name of providers  
+    MockBackend,
+    BaseRequestOptions,
+    provide(Http, {
+      useFactory: (a: ConnectionBackend, b: BaseRequestOptions) => {
+        return new Http(backend, defaultOptions);
+      }, deps: [MockBackend, BaseRequestOptions]
+    })
+  });
+  beforeEach(injectAsync(
+    [TestComponentBuilder, MockBackend], (tcb, mockBackend) => {
+       return tcb.createAsync(AppComponent)
+         .then((fixture) => {
+           myComponent = fixture;
+          });
+       }));
+  it('I should have my component', () => {
+    expect(myComponent).not.isEqual(null);
+  });
+});

@@ -10,3 +10,176 @@ dev Check
 
 node -v (must be greater than 6.*)
 npm -v (must be greater than 5.1.*)
+
+
+Javascript:-
+  loosely structured object oriented functional programming language.
+  
+Node Js-
+  Server side container
+  
+how to select angular version for project?
+  nagular 1.x - called angular js
+  angular 1.5 .x- called framework
+  angular 2+ or 4+ - is called platform
+  
+ Angular 2 or 4 supporting browser
+   IE8 +
+   Firefox 43+
+   Google chrome 43 +
+   (http://kangax.github.io/compat-table/es6/)
+   
+ drawback of javascript
+     no type declaration
+	 dynamic type can update ubject value, securing issue
+
+***************************************	 
+//es3 demo
+//object literal notation
+var product = {};
+product.id=1;
+product.name= "harman"; 
+console.log(product.id); //(dot notation)
+console.log(product['id']);// bracket notation
+
+//execution process
+//browser console or node filename.js in current directory
+
+
+//es5.0
+//object specification
+function Employee(empId, empName){
+    this.empId= empId;
+    this.empName = empName;
+    this.getEmpId = function(){
+        return this.empId;
+    }
+    this.setempId = function(empid){
+        this.empId = empid;
+    }
+}
+
+var harman = new Employee(1,"xyz");
+console.log(typeof(Employee)); // function
+console.log(typeof(harman)); // object
+console.log(harman.id);  // undefined
+console.log(harman.getEmpId()); // 1
+
+
+/// self invoking annonimous function expression
+//called IIFE:- Immediately invoke function expression
+(function(){
+
+})();  // it executes by it self and it does not have any method name
+
+****************************************************
+/// self invoking annonimous function expression
+//called IIFE pattern:- Immediately invoke function expression
+//can't change property value dynamically (i.e in browser)
+(function(){
+
+})();  // it executes by it self and it does not have any method name
+
+example:
+//IIFE demo
+// annonimous function
+(function(){
+    function company(cmpid, cmpName){
+        var self= this;
+        self.cmpid = cmpid;
+        self.cmpName = cmpName;
+        //getter
+        self.getCmpId = function(){
+            return self.cmpid;
+        }         
+        //setter   
+        self.setCmpId = function(cmpId){
+            self.cmpid = cmpId;
+        }
+    }
+    var harman = new company(1,"test");
+    console.log(harman);
+})();
+
+*************************************
+
+////RMP pattern- Revealing module pattern (namespace concept)
+
+var module = (function(){
+    function vehicle(vid, vName){
+        var self= this;
+        self.vid = vid;
+        self.vName = vName;
+        self.getvId = function(){
+            return self.vid;
+        }            
+        self.setvId = function(vId){
+            self.vid = vId;
+        }
+    }
+    // instanciation
+    var ford = new vehicle(1,"test");
+
+    //reveal properties (from outside we can access below properties)
+    return {
+        getRegisteredName : ford.getvId(),
+        setRegisteredName: ford.setvId(1,"test2")
+    }
+    
+    console.log(ford);
+    //window.module.getRegisteredName -> in browser-> output (1)
+})();
+
+****************************************
+https://es6console.com/
+//Es6
+transpilation is done by "babel" for converting typescript to es6 javascript
+export class Tax{
+	constructor(id, amount,netTax,dueDate){
+    	this.id= id;
+      this.amount= amount;
+      this.netTax= netTax;
+      this.duedate = duedate;
+    }
+  getId(){
+  }
+  setId(){
+  }
+}
+class GSTTax extends Tax{
+  constructor(){
+  	super(); //
+  }
+}
+
+// no access modifier
+
+********************* typescript *******************
+export class Greeter {    
+    constructor(message: string) {
+       
+    }
+    greet() {
+        
+    }
+}
+
+//transpiled versiondefine(["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Greeter = /** @class */ (function () {
+        function Greeter(message) {
+        }
+        Greeter.prototype.greet = function () {
+        };
+        return Greeter;
+    }());
+    exports.Greeter = Greeter;
+});
+****************************************************
+ 
+
+	 
+
+   
+  

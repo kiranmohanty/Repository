@@ -191,7 +191,90 @@ ng new projectName :- will create th default folder structure for the app
 
 Script:  "start": "ng serve --open" // to open browser automatically
 
- 
+
+*********** Component************************
+a set of html5 elements that are configurable and can provide set of functionality
+@Component :- key value pair json that has 16 properties (in angular2) or 21 properties (in angular 5)
+
+
+**** Why Angular? *************
+
+***** What is the difference between framework and platform? *******
+
+** Building blocks of angular**********************
+1. Directives :- single html custom element with single responsibility
+2.Component:- 
+3. Pipes:- output of an expression is send as input to it for further filteration
+4. Services:- to serve some common service request
+4.Modules:- package application into few bundles.  
+   AMD- Asynchronous module defination & loader 
+      Example:- webpack & SystemJS
+***** angular workflow +> how does it tie application **************
+index.html =>
+main.ts
+app.module.ts
+app.component.ts
+app.component.html
+
+bootstrap
+imports
+declarations
+providers
+selector
+
+**** how to create MVC application *****************
+  one way binding
+  two way binding 
+  how to use services in angular remote http (XHR)
+  
+  
+******************* Architecture ****************
+
+
+*********** criteria that defines library to be called framework*************
+1. HTML5 extensibility (should be able to define custom directives)
+2.binding
+    one way binding (paragraph, header, table)
+	two way binding (textbox, checkbox)
+	behavioural binding (anchor tag {onclick-> state change happens})
+	event binging (onclick,onchange,onfocus)
+3. Remote API integration
+    XHR => ability to read, route webapi	
+4. Routing Engine
+5. browser support & compatibility
+6. End to end testing 
+7. Templating (usercontrol)
+8. Community & support
+9. Dependency injection
+10.Filters
+11. Services
+*********** different platform *********************
+Desktop
+Mobile
+Tab
+Server
+    1. Universal code irrespective of platform
+	2. end to end testing
+	3. develop once & deploy everywhere
+	4. analyze architecture (codeanalyzer)
+***************************	MVC application*********************
+1. create model
+2. create component
+3. import model inside component
+4. instantiate the model inside component
+5. interpolation code in html 
+6. register component in module
+7. run the app
+******************************
+
+
+	platformBrowserDynamic() :- starting point of app
+  enableProdMode();:-production mode
+  bootstrapModule(AppModule):- starting module of the application.
+**********************************************************************************************
+1. oneway data binding :-   {{}} -> interpolation
+2. *ngFor - structural directive => "let x of arrayList" => {{x.id}} 
+3. two way data binding -> [()] -> import forms module in app.module.ts, import FormsModule
 
 	 
 

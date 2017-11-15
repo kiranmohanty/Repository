@@ -176,7 +176,21 @@ export class Greeter {
     }());
     exports.Greeter = Greeter;
 });
-****************************************************
+**************************************************** Angular 4.0 ***************
+1.webpack :- npm install -g @angular/cli
+2.SystemJS: git clone http:// github.com/angular/quickstart
+
+ng new projectName :- will create th default folder structure for the app
+
+
+*************** Package.json *********************************
+^- approximate version
+~ - whichever is applicable fetch the version
+@- exact version
+
+
+Script:  "start": "ng serve --open" // to open browser automatically
+
  
 
 	 

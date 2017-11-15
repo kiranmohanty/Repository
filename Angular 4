@@ -6,3 +6,7 @@ dev Check
 3.Angular.io  (documents)
 4. npm install -g , @angular/cli- angular with web pack.
 5. git clone (quick start)
+
+
+node -v (must be greater than 6.*)
+npm -v (must be greater than 5.1.*)

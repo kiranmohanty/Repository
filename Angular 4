@@ -277,6 +277,63 @@ Server
 3. two way data binding -> [()] -> import forms module in app.module.ts, import FormsModule
 
 	 
+Katana from microsoft
+CQRS pattern
+blog.angular.io
+addy osmani javascript framework book
+typescript design pattern
+angular design pattern
 
+SystemJs steps:-
+  npm install 
+  npm start
+  
+Build process:-
+ ng build --deploy-url="http:localhost/7000"   (with SystemJs)
+ npm run deploy 
+ 
+ web pack build steps
+    Environments.ts
+	    Production: true	
+	cmd terminal
+	     ng biuld --env=prod
+	test folder with all dependencies will be generated
+	copy the test folder to IIS folder
+	
+************* Services ********************
+Angular 1.5.*
+  1. Constant service
+  2.Value service
+  3.service
+  4.factory service
+  5.provider service
+  6.decorate service
+  
+Angular 2
+  @Injectable() :- inject HttpModule in app.module.ts
+  import http, HttpModule from @angular/core
+
+********** Promise *********
+Promise:- success, failed status (assynchronous call)
+Observable :-  are designed based on Observer design pattern or called Publisher-Suscriber model
+				it is cancellable
+				
+				
+**********************************john papa's plugin******************
+a-component -> tab => will generate component structure in angular 2,4	
+*********************** life cycle *************************
+1.ngOnInit:- page initialization (custom service can be called)
+2.ngDoCheck:-  checking content rendered or not, form validation 
+3.ngAfterContentInit:-    (custom service can be called)
+4.ngAfterContentChecked:- 
+5.ngAfterViewInit:  (custom service can be called)
+6.ngAfterViewChecked
+7.ngOnDestroy :  (custom service can be called)
+
+8.ngOnChanges:- any changes to form , this event will fire
+
+
+Route life cycle hook (only in angular 5)			
+1.
    
   

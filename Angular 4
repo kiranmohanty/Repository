@@ -337,3 +337,25 @@ Route life cycle hook (only in angular 5)
 1.
    
   
+bootswatch.com/cosmo :-  button design & colors
+https://github.com/syed
+****************** Pipes ************************
+temporary transfermation of data
+built-in pipes:- 
+Pipe, PipeTransform
+pipes can be tied to component or view or lifecycle
+
+********************** multiple component interaction ************************
+@Input:- is a decorator, used for injecting data into component.
+@output:- used to publish data form the component
+EventEmitter:- defining custom events
+
+statefull/container component   
+    components that manage the state of the app
+	
+stateless/ skeleton/dump component:- just have html without any functionality.
+									functionality is rendered at runtime by passing on the state form the stateful container to stateless container as properties.
+
+
+Transculotion:- at runtime changing directive propery value (Example @Input)									
+<ng-content></ng-content> is used for sending data from parent component to child

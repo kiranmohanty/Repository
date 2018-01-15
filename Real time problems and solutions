@@ -7,9 +7,15 @@ process is not defined in webpack error..
             })
             
 webpack is not able to load html
-      added below plugin in webpack.config.js
+      added below loader in webpack.config.js
            {
                 test: /\.html$/,
                 loader: 'html-loader'
             },
             and templateUrl: 'x.component.html'
+webpack is not able to load images & gifs
+     added below loader in webpack.config.js
+           {
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+                loader: 'file-loader?name=assets/[name].[hash].[ext]'                                
+            }

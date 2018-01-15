@@ -19,6 +19,16 @@ webpack is not able to load images & gifs
                 test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
                 loader: 'file-loader?name=assets/[name].[hash].[ext]'                                
             }
+            or (if output file resides in any sub folder)
+            {
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[hash].[ext]',
+                    outputPath: 'images/',
+                    publicPath: helpers.root('transpiled/')
+                }
+            }
 <app-home> tempate is not defined error.
     removed transpiled js (by webpack like app.js, vendor.js, pollyfill.js) from header script tag and added in body tag.
     ex:-
@@ -29,3 +39,4 @@ webpack is not able to load images & gifs
               <script src="~/Scripts/spa/transpiled/vendor.js"></script>
               <script src="~/Scripts/spa/transpiled/app.js"></script>
              </body>
+.gif not found in browser

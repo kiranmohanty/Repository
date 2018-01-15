@@ -1,2 +1,9 @@
 Angular 2
 ----------------------------------------------------------------
+process is not defined in webpack error..
+       added below pluin in webpack.config.js
+            new webpack.DefinePlugin({
+            'process.env.ENV': JSON.stringify('development')
+            })
+            
+            

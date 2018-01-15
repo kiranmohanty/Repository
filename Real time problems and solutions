@@ -19,3 +19,13 @@ webpack is not able to load images & gifs
                 test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
                 loader: 'file-loader?name=assets/[name].[hash].[ext]'                                
             }
+<app-home> tempate is not defined error.
+    removed transpiled js (by webpack like app.js, vendor.js, pollyfill.js) from header script tag and added in body tag.
+    ex:-
+              <body>
+               <app-home></app-home>
+
+              <script src="~/Scripts/spa/transpiled/polyfills.js"></script>
+              <script src="~/Scripts/spa/transpiled/vendor.js"></script>
+              <script src="~/Scripts/spa/transpiled/app.js"></script>
+             </body>

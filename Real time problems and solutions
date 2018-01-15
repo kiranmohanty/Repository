@@ -1,9 +1,15 @@
 Angular 2
 ----------------------------------------------------------------
 process is not defined in webpack error..
-       added below pluin in webpack.config.js
+       added below plugin in webpack.config.js
             new webpack.DefinePlugin({
             'process.env.ENV': JSON.stringify('development')
             })
             
-            
+webpack is not able to load html
+      added below plugin in webpack.config.js
+           {
+                test: /\.html$/,
+                loader: 'html-loader'
+            },
+            and templateUrl: 'x.component.html'

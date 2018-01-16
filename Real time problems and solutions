@@ -39,4 +39,15 @@ webpack is not able to load images & gifs
               <script src="~/Scripts/spa/transpiled/vendor.js"></script>
               <script src="~/Scripts/spa/transpiled/app.js"></script>
              </body>
-.gif not found in browser
+.gif/ image not found in browser (404 error)
+            changed publicPath of the loader the way we can access image in url
+            Ex:-
+              {
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'images/',
+                    publicPath: 'Scripts/spa/transpiled/'
+                }
+            }

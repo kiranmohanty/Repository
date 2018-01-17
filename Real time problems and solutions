@@ -51,3 +51,12 @@ webpack is not able to load images & gifs
                     publicPath: 'Scripts/spa/transpiled/'
                 }
             }
+
+
+can't load plugin error in npm while plugin is already installed :-
+       run command npm install plug-in-name --save --dev --link
+       
+module is not registered in karma 
+       add the package in plugin :[] section
+       
+       

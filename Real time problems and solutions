@@ -59,4 +59,7 @@ can't load plugin error in npm while plugin is already installed :-
 module is not registered in karma 
        add the package in plugin :[] section
        
-       
+unsafe-perm in lifecycle true while running npm witth webpack:-
+    typescript compilation error because of wrong syntax or wrong reference. Once compilation is fixed, this issue gets resolved.
+    
+

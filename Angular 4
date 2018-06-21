@@ -359,3 +359,16 @@ stateless/ skeleton/dump component:- just have html without any functionality.
 
 Transculotion:- at runtime changing directive propery value (Example @Input)									
 <ng-content></ng-content> is used for sending data from parent component to child
+
+
+************Dynamic components******
+Components can be added dynamically to DOM .
+Steps to add compoenents dynamically:-
+1.Define a directive with  constructor(public viewContainerRef: ViewContainerRef) { }.
+2. Define a child components template.
+3. Define a main component with <ng-template ad-host></ng-template> in templete DOM. Here 'ad-host' is the directive selector.
+
+
+
+
+

@@ -368,6 +368,12 @@ Steps to add compoenents dynamically:-
 2. Define a child components template.
 3. Define a main component with <ng-template ad-host></ng-template> in templete DOM. Here 'ad-host' is the directive selector.
 
+************************** Directives ***************
+There are 3 kinds of directives in angular
+1. Component- directives with template
+2.Structural directive - changes the DOM layout by adding/removing html
+3.Attribute directive:- chnages the appearance or behavoiur of component or directive
+
 
 
 

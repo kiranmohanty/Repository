@@ -374,6 +374,20 @@ There are 3 kinds of directives in angular
 2.Structural directive - changes the DOM layout by adding/removing html
 3.Attribute directive:- chnages the appearance or behavoiur of component or directive
 
+Example of attribute directive
+import { Directive } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  constructor() { }
+}
+
+<div appHighlight></div>
+
+
+Any selector decorated with "[]", behaves as directive.
 
 
 

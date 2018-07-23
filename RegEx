@@ -1,0 +1,12 @@
+^[a-z]{1,}[a-z0-9:]{1,}/[a-z0-9]{0,}\\[a-z]{1,}$
+
+conditions:-
+1. starts with any character between a-z only.
+2.then any number, any alphabet and ':' characters only of any length.
+3.then '/' character
+4. then zero or more characters of either alphabet or digit type only.
+5.then '\' character
+6. then any character between a-z of any length.
+
+Ex:-
+xyz123c:bv/12abvc12\abc

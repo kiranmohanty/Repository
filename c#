@@ -1,0 +1,6 @@
+----safe navigation--------
+accessing any child property of an object without getting null reference error.
+Ex:- employee?.Name
+    if employee object is null , it will return null.
+    if employee object is not null, it will return Name of employee.
+

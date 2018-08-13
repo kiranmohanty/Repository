@@ -3,4 +3,51 @@ accessing any child property of an object without getting null reference error.
 Ex:- employee?.Name
     if employee object is null , it will return null.
     if employee object is not null, it will return Name of employee.
+    
+------------------ C# 7.0 -------------------
+* Declaration of out variable while calling a method
+  Ex:- p.GetCoordinates(out int x, out int y);
+
+* Ignoring any out parameter while calling a method. 'out var _' says that compiler is not interested to know ablut the out variable data.
+  Ex- p.GetCoordinates(out var x, out _);
+
+* Pattern Matching
+  * Is expression
+	ex:-   
+		if (o is null) return;     // constant pattern "null" (constant pattern matching)
+    		if (!(o is int i)) return; // type pattern "int i" (type pattern matching)
+  * Swith pattern
+	ex:- 
+		switch(shape)
+		{
+    		  case Circle c:
+        		WriteLine($"circle with radius {c.Radius}");
+       			break;
+    		  case Rectangle s when (s.Length == s.Height):
+        		WriteLine($"{s.Length} x {s.Height} square");
+        		break;
+    		  case Rectangle r:
+        		WriteLine($"{r.Length} x {r.Height} rectangle");
+        		break;
+    		 default:
+        		WriteLine("<unknown shape>");
+        		break;
+    		 case null:
+        		throw new ArgumentNullException(nameof(shape));
+		}
+
+
+*Tupes
+	For returning multiple outputs from one method.
+	Ex:-
+	   (string first, string middle, string last) LookupName(long id) // tuple return type
+		{
+    			... // retrieve first, middle and last from data storage
+    			return (first, middle, last); // tuple literal
+		}
+	main.cs
+	   var names = LookupName(id);
+	   WriteLine($"found {names.first} {names.last}.");
+
+*     
 

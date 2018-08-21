@@ -49,5 +49,87 @@ Ex:- employee?.Name
 	   var names = LookupName(id);
 	   WriteLine($"found {names.first} {names.last}.");
 
-*     
+Tuple namespace System.ValueTuple
+
+* Destruction Tuple
+(string first, string middle, string last) = LookupName(id1); // deconstructing declaration
+WriteLine($"found {first} {last}.");
+
+** Deconstruct
+	Is used for extracting any class properties .
+	Used for returning multiple values from a method (like Tuple)
+	
+	Ex:-
+		class Point
+			{
+				public int X { get; }
+				public int Y { get; }
+
+				public Point(int x, int y) { X = x; Y = y; }
+				public void Deconstruct(out int x, out int y) { x = X; y = Y; }
+			}
+
+			(var myX, var myY) = GetPoint(); // calls Deconstruct(out myX, out myY);
+			or
+			var (myX, myY) = GetPoint();
+			or 
+			(var myX, _) = GetPoint(); // when only myX is required and myY is not required
+	
+	Advantage:- We can define multiple overloaded methods for returning n no. of outouts. Hence we can costumise our logic as well.
+	
+** Local functions
+	Any function defined inside another function is called Local function.
+	Ex:-
+		public int Fibonacci(int x)
+			{
+				if (x < 0) throw new ArgumentException("Less negativity please!", nameof(x));
+					return Fib(x).current;  // local function is called and tupil property is "current" is being used
+					
+				 //local function defination
+				(int current, int previous) Fib(int i)
+					{
+						if (i == 0) return (1, 0);
+							var (p, pp) = Fib(i - 1);
+						return (p + pp, p);
+					}
+			}
+	
+	
+	
+** yield :- 
+		Used when any value needs to be returned without exiting method execution. Example getting fibonacci series.
+
+static IEnumerable<int> GenerateFibonacciNumbers(int n)
+
+       {
+
+           for (int i = 0, j = 0, k = 1; i < n; i++)
+
+          {
+
+               yield return j; // will return j as and when control hits this line
+
+               int temp = j + k;
+
+               j = k;
+
+               k = temp;
+
+           }
+
+       }
+	   
+main()
+{	   
+	foreach (int x in GenerateFibonacciNumbers(10)) // x is yield value
+
+   {
+
+       Console.WriteLine(x);
+
+   }
+}   
+
+
+    
 

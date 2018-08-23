@@ -130,6 +130,41 @@ main()
    }
 }   
 
+** Digit separator
+   C# 7.0 has introduced "_" (underscore) as digit separator in order to increase readability.
+   Ex:- var d= 123_735_345 ; (is equivalent to 123735345)
+   
+** Return ref     variable from function
+	When a function returns a referential variable, it returns address of that variable not value.
+	Ex:-
+		public ref int Find(int number, int[] numbers)
+		{
+			for (int i = 0; i < numbers.Length; i++)
+				{
+					if (numbers[i] == number) 
+					{
+						return ref numbers[i]; // return the storage location, not the value
+					}
+				}							
+		}
 
+		ref int place = ref Find(7, array); // aliases 7's place in the array
+		int[] array = { 1, 15, -39, 0, 7, 14, -12 };
+		place = 9; // replaces 7 with 9 in the array
+		WriteLine(array[4]); // prints 9
+		
+** Easiest way to throw exception
+	Ex:- class Person
+			{
+				public string Name { get; }
+				public Person(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
+				public string GetFirstName()
+					{
+						var parts = Name.Split(" ");
+						return (parts.Length > 0) ? parts[0] : throw new InvalidOperationException("No name!");
+					}
+				public string GetLastName() => throw new NotImplementedException();
+							
+			}
     
 

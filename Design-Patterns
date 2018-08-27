@@ -1,0 +1,31 @@
+***************** Design Patterns *******************
+Design pattern gives common reusable solution to few software design problems.
+
+categories:-
+
+1.Creational Design Pattern
+	Factory Method
+	Abstract Factory
+	Builder
+	Prototype
+	Singleton
+2.Structural Design Patterns
+	Adapter
+	Bridge
+	Composite
+	Decorator
+	Façade
+	Flyweight
+	Proxy
+3.Behavioral Design Patterns
+	Chain of Responsibility
+	Command
+	Interpreter
+	Iterator
+	Mediator
+	Memento
+	Observer
+	State
+	Strategy
+	Visitor
+	Template Method

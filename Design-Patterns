@@ -29,3 +29,88 @@ categories:-
 	Strategy
 	Visitor
 	Template Method
+
+
+
+---- Creation design pattern-----------
+This pattern deals with the process of object instance creation irrespective of it's implementation.
+
+**Abstract Factory:-
+		When a number of derived classes must need to define set of methods,
+		we should define a parent class as abstract and should define common methods as abstract method. This is called abstract factory.
+
+		Ex:-public abstract class A{
+			public abstract void Method1();
+			public abstract void Method2();
+		}
+		
+		public class B: A{
+			public virtual void Method1(){
+				//some implementation
+			}
+			public virtual void Method2(){
+				//some implementation
+			}
+		}
+		
+		public class C: A{
+			public virtual void Method1(){
+				//some implementation
+			}
+			public virtual void Method2(){
+				//some implementation
+			}
+		}
+		
+*** Singleton
+		This pattern is desined to create only one instance of a perticular class through out the application.
+		Ex:-
+		public sealed class Singleton
+			{
+				private static Singleton instance=null;
+
+				private Singleton()
+				{
+				}
+
+				public static Singleton Instance
+				{
+					get
+					{
+						if (instance==null)
+						{
+							instance = new Singleton();
+						}
+						return instance;
+					}
+				}
+			}
+			
+		Ex:- Singleton with tread safe
+		public sealed class Singleton
+		{
+			private static Singleton instance = null;
+			private static readonly object padlock = new object();
+
+			Singleton()
+			{
+			}
+
+			public static Singleton Instance
+			{
+				get
+				{
+					lock (padlock)
+					{
+						if (instance == null)
+						{
+							instance = new Singleton();
+						}
+						return instance;
+					}
+				}
+			}
+		}
+**** Factory Pattern
+		In Factory pattern, we create the object without exposing the creation logic and initialization of object happens at runtime.
+		

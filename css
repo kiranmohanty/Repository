@@ -1,0 +1,13 @@
+margin:0 auto; -> for centering a div
+Margin-top/left-> outside div position
+Padding-top/left=> content will occupy inside space
+float-left/right-> div on left/right-Folat:left;width 10%-> multiple div on same row 
+Positioning a div:-
+	Position: static -> default. behaves like a plain div
+			  Relative -> will occupy position with respect to parent div.
+						  Extra styling work with Position:relative-> Margin-left/top/bottom/right.
+			  Absolute -> if any nearest position :relative div is there , it will occupy space with respect to this div
+						  if no relative div is there, it will take space from top most parent.
+						  Extra styling work with Position:Absolute-> left/top/bottom/right.
+			  Fixed ->    Position of div is fixed with respect to broswer window.
+			  

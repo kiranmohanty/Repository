@@ -167,4 +167,53 @@ main()
 							
 			}
     
+--------------------------- C# 6.0--------------------------------
+** Expression builder method:- new way of writting method body in one line.
+	Ex:- public int CalculateMonthlyPay(int dailyWage) => dailyWage * 30;
 
+** Conditional access :- now null check for object is not needed with conditional access.
+	Ex:- string employeeMiddleName = employee?.EmployeeProfile?.MiddleName ?? "N/A";
+	(if any property is null, variable will be initialized with "N/A", instead of getting exception)
+
+** Auto property initializer: any referential property can be directly initialized while defining a 
+			      class. Hence get, set is not needed.
+	Ex:- class PeopleManager
+		{
+   			public List Roles { get; } = new List() { "Employee", "Managerial"};
+		}
+
+** Primary constructor :- when we pass parameters to class at declaration label, is called primary constructor.
+	Ex:- class Basket(string item, int price)
+		{   
+   			public string Item { get; } = item;
+  			 public int Price { get; } = price;
+		} // mainly this concept is used for auto property initialization
+
+**Out parameter declaration dusring method call:- Out parameter is now not needed to be defined separately.
+		It can be defined while calling a method.
+	Ex:- int.TryParse(value, out int convertedValue) 
+
+** Await in catch block:- now await can be implemented in catch block to have async calls
+** Implementation of using :-
+	Ex:- 	using System;
+		// A static class reference
+		using System.Console;
+
+		namespace CSharp6Demo
+		{
+  		   class Program
+  			 {
+      			   static void Main(string[] args)
+      				{
+         			  WriteLine("Console. is not required as it is included in the usings!");
+     				 }
+   			  }
+		 } // since System.Console is imported, "WriteLine" method can be called independently.
+
+**String Interpolation:- instead of index , now we can use parameter name directly
+	Ex:- 	string name = "Robert";
+   		string car = "Audi";
+  		 WriteLine("\{name}'s favourite car is {car}!");
+--------------------------------------------------------------------------------------------------------------------	
+	
+	

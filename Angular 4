@@ -390,5 +390,66 @@ export class HighlightDirective {
 Any selector decorated with "[]", behaves as directive.
 
 
+********************************************************************************************
+1.What is Angular 2?
+It is a new typescript framework built around the concept of components .
+It is component-based framework in which an application containts loosely coupled components and uses MVVM design pattern.
+Because of loose coupling between components , we can test any component indivisually.
+
+2. How  many types of data binding we have in angular 2?
+oneway data binding  : Ex- [attr.value]="value"
+Twoway data binding : ([ngModel])="value"
+Interpolation : <div > {{value}}</div>
+
+3. How two componets can interact in angular 2?
+
+in 2 ways
+@Input() - to pass data from parent to child
+@Output() event -> to pass data from child to parent
+
+4. syntax for component declaration
+
+@Component(
+{
+selctor: 'div-tag',
+template: '<div> hello</div>',
+templateUrl: ['./x.html'],      //template or templateUrl to be used
+styles:' .div{color: red;}',
+styleUrls:[./x.css]  // styles or styleUrls to be used
+}
+)
+export class NameComponent{
+}
+
+5. When to use Ngoninit and constructor in Angular 2?
+A constructor method is called only when the class is instantiated.
+ngOnlnit is called when we import OnInit in our component and will execute logics defined in ngOnInit() method.
+
+6.What is the meaning of component life cycle in Angular 2?
+ngOnChanges
+ngOnInit
+ngDoCheck
+ngAfterContentInit
+ngAfterContentChecked
+ngAfterViewInit
+ngAfterViewChecked
+ngOnDestroy
+
+7.List the key components of Angular 2?
+Module – This is used to break the application into the logical pieces of the program code and each piece of code or module is designed to perform a single and unique task.
+Component – This is used to bring the modules together.
+Templates – This is used to define the Views of an Angular JS application.
+Metadata – This is used to add more data to an Angular JS application.
+Service – This component is used to develop the components, which can be used to share in the entire application.
+
+8.Explain tsconfig.json file.
+This file is used to give the options about TypeScript used for the Angular JS project.
+
+9.How will you convert an input to all lowercase?
+lowercase filter is used to convert the input to all lowercase.
+ex:-The first Topic is {{appList[0] | lowercase}}
+
+10. Why angular service is required?
+To share data betweeen to component we need a service. It increases reusability of code. We can make API call inside this.
 
 

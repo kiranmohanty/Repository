@@ -2,6 +2,10 @@ codes written in .net core can run in all kinds of OS without any extra modifica
 
 StartUp.cs (like Global.asax)
 -----------------------------------------------------------------------
+
+ public Startup(IConfiguration config){ // interface that helps reading config keys
+    _config = config
+ }
 // to configure API service settings
 //ConfigureServicce method will excute before Configure method (if defined).
 public void ConfigureServices(IServiceCollection services)
@@ -39,14 +43,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
     app.UseStaticFiles();
 
-    app.UseIdentity();
-    
-    //each http response will be generated based on this anonymous method logic
-    // app.Run delegate terminates the pipeline.
-    app.Run(async context =>
-        {
-            await context.Response.WriteAsync("Hello, World!");
-        });
+    app.UseIdentity();        
         
        //can chain multiple request delegates together with app.Use 
       app.Use(async (context, next) =>
@@ -63,8 +60,21 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
             name: "default",
             template: "{controller=Home}/{action=Index}/{id?}");
     });
+    
+    //each http response will be generated based on this anonymous method logic
+    // app.Run delegate terminates the pipeline.
+    app.Run(async context =>
+        {
+            //await context.Response.WriteAsync("Hello, World!");
+            await context.Response.WriteAsync(_config("myKey"));
+        });
 }
 Adding services to the services container makes them available within your application via dependency injection.
+
+*CreateDefaultBuilder() :<inside Configure() in StartUp.cs> - it performs below jobs
+    1. Setting up web server
+    2. Loading configurations for the host & the application from various source (like launchsettingjson, appsetting.json)
+    3. Configures logging service.        
 
 -----------------------------Middleware------------------------------------------------------------
 It consists of multiple delegates, that gets executed one by one. If any condition failed, it will not execute next pipeline delegate.
@@ -80,6 +90,67 @@ app.Run() method (in startUp-> configure method) :- each http response will be g
 2. Static file server :- 2nd static file request:- app.UseStaticFiles();     
 3. Authentication:- 3rd authentication :-  app.UseIdentity();      
 4. MVC:-  4th routing :- app.UseMvcWithDefaultRoute(); or app.Mvc()
+
+* Middleware helps in processing request and response based on our need. For example one middleware component takes care of request authentication , another for exception handeling.
+    1. it has access to both request and response object.
+    2. it may simply pass request to next middleware
+    3. it may process & pass the request to next middlewware. 
+    4. may handle the request and short circuit the pipeline (return the response)
+    5. may process the out going response. 
+    6. middleware are executed in the order they are added to the pipeline .
+
+************************  Introduction ***************
+.net core sdk is installed on development machine and is required to build and run an app.
+.net core runtime is required on staging/ production machine and is reuired to run deployment of .net packaged project.
+
+* .csproj can be edited directly without unloading the project, in .net code.
+* All files that are defined under project are by default part of the project. Hence .csproj does not hold any reference of files and folders.
+* .net core application starts as console application.
+
+********************  AspNetCoreHostingModel *********************************
+1. InProcess hosting ->
+    a. InProcess hosts the app inside the IIS worker process. ( process name w3wp.exe / iisexpress.exe)
+    b. InProcess hosting is faster than OutOfProcess hosting. Because conectivity between 2 servers in OutOfProcess hosting hits performance.
+    c. Process name IIS express/ IIS.
+2. OutOfProcess hosting ->
+    a. this kind of hosting model forwards web request to Kestrel server and the .net core project will be hostested on that server.
+    b. Two web servers are involved. Internal web server - Kestrel & External web server-> IIS/ Nginx /Apache.  
+    c. Process name is dotnet.exe
+
+*Kestrel Server:- It's a cross platform webserver for ASP.Net core. It can be used as an edge/ standalone server where request can be 
+                  handled by this server itself or can be used as a backend server. Kestrel uses dotnet.exe process to host .net app.
+
+* command :- dotnet run (on project folder path) : will build and run the .net core app.
+* When .net core project is run using command prompt, internally Kestrel server hosts the application. 
+* Default hosting model for .net core project is OutOfProcess hosting.
+* A reverse proxy server can be configured between browser and Kestrel server (i.e IIS/NginX / Apache) so that an extra layer of security and load balancer can be configured.
+* If a .net core project is run via command prompt, by default it uses OutOfProcess hosting model even when AspNetCoreHostingModel is defined as "InProcess" in launchsettings.json.
+* If command name is "IISExpress" & AspNetCoreHostingModel is "InProcess", then only .net core will use InProcess hosting model. Rest all cases it will use out of process hosting model.
+
+****************************** settings files *********************************
+1. launchsettings.json - Resides under properties in project node (only in dev environemnt)
+                         Application URL is set here. 
+                         Environmental variables are set here.
+                         if command name is "project", .net will use OutOfProcess hosting model.
+2. appsetings.json :- similar to web.config. We can define application/ environment variable/ keys here.                         
+3. appsettings.development.json - dev environment specific settings. Hence keys defined in appsettings.json will be overridden .
+4. appsettings.production.json
+
+* Priorities of a variable defined under different files W.R.T. IConfiguration service (a service that is being used to read config keys) in descending order.
+    1. command line argument
+    2. Environmental variable (defined in system environment)
+    3. User secret
+    4. appsettings.development.json / appsettings.production.json
+    5. appsettings.json    
+    
+*WebHost.CreateDefaultBuilder() :- is the method where all these config keys are read by the app.
+    
+    
+    
+    
+    
+
+
 
 
 

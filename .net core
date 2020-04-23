@@ -144,7 +144,71 @@ app.Run() method (in startUp-> configure method) :- each http response will be g
     5. appsettings.json    
     
 *WebHost.CreateDefaultBuilder() :- is the method where all these config keys are read by the app.
-    
+
+************************ Request pipeline configuration ****************************
+Startup.cs
+ public void Configure (IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
+ { 
+   if(env.IsDevelopment())
+     {
+       app.UseDeveloperExceptionPage(); // exception middleware
+     }
+    //app.Use(...) will add middleware functionality for request pipeline
+    app.Use(async (context, next) => {
+       logger.LogInformation(".....");  // logging middleware
+       await context.Response.WriteAsync("xyz");
+       await next();                              // will call next middleWare
+     });
+     
+     //add Default page to the app
+     //this should be defined before UseStaticFiles() middleware call
+     app.UseDefaultFiles();
+     
+     // if any image or file is requested, this midleware will serve the file n shortcircuit the request (no further middleware will be executed)
+     app.UseStaticFiles();
+     
+     //is the last middleware in .net core after which if any middleware is defined, that middleware will never get executed.
+     // Hence app.Run (..) is called Terminal middleware
+      app.Run(async (context, next) => {
+       ..........
+     });
+     
+  }
+
+* ILogger is inbuild logging interface in .net.
+* UseStaticFiles() method reads file under wwwroot folder path
+   ex:- wwwroot
+           Image folder
+           css folder
+           javascript folder
+* app.FileServer():-  serves a request with static file where user requests aa static file with specific path.
+* app.UseDeveloperExceptionPage(); :- If application has default age enabled and exception , browser will dispaly default page instead 
+                                     of displaying exception.
+                                     code:- 
+                                       app.FileServer();
+                                       app.UseDeveloperExceptionPage();
+          It shows iinformation about 
+                                   1. exception details
+                                   2. query string
+                                   3. cookies
+                                   4. Http header details
+
+***************************** Asp.net core Environment variable ****************************************
+1. Development 
+2. Staging
+3. Production
+
+In staging & production environemnt minified javascripts are loaded in order to improve performance. 
+setting up environment :-
+   launchsettings.json 
+        environmentvaribale {
+            "ASPNETCORE_ENVIORNMENT": "Development"
+            }
+* Default value of  "ASPNETCORE_ENVIORNMENT" is production if not set. 
+* On staging or production server, environment variable is set in operating system environment variable.
+* We can access runtime environment using IHostingEnvironment service.
+* If environment variable is set in both operating system & luanchsettings.json , launchsettings.json value will have more preference.
+
     
     
     

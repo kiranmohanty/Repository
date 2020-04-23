@@ -209,8 +209,63 @@ setting up environment :-
 * We can access runtime environment using IHostingEnvironment service.
 * If environment variable is set in both operating system & luanchsettings.json , launchsettings.json value will have more preference.
 
+******************************* ASP.Net core MVC ******************************************
+Startup.cs
+     public void ConfigureSerices(IServiceCollection services){
+         services.AddMvc() //enables MVC architecture
+         .AddXml(SerializerFormatters(); // to enable XML serialization 
+     }
+     public void Configure(IApplicationBuilder app, ..){
+         app.UseStaticFiles();
+         app.UseMvcWithDeafultRoute(); //middleware for enabling mvc architecture
+     }
+ 
+ * Here if application requests any static file, "app.UseStaticFiles();" will serve the request and shortcircuit the pipeline. If its a
+   MVC request, UseStaticFiles() middleware will pass the request to UseMvcWithDeafultRoute() middleware.
+*  services.AddMvc() is the dependency injection container. It should be injected before using "UseMvcWithDeafultRoute()" middleware.
+* Difference between service.AddMvc() & service.AddMvcCore()
+    AddMvcCore() will add only basic dependencies.
+    AddMvcCore() will add few extra dependencies like JsonFormater service.
+* ViewData - Key value pair object. ViewBag - dynamic type. both defines loosely typed vew.
+* Stronly typed view:- view tightly coupled with model.
+* Layout view:- is same as master page in ASP.Net and it holds common designs for app . Ex:- header , footer, left/right side navigation.
+* _Layout.cshtml :- "_" (underscore) is intended to say this view should not be rendered by browser directly.
+* RenderBody() is layout view:- will render requested view insterting inside layout view.
+* In any view @{
+                 Layout = "~/views/shared/_Layoutview.cshtml" } is added to define Layout view for that view.
+* Layout view section:- helps in adding certain control/ html to a perticular section .
+     Layout view 
+          <body>
+            <div> .... </div>
+            @if(IsSectionDefined("scripts"))
+            {
+              @RenderSection("scripts", required: true);
+            }
+     Detail.cshtml
+           <div> .... </div>
+           @section script {
+              <script src="~/js/xyz.js"></script>
+             }
+A section in layout view defines a way of adding certain html/ script i nperticular area of view.
+
+* _ViewStart.cshtml (under views-> shared folder):- 
+    @{
+      Layout ="_Layout"
+      }
+which will imply _Layout.cshtml as default view for all views.
+* If a "_ViewStart" file exists in sub folder and  app points to that sub folder , then sub folder viewstart will be served by the request.
     
-    
+********************************** Dependency injection *****************************    
+* Constructure dependency injection :- injecting any service in constructor .
+* way of defining implementation for any interface , so that interface can be injected into the app
+    startup.cs 
+       ConfigureServices(){
+         services.AddSingleton<IEmp, Emp>();         
+         
+* AddSingleton:- Only one instance of service is created
+  AddTransient:- a new seervice instance is created as and when a request refers injected class
+  AddScoped:- will generate a service instance per scoppe per request.
+
     
     
 

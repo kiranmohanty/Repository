@@ -266,8 +266,26 @@ which will imply _Layout.cshtml as default view for all views.
   AddTransient:- a new seervice instance is created as and when a request refers injected class
   AddScoped:- will generate a service instance per scoppe per request.
 
-    
-    
+*************************** Startup.cs middleware methods ********************
+UseDeveloperExceptionPage():- app will load a developer exception page only on dev environment.
+UseHsts():- HSTS stands for Http strict transport security protocol
+			         Basically it notifies client about Https protocol & if any client send request on http, it responds with 400 status error.
+			         This middleware is used along with UseHttpsRedirection();
+UseHttpsRedirection()- helps in redirecting a call from http to https transport protocol.
+UseStaticFiles()- to serve any static file like image/ css/ javascript
+UseSpaStaticFiles()- configures the application to serve static file from a specific directory for Single page apllication.
+UseRouting()- it enables mvc routing in request pipeline. This middleware is used followed by UseEndpoints() middleware.
+UseEndpoints()- this is the middleware which defines an endpoint in the pipiline where routing decissions are made 
+			            	i.e which controller/action method should serve the request
+			            	Ex:- app.UseEndpoints(endpoints =>
+				                   {
+					                     endpoints.MapControllerRoute(
+						                           name: "default",
+						                           pattern: "{controller}/{action=Index}/{id?}" // id as optional parameter
+					                      );
+				                   });
+UseSpa()- returns default page of SPA application as response . This is the last middleware in SPA integrated app
+Run():- is the last middleware in server standalone application.        
 
 
 

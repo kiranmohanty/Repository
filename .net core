@@ -287,7 +287,303 @@ UseEndpoints()- this is the middleware which defines an endpoint in the pipiline
 UseSpa()- returns default page of SPA application as response . This is the last middleware in SPA integrated app
 Run():- is the last middleware in server standalone application.        
 
+UseAuthorization(): - Enables authorization for request pipeline.
+UseMvcWithDeafultRoute()- enables mvc routing in "/controller/{actoion = index}/id?" format.
+						  default action is index & id param is optional 
+UseMvc()- enables supporting MVC architecture but will not have any default routing defined as 	UseMvcWithDeafultRoute();					  
 
+* _ViewImports.cshtml :- all common namespace or class imports that are common to all pages, can be defined here.
+						 ex:- _ViewImports.cshtml 
+									App.ViewModels
+								Home.cshtml
+									@model Employee // Employee is a class defined under App.ViewModels namespace
+
+************************** Routing ***************************
+1. Conventional routing:- mvc defined URL routing pattern
+2. Attribute routing:- attribute routing decorated over controller or action name.
+
+1.Conventional routing
+configure routing for UseMvc() middleware
+		app.UseMvc(routes=>{
+			// 1st param- route name
+			//2nd param- route pattern. 'home' is a static part of route url
+			//id param is optional
+			//= used to give default route
+			routes.MapRoute("1stroute","home/{controller= Home}/{action= Index}/{id?}");  
+		});
+		
+2. Attribute routing:-
+	[Route("")]	// empty URL will be navigated here
+	[Route("Home")] //if URL has only controller defined , it will point to Index action
+ 	[Route("Home/Index")]   // with compelte URL route mapping
+	[Route("Home/Index/{id?}")] //optional id param
+	public ViewResult Index(string id){
+	}
+	
+	[Route("Home")]
+	public class HomeController: Controller{
+		
+		//"~" in routing will ignore controller attribute routing
+		// localhost:2020 will point to this action
+		[Route("~/")]
+		public ViewResult Index(){}
+
+		//localhost:2020/Home/Details will point to this action method
+		[Route("Details")]
+		public ViewResult Details(){}
+	}
+	
+token based Attribute routing:- it aumatically replaces actual controller/action name in pace in routing URL
+		It's a dynamic way of defining controller/ action name, so that in future if action/ controller name is being changed, we dont need to change routing attribute. 
+	[Route("[controller]")]
+	public class XyzController: Controller{			
+
+		//localhost:2020/Home/Details will point to this action method
+		[Route("[action]")]
+		public ViewResult Details(){}
+	}
+
+*************** include external client side library like bootsrtap ****************
+project-> (right click)-> add Project library => provider as cdnjs-> search for library -> click on add
+this will add "libman.json" under project node, that holds all external libraries has been added to the project.
+content:- 
+ {
+	"version": "1.00",
+	"defaultProvider": "cdnjs",
+	"libraries":[
+		{
+			"library": "twitter-bootsrtap@3.3.7",
+			"destination": "wwwroot/lib/bootsrtap"
+		},
+		{
+			"library": "jquery@3.3.7",
+			"destination": "wwwroot/lib/jquery"
+		}
+	]
+ }
+ 
+ ********************* Tag helper in .net core ******************
+ tag helpers are server side component which are used to generate html on server. its similar to HtmlHelper in MVC.
+How to import :_ include below code on top of cshtml
+//* refers to include all tag helprers 
+//Microsoft.AspNetCore.Mvc.TagHelper namespace
+@addTagHelper, *, Microsoft.AspNetCore.Mvc.TagHelper
+
+//asp-route-*:- * refers to route parameter name
+<a asp-controller="home" asp-action="details" asp-route-id="@emp.Id" class="btn">view</a>  
+<a href="Home/details/1">View</a> // regular ASP.Net route
+app.UseMvc(routes =>{
+	routes.MapRoute("Default", "{Controller}/{action}/{id?}"
+});
+
+ tag helpers are better than usual mvc route defination. Because in future, incase we change our route defination, tag helpers will 
+ work as earlier , but tipical MVC approach will lead to 404 error. in order to make them work, we need to change all mvc route references.
+ Ex:-
+ app.UseMvc(routes =>{
+	routes.MapRoute("Default", "xyz/{Controller}/{action}/{id?}"
+});
+<a asp-controller="home" asp-action="details" asp-route-id="@emp.Id" class="btn">view</a>  
+<a href="xyz/Home/details/1">View</a> // must update route path
+
+********* Image tag helper
+usually once a page is loaded, images are stored in browser cache. so if a image has been changed in server, it would still load cashed one until 
+browser is closed or cache is cleared. If we disable browser cache, then each & everytime a server call will be made for loading image.
+
+Insead of doing so, one can use image tag helper in .net core.
+ex- <img class="img" src="/img/noimage.png" asp-append-verion="true"/>
+Here tag helper appends a hash code along with image path in html src. if the hash value is same as before when a page is reloaded, then
+image is read from browser cache else a server call is made to fetch image details.
+
+***** Environmental tag helprers *****************
+Layout.cshtml
+ <environment include="Developmemnt">
+        <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+</environment>
+<environment include="Production,Staging" exclude="Developmemnt">
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+</environment>
+
+this environment tag helper defines which type of file needs to be loaded in different environment like Developmemnt/ production.
+
+******************* Form  tag helper ******************
+We can use Form tag helpers for creating interactive forms with submit action.
+If a cshtml file with form tag is loaded at Home/Create, then form will be posted back 
+to Home/Create action with HttpPost verb, if no controller or action is added explicitly to the form.
+
+Ex:- 
+@Model Employee
+<form asp-controller="Home" asp-action="SaveData" method="POST">
+	<label asp-for="Name"></label> //asp-for for label will be converted to HTML for and when user clicks on this label , Name text fox will get focus
+	<input asp-for="Name" /> //Name is a property of Employee class
+	<select asp-for="Department" asp-items="HTML.GetEnumSelectList<Dept>()"></select>
+</form>
+
+asp-items="HTML.GetEnumSelectList<Dept>()"
+Dept is an enum here.
+HTML.GetEnumSelectList<Dept>()- will convert enum items to list of string
+asp-items - will generate options for the dropdown element
+
+****************** Model binding in core **************
+Binding request data to action method parameter:- .net core MVC binds request data to controller action method parameter by name.
+ If any parameter name in request object and action parameter name is not same, MVC cant map the value.
+
+Url= Home/Index/2?name=xyz
+Public string Index(string id, string name){
+	//here id= 2 and name= xyz will be populataed by MVC
+}
+
+Url= Home/Index/2?abc=xyz
+Public string Index(string id, string name){
+	//here id= 2 and name= null will be populataed by MVC
+}
+
+Url= Home/Index/2?name=xyz&id=5
+Public string Index(string id, string name){
+	//here id= 2 and name= xyz will be populataed by MVC 
+	//Id value is present in both RouteData & queryString , but MVC has high preference for Route data compared to QueryString
+}
+
+Url= Home/Index?name=xyz&id=5
+Public string Index(string id, string name){
+	//here id= 5 and name= xyz will be populataed by MVC 	
+}
+
+.net core model binding looks into below objects for populating action parameter when a request is rased.
+	1. Form values (forst preference)
+	2. Route Values
+	3. QueryString
+
+<form asp-controller="Home" asp-action="SaveData" method="POST">
+	<input asp-for="Name" /> //Name is a property of Employee class	
+</form>
+
+<input asp-for="Name" /> 
+.net core tag helper will be converted as <input for="Name" id="Name" name="Name"/>
+Here for- will map data from response/ control return type to textbox value
+	 name- will map data from textbox value to model "Name" property and hence changes will be posted to server on submit click
+
+*************** Form validation ********************
+Mandatory field validation:- 
+
+<form asp-controller="Home" asp-action="SaveData" method="POST">
+	<input asp-for="Name" /> //Name is a property of Employee class	
+	<span asp-validation-for="Name"></span> // show validation message for "Name" property
+</form>
+
+Using System.ComponentModel.DataAnotations;
+public class Employee{
+	public int Id;
+	
+	[Required]
+	[MaxLength(50, ErrorMessage= "Name can't exceed 50 characters")]
+	public string Name;
+	
+	[RegularExpression(@"^[a-zA-z0-9_.]{1,}@[a-zA-z0-9_.].(com||in)$", ErrorMessage= "Invalid Email format")]
+	[Display(Name= "Office Email")]
+	public string EmailId;
+}
+
+Public IActionResult Submit(Employee emp){
+	if(ModalState.IsValid){
+		//save code
+		return RedirectToAction("Details", new {id: "saved id"};
+	}	
+	return View();
+}
+
+Display validation summary:- 
+<form>
+	<div asp-validation-summary="All"></div>
+</form>
+asp-validation-summary available options :- "All/ ModelOnly / None"
+
+ ********************** Dependency injection class instantiation *******************
+ to inject service in cshtml, we should add below code 
+ @inject IEmployeeRepo _employeeRepo; // _employeeRepo is the proprty which holds DI class instance 
+ 
+ Different scope of service instance :- 
+ Startup.cs
+	Public void ConfigureService(IServiceCollection services){
+		services.AddSingleton<IEmployeeRepo, EmployeeRepo>();
+	}
+	
+AddSingleton:- only one instance of the DI service/class is created through out the application
+AddScoped- a new instance of DI service/class is created for each http request.
+AddTransient- a new instance of DI service/class is created whenever a service instance is needed.
+
+********************** Entity framework *******************************************
+Advantages 
+	ORM(Object relational mapper)- database tables r mapped as objects
+	lighweight, extensible and open source
+	work cross platform
+	Microsofts official data access platform
+
+ Startup.cs
+ using Microsoft.EntityFrameworkCore;
+  public Startup(IConfiguration config){
+	_config= config;
+  }
+  public void ConfigureService(IServiceCollection services){
+		services.AddDBContext<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb"))
+		or 
+		services.AddDBContextPool<AppDbContext>((options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb"))
+	}
+apsettings.json
+		{
+			"ConnectionSTrings":{
+				"SqlDB":"server=(localdb)\\MSSQLLocalDB;database=DBName;Trusted_Connection=True"
+			}
+		}
+ 
+ AppDbContext is a class that represents database and it must inherit DBContext class.
+ AddDBContext:- any time a AppDbContext instance is requested, application will create a new instance of it.
+ AddDBContextPool:- it is similar to database connection pulling. 
+					any time a AppDbContext instance is requested, first application will check if any connection is availablein pull.
+					if so, it returns that instance else returns a new instance.
+options.UseSqlServer():- will let application know that we are going to use SQL database. Accepts connectionString name.
+server=(localdb)\\MSSQLLocalDB :- Application will create a local SQL DB in VS server explorer.		
+Trusted_Connection/Integrated Security are same and either or can be used in connection string.
+
+******************** Repository pattern ******************
+Its an abstraction pattern of data access layer. It hide how data is beinged saved or retrived to the outer layer.			
+Ex:-
+ IRepository
+  Add
+  Update
+  Get
+  Delete
+  (methods)
+					
+ 
+ InMemoryRepository: IRepository  			SqlRepository: IRepository			OracleRepository: IRepository
+ 
+ public class SqlRepository: IRepository{
+	public SqlRepository(AppDbContext dbContext){ // DI of database instance
+	}
+ }
+ 
+ public class AppDbContext: DbContext{
+	public AppDbContext(DBContextOptions<AppDbContext> options):base(options){
+		//registering custom DBContext class
+	}
+	public DbSet<Employee> Employees {get; set;}
+ }
+ 
+ public class HomeController{
+	public HomeController(IRepository respository){
+		//injecting repository interface instance
+	}
+ }
+ 
+ startup.cs
+ public void ConfigureServices(IServiceCollection services){
+	services.AddDBContextPool<AppDbContext>((options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb"));
+	services.AddScoped<IRepository, SqlRepository>(); // defines which repository implementation to be used for data manupulation
+ }
+ 
+ Advantage of respo pattern:-
+	cleaner code
+	loosely coupled (application can point to any other repository if its changed only in startup.cs file)
 
 
 

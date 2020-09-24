@@ -1,0 +1,139 @@
+*** Local functions or nested functions ***********
+Defining a function inside a function 
+Ex:-
+static void Main(string[] args) {  
+     void Add(int x, int y) {  
+             WriteLine($ "Sum of {x} and {y} is : {x + y}");  
+     }         
+     void Multiply(int x, int y) {  
+             WriteLine($ "Multiply of {x} and {y} is : {x * y}");  
+             Add(30, 10);  
+     }  
+     Add(20, 50);  
+     Multiply(20, 50);  
+} 
+
+********** Binary Literals*********
+
+Decimal literal (any regular number) - int x= 50;
+Hexadecimal literal (any hexacode prefixed with 0X or 0x) - int num = 0X3E8;
+Binary literal (any binary code prefixed with 0b or 0B) - int binary = 0B110010;
+Console.WriteLine() of all variables will be shown as a decimal number.
+
+************* Digit separator**********************
+In plain text we use comma (,) separateor. Likewise we can use one or more than one 
+Underscore( _ ) character for digit separators.
+
+Ex-
+int binaryData = 0B0010 _0111_0001_0000; // binary value of 10000   
+int hexaDecimalData = 0X2B _67; //HexaDecimal Value of 11,111   
+int decimalData = 104 _567_789; //  value 104567789
+
+********* Pattern Matching **************
+It is a technique to check if a string is present in an another string.
+"if" / "switch"/ "is"  is also part of pattern matching.
+
+In C# 7.0, the is expression both tests the variable and assigns it to a new variable of the proper type.
+The new is expression works with value types as well as reference types.
+Ex-
+public static double ComputeAreaModernIs(object shape)
+{
+    if (shape is Square s)
+        return s.Side * s.Side;
+    else if (shape is Circle c)
+        return c.Radius * c.Radius * Math.PI;
+    else if (shape is Rectangle r)
+        return r.Height * r.Length;
+    // elided
+    throw new ArgumentException(
+        message: "shape is not a recognized shape",
+        paramName: nameof(shape));
+}
+
+Pattern matching Switch
+The only pattern supported by the switch statement was the constant pattern (Number / string). 
+In c# 7.0, we can now write a switch statement using the type pattern.
+Ex:- 
+
+switch (shape)
+    {
+        case Square s:
+            return s.Side * s.Side;
+        case Circle c:
+            return c.Radius * c.Radius * Math.PI;
+        case Rectangle r:
+            return r.Height * r.Length;
+        default:
+            throw new ArgumentException(
+                message: "shape is not a recognized shape",
+                paramName: nameof(shape));
+    }
+	
+************* out variables ***************
+Before c# 7 , inorder to pass a variable as out	, we need to declare it before. But in c# 7 we can declare out 
+variable while passing it as parameter.
+
+Ex- DateTime.TryParse(s, out DateTime date)
+
+********** Tuples **********************
+A way of retuning mora than 1 value from a method.
+
+Install “System.ValueTuple” from NuGet Package.
+static void Main(string[] args) {  
+         
+        Program p = new Program();  
+        var price = p.GetPrice(1);  
+		// price & discount are any variable names & refers to return parameters in order.
+        WriteLine($ "Price: ₹{price.price}/- \nDiscount: ₹{price.discount}/-");  
+ }  
+//returning price & discount  
+(int, int) GetPrice(int itemId) {  
+	var product = (500, 100);  
+	return product;  
+}
+
+
+***************** Deconstruction **************
+“deconstruction” is a concept which allows us to split tuple members and we can use it directly with their respective names.
+
+Ex-
+(int price, int discount)  = p.GetPrice(itemId);  		
+WriteLine($ "Price: ₹{price}/- \nDiscount: ₹{discount}/-");  
+
+************** Expression bodies / anonymous function ******
+property expression body
+public class xyz{
+	public string UserDetails => $ "{UserId} {UserName} {EmailId} {ContactNumber}";  
+ }
+ 
+ Constructor expression body
+ class Product {  
+    public int ProductId {  get;  } = 1;  
+    public string ProductName {  get;  }  
+    public decimal Price => 3000;  
+    Product() => ProductName = "Microsoft HoloLens";  
+	~Product() => Console.WriteLine("destructor");
+}  
+
+******************** Ref returns & locals ******
+"ref" keyword is used as input parameter and it returns address of the variable rather than value ,
+ when returned from a method. But in c# 7, a method can return variable with reference as ref.
+ Ex:-
+ public ref decimal GetProductPriceReference(int productId) {  
+    return ref ProductPriceList[productId];  
+} 
+public callingMethod(){
+	ref decimal result = ref this.GetProductPriceReference(1); // result is example of ref local
+}
+
+************* Throw exception **************8888
+return y != 0 ? x % y : throw new DivideByZeroException();  
+
+
+generalized async (Generalized async return), Replace (Partial Class Enhancements) Records (or Record Types) Non-Nullable Reference Types, Immutable Types etc.
+
+
+
+
+
+

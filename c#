@@ -217,3 +217,46 @@ main()
 --------------------------------------------------------------------------------------------------------------------	
 	
 	
+*********** Delegates ***********
+Delegate is a function pointer. It's a type that store memory address of a function.
+In other words it's a pipeline between event and event handler / action.
+
+Ex of inbuilt delegeta:-
+<input type="text" onfocus="focus()"/>
+function focus() {}
+
+Here onfocus is the event and focus() method is event handler/ action.
+
+Types:-
+1. Single cast delegate
+2. Multi cast delegate
+
+1. Single cast delegate
+	a delegate pointing to only one function();
+	Ex-
+	public delegate void NotificationHandler (string message);
+	public void main (){
+		NotificationHandler handler = new NotificationHandler(TextNotification);
+		handler.Invoke(message);
+	}
+	
+	public void TextNotification(string Message){}
+	
+2. Multi cast delegate	
+	a multi cast delegate can refer to more than one delegate function using an invocation list.
+
+Ex:-
+publicstaticvoid Main(string[] args)   
+{  
+    EmailSentNotificationHandler del1 = newEmailSentNotificationHandler(WriteEmailSentNotificationOnConsole);  
+    del1 += WriteEmailSentNotificationinLogFile;  
+    del1 += WriteEmailSentNotificationinDatabase;  
+    del1.Invoke();  
+}
+
+We can unsubscribe to a delegate function at any given point of time.
+Ex- 
+EmailSentNotification -= WriteEmailSentNotificationinDatabase; 
+
+Anonymous function, lambda expression, Action<T> are advanced feature of delegate.
+  ________________________________________________________________________________________________________-

@@ -10,3 +10,30 @@ conditions:-
 
 Ex:-
 xyz123c:bv/12abvc12\abc
+
+
+Also we do have below syntax in RegEx.
+[^a-z] :- any character except a-z
+\w:- matches alphanumeric and underscore character
+\W:- matches characters that are neither alphanumeric nor underscore 
+\s:- matches whitespace character (tab, space) 
+\S:- matches non whitespace character
+\d:- matches digit 
+\D- non digit match 
+*:- matches 0 or more of the preceding token
+ 
+Now suppose we have to validate password. Criteria of password as follows.
+Minimum length 8 characters.
+Must start with alphabet
+Must contain at least an upper case and a lower case character and a number
+Must contain a special character out of *,#,_
+Our regular expression will look like as below.
+Ex:-
+regexPattern = @"^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$";
+ 
+ Here (?=) represent positive look ahead. Meaning input must contain character(s) defined after "?=".
+(?=\S*[a-z]) :- must contain a-z without whitespace
+(?=\S*[A-Z]):- must contain A-Z without whitespace
+(?=\S*\d):- must contain any number without whitespace
+(?=\S*[^\w\s]):- must contain any character except word (alphanumeric and underscore) and whitespace
+\S{8,}:- minimum character length as 8 without whitespace

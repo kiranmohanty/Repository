@@ -577,14 +577,57 @@ Ex:-
  
  startup.cs
  public void ConfigureServices(IServiceCollection services){
-	services.AddDBContextPool<AppDbContext>((options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb"));
+	services.AddDBContextPool<AppDbContext>((options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb")); // "SqlDb" is the connection string name defined in appsettings.json
 	services.AddScoped<IRepository, SqlRepository>(); // defines which repository implementation to be used for data manupulation
  }
  
  Advantage of respo pattern:-
 	cleaner code
 	loosely coupled (application can point to any other repository if its changed only in startup.cs file)
+	
+********************** Entity framework core database migration using command*****************
+suppose we wish to create a local SQL database in VS and we have our DbContext class and DbSet properties , then we should follow below steps.
 
+open VS => View => Package Manager Console => type get-help about_entityframeworkcore
+ => add_migration migrationName => update_database
+
+add_migration migrationName :- will create a migration folder in our project. Then will create database and table definations that 
+are defined in AppDbContex:DbContext. Here SqlDb will database name same as connection string name.
+If we have DbSet<Employee> EmployeeTable property,  then EmployeeTable as table. 
+
+update_database:- once we execute this command, both database and all tables that are already defined in AppDbContex will be created.
+We can see this database in SQL Server object explorer in VS.
+
+*********************** How can we initialize data for few tables along with database migration (seed data) ****************************
+For initializing data while creating database, we should override OnModelCreating method in AppDbContex.
+
+public class AppDbContex: DbContext{
+	public void OnModelCreating(ModelBuilder modelBuilder){
+		modelBuilder.Enity<Employee>().HasData(
+			new Employee(){ Id: 1, Name: "xyz", Address: "something"},
+			new Employee(){ Id: 2, Name: "abc", Address: "dhsdg"} // default data
+		);
+	}
+}
+
+after defining code, we have run bellow commands in package manager console.
+Add_migration migrationName1 => another file named migrationName1 will be created under migration folder with latest changes.
+update_database => will update database with default initial value.
+
+We can move this default initialization code to an extention class as below.
+
+public static void Seed(this ModelBuilder modelBuilder){
+	modelBuilder.Enity<Employee>().HasData(
+			new Employee(){ Id: 1, Name: "xyz", Address: "something"},
+			new Employee(){ Id: 2, Name: "abc", Address: "dhsdg"} // default data
+		);
+}
+
+public class AppDbContex: DbContext{
+	public void OnModelCreating(ModelBuilder modelBuilder){
+		modelBuilder.seed();
+	}
+}
 
 
 

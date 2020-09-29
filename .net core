@@ -544,6 +544,21 @@ options.UseSqlServer():- will let application know that we are going to use SQL 
 server=(localdb)\\MSSQLLocalDB :- Application will create a local SQL DB in VS server explorer.		
 Trusted_Connection/Integrated Security are same and either or can be used in connection string.
 
+
+********************* Creating local SQL DB (in SQL server object explorer) in entity framework *****************
+ORM- Object relational mapping.
+ORM is a programming technique that is used to covert data between two incompatible systems. ex- c# & SQL
+EF (Enity framework is an example of ORM)
+
+Advantage of EF over ADO.Net :-
+It eliminates the need of writing codes such as database connection, data fetch, any kind of data update.
+Hence EF is called as code first approach. ADO.Net is a technique of database first approach 
+beacase database & table must be present before application executes it. In case we have database already and
+we are planning to build an application, the we should go with database first approach.
+
+In case if we wish to go with database first approach with EF, we will haev to include Database Provider plugins (from NuGet).
+This Database Provider model is a communicating agent between EF and actual database (SQL/ Oracle).
+
 ******************** Repository pattern ******************
 Its an abstraction pattern of data access layer. It hide how data is beinged saved or retrived to the outer layer.			
 Ex:-
@@ -630,4 +645,40 @@ public class AppDbContex: DbContext{
 }
 
 
+********************** Keep Application domain model in sync with database schema (52) *************************
+Migration helps in keeping domain model and database schema in sync.
+Commonly used commands in migration:-
+	"Add-migration"
+	"remove-migration"
+	"update-database"
+	"update-database migration3"
+	
+AddDbContextModelSnapShot.cs under Migration folder keeps current database , table  and columns info. Any new migration update will generate a 
+migration file and update this snapshot file with latest schema.
+
+A new migration file used to get created under migration folder as and when any migration command is ran. File name would look like 
+290920201230<timestamp>_migrationName.cs. This file contains 2 methods Up() and Down(). Up() method keeps track of current changes in migration. 
+Down() method contains info that needs to be removed when we wish to downgrade any migration update.
+
+Suppose we have added column1 in amigration. Then Migration file will look like as below.
+public partial class MigrationName : Migration{
+	protected override void Up(MigrationBuilder migrationBuilder){
+		migrationBuilder.AddColumn<string>(name: "Column1", table:"EmployeeTable", nullable: true);
+	}
+	protected override void Down(MigrationBuilder migrationBuilder){
+		migrationBuilder.DropColumn(name: "Column1", table:"EmployeeTable", nullable: true);
+	}
+}
+
+In order to remove a migration we should use "remove-migration" command in package manager console. It will revert last recent migration. 
+This will remove last migration file, modify AddDbContextModelSnapShot.cs content so that it can point to last but one migration file.
+
+"Remove migration" command will work if and only if changes are not applied on database. Once applied on database, this command will not work
+and will give error. 
+
+"update-database" command will update all pending migration commands on database.
+
+By default EF creates a table in database named "__EFMigrationHistory". This table keeps track of database migration history. In order to 
+revert a database migration , we need to run "update-database migration3" and our database structure will be reverted back to migration3 update.
+Then we have to run "remove migration" to delete unwanted migration file from migration folder.
 

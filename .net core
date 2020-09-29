@@ -682,3 +682,75 @@ By default EF creates a table in database named "__EFMigrationHistory". This tab
 revert a database migration , we need to run "update-database migration3" and our database structure will be reverted back to migration3 update.
 Then we have to run "remove migration" to delete unwanted migration file from migration folder.
 
+****************** File Upload in .net core MVC **************************
+IFormFile class under MIcrosoftCore.AspNetCore.Http is predefined class in .Net core which has properties that are needed for file upload .
+Ex of Properties - FileName, Name, ContentType, Length, Stream OpenReadStrem(), CopyTo() etc ..
+If we use this class as data type of a property in view model, we can access file uploaded info in  server.
+
+public class EmpViewModel {
+	public IFormFile Photo;
+}
+public ActionResult Create(EmpViewModel model){
+	//all necessary code
+	
+	//copy file to destination folder
+	model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+}
+
+//@PhotoPath is a local variable to get actual image location
+//asp-append-version="true" is added to avoid cache issue
+<img class="image" src="@PhotoPath" asp-append-version="true"/> 
+
+?? operator:- The null-coalescing operator ?? returns the value of its left-hand operand if it isn't null;
+			  otherwise, it evaluates the right-hand operand and returns its result.
+			  Ex:- int? a=null; Console.WriteLine( a ?? 20); //output 20 but a is still null
+??= operator:-when lefthand variable is null it assigns RHS value to LHS variable.
+			  Ex - int? a=null; Console.WriteLine( a ??= 20); //output 20 Console.WriteLine( a); // 20
+			  
+*********************** Upload multiple files  **************************************			  
+<input type="file" asp-for="Photos" multiple/>
+
+public class EmpViewModel {
+	public List<IFormFile> Photos;
+}
+
+public ActionResult Create(EmpViewModel model){
+	forEach(IFormFile photo in model.photos){
+		//all necessary code
+	
+		//copy file to destination folder
+		using(var fileStream = new FileStream(filePath, FileMode.Create)){ // so that file stream object instance will be disposed
+			model.Photo.CopyTo(fileStream);
+		}
+	}
+}
+ 
+ ****************** Edit view in Asp.Net Core *******************************
+ <a asp-controller="Home" asp-action="Edit" asp-route-id="@employee.id">Edit</a>
+ 
+ asp-action, asp-controller, asp-route-id attributes can't be used if we have href defined in anchor element.
+ 
+ ******************* Handle 404 error in ASP.Net core ***************************
+ 2 types:-	
+	Resource with the specified ID does not exist. Ex-In edit mode  EmpId=99 , which does not exist in our database.
+	The URL does not match any route. Ex- localhost/xyz/abc - invalid address
+	
+How to handle 404 error?
+1.Resource with the specified ID does not exist.
+		This type of error handler needs custom code logic as per our application.
+2.The URL does not match any route.
+		public class Startup.cs {
+			public void Config(IApplicationBuilder app, IHostingEnvironment){
+				if(app.IsDevelopment()){
+					
+				}else{
+				//any of these method is used to handle 404 error globally
+					//app.UseStatusCodePages(); //least used, shows a plain text "Status code: 404; Not Found"
+					app.UseStatusCodePagesWithRedirects("/Error/{0}"); // redirect to ErrorController/ {0} (actual status code Ex- 404) action.
+					//app.UseStatusCodePagesWithReExecute();
+				}
+			}
+		}
+ 
+ UseStatusCodePagesWithRedirects() and UseStatusCodePagesWithReExecute() methods bahave same from end user point of view.
+ 

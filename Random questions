@@ -308,6 +308,22 @@ public class y
    indexed view:- view with unique clustured index on it. It's helpfull whenever we are aggregate multiple rows.
    partitioned view:-A partitioned view joins horizontally partitioned data from a set of member tables across one or more servers.
    
-  
+27. What is navigator.sendBeacon()?
+   The navigator.sendBeacon() method asynchronously sends a small amount of data over HTTP to a web server. It’s intended to
+   be used in combination with the visibilitychange event (but not with the unload and beforeunload events).
+   
+   window.addEventListener("unload", function logData() {
+  	var xhr = new XMLHttpRequest();
+  	xhr.open("POST", "/log", false); // third parameter of `false` means synchronous
+  	xhr.send(analyticsData); 
+  });
+  This is what sendBeacon() replaces. With the sendBeacon() method, the data is transmitted asynchronously when the User Agent has 
+  an opportunity to do so, without delaying unload or the next navigation. This solves all of the problems with submission of analytics data:
+
+Advantage:-
+  1.The data is sent reliably
+  2.It's sent asynchronously
+  3.It doesn't impact the loading of the next page
+  4.In addition, the code is simpler to write than any of the older techniques!
   
   

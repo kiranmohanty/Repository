@@ -738,19 +738,82 @@ public ActionResult Create(EmpViewModel model){
 How to handle 404 error?
 1.Resource with the specified ID does not exist.
 		This type of error handler needs custom code logic as per our application.
-2.The URL does not match any route.
-		public class Startup.cs {
-			public void Config(IApplicationBuilder app, IHostingEnvironment){
+2.The URL does not match any route.		
+
+ UseStatusCodePagesWithRedirects() and UseStatusCodePagesWithReExecute() methods bahave same from end user point of view.
+ 
+ public void Config(IApplicationBuilder app, IHostingEnvironment){
 				if(app.IsDevelopment()){
 					
 				}else{
 				//any of these method is used to handle 404 error globally
 					//app.UseStatusCodePages(); //least used, shows a plain text "Status code: 404; Not Found"
 					app.UseStatusCodePagesWithRedirects("/Error/{0}"); // redirect to ErrorController/ {0} (actual status code Ex- 404) action.
-					//app.UseStatusCodePagesWithReExecute();
+					//app.UseStatusCodePagesWithReExecute("/Error/{0}"); // mostly used
 				}
+				
+				app.UseStaticFiles();
+				app.UseMvc( routes=>{
+					routes.MapRoute("Default","{controller}/{action}/{id?}";
+				});
 			}
+			
+ app.UseStatusCodePagesWithRedirects("Error/{0}");
+	when we use this code, any requested URL if does not match any route, then current request status code is marked as
+	302 (URI has been changed temporarily) . Then the http request pipeline issues another get request which changes URL to "Error/404".
+	Then ErrorController logic prepares response.
+	Here 2 round trips happen , one response with 302 sta code and other with 404.
+	It redirects a pipeline to Error/404 when any URL is ot found.
+	
+app.UseStatusCodePagesWithReExecute("Error/404")
+	When we use this code, if any URL is not found as per our route config, UseMVC middleware resonsonds 404 and response reaches UseStaticFiles()
+	middleware. It just passes response to UseStatusCodePagesWithReExecute() middleware. This middleware finds response code as 404 and hence issues
+	Error/404 request. Here HTTP pipeline does not send any response to browser/ end client. It starts executing Error/404 again. Once 404 action responds,
+	http pipeline send response back to client/browser with status code 404.
+	Here only 1 round trip happens , one response with status code 404.
+	It reexecutes a pipeline.
+
+***************************** Global exception handling ******************
+app.UseExceptionHandler("/Error"); will execute ErrorController with Error Route attribute.
+
+[Route("Error")]
+[AllowAnonymous]
+public IActionResult Error(){
+}	
+	
+************************ Logging in ASP.Net core  ************************
+appsettiings.json
+{
+	"Logging":{
+		"LogLevel":{
+			"Default": "Warning",
+			"Microdoft": "Information"
 		}
- 
- UseStatusCodePagesWithRedirects() and UseStatusCodePagesWithReExecute() methods bahave same from end user point of view.
- 
+	}
+}
+ "Microdoft" can be "Information" /"warning"
+Enable above settings, in order to see .Net core default logging action. 
+.Net core has 2 logging provider services.
+	1. Console logging provider- it logs info on console when project is ran via command prompt.
+	2. Debug logging provider- it logs info on output window of VS when project is ran via VS  in debug mode
+This logs are auto generated, because WebHost.CreateDefaltBuilder() method internally calls ConfigureLogging() method( framwork label logging mehod).
+What all information it shoulg log, that we have to define in "Logging" section of appsettiings.json.
+
+We can log our custom infor using ILogger provider.
+using Microdoft.Extentions.Logging;
+
+public class ErrorController : Controller{
+	private readonly ILogger<ErrorController> _logger;
+
+	//ILogger<ErrorController> is defined here so that all logs for ErrorController will be grouped together 
+	public ErrorController(ILogger<ErrorController> logger){
+		this._logger=logger;
+	}
+	public IActionResult Error(string url){
+		//$ is used for string interpolation
+		_logger.LogError($"Requested URL {url}" not found");
+		//_logger.LogInformation or _logger.LogWarning etc
+	}
+	
+}
+

@@ -791,7 +791,7 @@ appsettiings.json
 		}
 	}
 }
- "Microdoft" can be "Information" /"warning"
+ "Microsoft" value can be "Information" /"warning"
 Enable above settings, in order to see .Net core default logging action. 
 .Net core has 2 logging provider services.
 	1. Console logging provider- it logs info on console when project is ran via command prompt.
@@ -816,4 +816,299 @@ public class ErrorController : Controller{
 	}
 	
 }
+
+
+****************** Logging to a file in ASP.Net core using NLog ***************
+download and install NLog.We.AspNetCore from NuGet package.
+Add a text file in project folder and name it as NLog.config.txt.
+
+****************** .Net core Identity *******************************
+.Net core identity is a membership system that helps in doing below operations.
+	1. Create, Read, Update and Delete user account
+	2. Account confirmation
+	3. Authentication & Autherization
+	4. Password Recovery
+	5. Two factor authentication with SMS
+	6. supports 3rd party login providers like gmail, microsoft etc account
+	
+Steps to add Identity to our project
+1. AppDbContext must inherit from IdentityDbContext
+	using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+	public class AppDbContext : IdentityDbContext {
+	}
+2. Add Identity services to the application 
+	Startup.cs
+	using microsoft.AspNetCore.Identity;
+	public void ConfigureServices(IServiceCollection service){
+		//IdentityUser has user related info. IdentityRole has user role related info 
+		service.AddIdentity<IdentityUser, IdentityRole>()
+		.AddEntityFrameworkStores<AppDbContext>(); //in order to allow Identity class to access user info from our database
+	}
+3. Add Authentication middleware.
+	Startup.cs
+	public void Configure(IApplicationBuilder app, IHostingEnvironment env){
+		app.UseAuthentication();
+		app.UseMvc(routes=>{ //Authentication middleware must be called before routing
+		});
+	}
+4. Create .Net core Identity table in SQL server database.
+	AppDbContext.cs
+	public void OnModelCreating(ModelBuilder modelBuilder){
+		base.OnModelCreating(modelBuilder);
+		modelBuilder.Seed(); // our own data initialization logic, not related to Identity
+	}
+	
+	Then we have to run migration command in order to create SQL Identity tables.
+	package manager console=> add-migration IdentityUpdate
+							  update-database // in order to reflect migration changes on database
+    
+	On command successful execution, we will see below tables in SQL database.							  
+		dbo.AspNetUser, dbo.AspNetRole, dbo.AspNetUserLogin etc tables.
+		
+******************* Register new user using Asp.Net core Identity ********		
+	[Required]
+	[DataType(DataType.Password)] //in order not to show any character while typing in password field
+	public string Password;
+	
+New user can be registered by defining register/account	routing related code.
+
+******************** Inbuilt Identity User manager & signin manager services **********************
+UserManager<IdentityUser> :- is used to create/update/delete a user info. In order to use this service we have inject this into AccountController.
+	Its methods :- CreateAsync, UpdateAsync, DeleteAsync etc.
+SignInManager<IdentityUser> :- This service is useful for allowing a user to signin. This also need to be injected in controller.
+	Its Methods:- SignedInAsync, SignedOutAsync, IsSignedIn etc..
+	
+	public class AccountController {
+		private UserManager<IdentityUser> _userManager;
+		private SignInManager<IdentityUser> _signinManager;
+		
+		public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signinManager){
+			this._userManager = userManager;
+			this._signinManager = signinManager;
+		}
+		
+		//async operation
+		public async Task<IActionResult> Register(RegisterViewModel model) {
+			if(ModelState.IsValid){ //if valid info, save user
+				var user = new IdentityUser();
+				user.Name = model.Name;//... copy all values
+				
+				//pass IdentityUser and password info for creating user.
+				//once record is created in database, password is hashed before storing in DB
+				var result = await userManager.CreateAsync(user, model.Password); 
+				
+				//if user creation is successful, then signin the user
+				if(result.Succeded){
+					//isPersistent:true - for persisent cookie, user login is retained forever
+					//isPersistent:false - for session specific. Once user logsout or browser closes, it will be auto logged out
+					signinManager.SignInAsync(user, isPersistent: false); 
+				}
+				
+				//in case user creation fails , we have to show errors.
+				foreach(var error in result.Errors){
+					ModelState.AddModelError("", error.Description);
+				}
+			}
+			return view(model); //if not valid render the same view with validation error
+		}
+	}
+
+*********************** Identity password complexity *************************** 
+.Net core Identity default password validation rule
+	At least 6 characters
+	must contain at least one non-alpha-numeric character
+	must contain at least one upper case character
+	must contain at least one number
+	
+In order to define our own password rule , we must change configurion as below.
+This can be achieved using services.configure method or by using service.AddIdentity method. 
+	startup.cs
+	public void ConfigureSerives(IServiceCollection services){
+		services.Configure<IdentityOption>(option => {
+			option.Password.RequiredLength =8;
+			option.Password.RequiredUniqueChars =3;
+		});
+	}
+	Or
+	public void ConfigureServices(IServiceCollection service){		
+		service.AddIdentity<IdentityUser, IdentityRole>(option => {
+			option.Password.RequiredLength =8;
+			option.Password.RequiredUniqueChars =3;
+		})
+		.AddEntityFrameworkStores<AppDbContext>(); //in order to allow Identity class to access user info from our database
+	}
+
+******************* show or hide login or logout link ************************
+In order to decide whether to show Login or Logout link, we need signin manager help. We have to add below code for it.
+_viewImports.cshtml
+@using Microsoft.AspNetCore.Identity; // common place to import namespaces
+
+_Logout.cshtm	
+	@inject SignInManager<IdentityUser> signinManager; // for injecting any service
+	<div>
+		//IsSignedIn method expects instance of ClaimsPrinciple, which is defined in User property of RazorPageBase class
+		//User property is from RazorPageBase class, hence no external namespace import is not needed.
+		@if(signinManager.IsSignedIn(User) {
+			<li class="nav">
+				// we should define a logout action as POST. If we define as GET, with image load request, user might get logged out.
+				<form method="post" asp-controller="account" asp-action="logout">
+					<button type="submit" class="btn" >
+						Logout @User.Identity.Name
+					</button>
+				</form>
+			</li>
+		}
+		else{
+			<a class="btn" asp-controller="account" asp-action="login">Login</a>
+		}
+	</div>
+AccountController.cs
+	[HttpPost]
+	public async Task<IActionResult> Logout() {
+		 await signinManager.SignOutAsync();
+		 return RedirectToAction("index", "home");
+	}
+	
+	
+For Login action, we need 2 actions in controller. one is Get request for login page view and the other on is 
+Post request for submitting login details for validation and post login view .
+	
+	using microsoft.ComponentModel.DataAnotation;
+	public class LoginViewModel{
+		[Required]
+		[EmailAddress]
+		public string EmailId {get; set;}
+		
+		[Required]
+		[DataType(DataType.Password)]
+		public string Password {get; set;}
+		
+		[Display(Name= "Remember me")]
+		public  bool RememberMe {get; set;} // if true , create a peristent cookie or else a session cookie
+	}
+	
+	public class AccountController : Controller{
+		[HttpGet]
+		public IActionResult Login() {
+			return view();
+		}
+		
+		[HttpPost]
+		public async Task<IActionResult> Login(LoginViewModel model){
+			if(ModelState.IsValid){
+				//Here isPersistent is related to login cookie, lockOutOnFailure is for locking account in case of invalid login details
+				SignInResult result = await signinManager.PasswordSignInAsync(userName: model.EmailId,
+				password: model.Password, isPersistent: model.RememberMe, lockOutOnFailure: false);
+								
+				if(result.Succeded){
+					return RedirectToAction("index","Home");
+				}
+				
+				//if signin failed, we should show error message to the user 
+				ModelState.AddModelError("", "Invalid Login attempt");
+			}
+			
+			return view(); for invalid user info, show error infor on Login page
+		}
+	}
+
+Once user is logged in , a cookie with name "AspNetCore.Identity.Application" gets created. We can see this cookie under
+Application tab once we do F12. For any other server call after login, this cookie is sent to server in order to tell server that 
+loggedin user is a valid user. 
+
+A session cookie gets deleted when user logsout or browser is closed but a peristent cookie will be present forever. If we 
+wish to remove peristent cookie, then we will have to logout from the browser.
+
+**************** Autherization in .net core ***********************************
+Authentication is the process of identifying who the user is. 
+Autherization is the process of identifying what the user can and can't do. 
+
+We can achieve Autherization by decorating Autherize attibure over any action. If any un-Autherized user tries to access 
+any Autherized action, application will redirect the user to Login page and here url will look like
+	baseUrl/Account/Login?ReturnUrl=home/edit/1 (assuming user was redirected to login page after home/edit/1 URL)
+Once user logsin, app can redirect him back to ReturnUrl by adding few extra code.
+
+using Microsoft.AspNetCore.Authentication;
+[Autherize]
+public IActionResult Create(){
+}
+
+When we apply Autherize attribute on Controller, non of the controller action is accessible for a non-autherized user. 
+In this case , if we wish to allow un-Autherized user to index page, we should decorate it with AllowAnonymous attribute.
+
+[Autherize]
+public class HomeController{
+
+	[AllowAnonymous]
+	public IActionResult Index(){
+	}
+
+	public IActionResult EditUser(){
+	}
+	
+	public IActionResult Create(){
+	}
+}
+
+But if we apply AllowAnonymous attribute over controller and Autherize attribute over any action, that action can be accessed by
+un-autherized user.
+
+We can add Autherize attribute globally in startup.cs too. Hence all controller action methods are accessible to autherized user.
+Startup.cs
+
+using Microsoft.AspNetCore.Autherization;
+using Microsoft.AspNetCore.Mvc.Autherization;
+public void ConfigureSerives(IServiceCollection services){
+	services.addMvc(options=>{
+		var policy = new AuthenticationPolicyBuilder()
+						.RequiredAuthenticatedUser()
+						.Build();
+		options.Filters.Add(new AutherizeFilter(policy));
+	});
+}
+
+Additional to Authenticated user authentication another 3 types of Authentication is available in .net core .
+	1. Role based Autherization
+	2. Claims based
+	3. Policy based
+	
+********************* Redirect to original URL after login (72) ***************
+When user tried to access any autherized page without logging in, app redirects user to log in page and the url may look like below
+baseUrl/Account/Login?ReturnUrl=home/edit/1 (assuming pre-login url was home/edit/1 ). Now once user logsin, we shouldredirect him to 
+home/edit/1 url instread of any default Url. This can be achieved using below code.
+
+Add returnUrl parameter to Login() action in order to read returnUrl query-string parameter.
+
+[HttpPost]
+public async Task<IActionResult> Login(LoginViewModel model, string returnUrl){
+	if(ModelState.IsValid){
+		//all logic for login details validation
+		if(result.Succeded){
+			if(!string.IsNullEmpty(returnUrl)){
+				return Redirect(returnUrl);
+			}
+			else
+			{
+				return RedirectToAction("index","Home");
+			}
+		}
+	}
+		//other logics
+}
+
+But return Redirect(returnUrl); line of code  will create "open redirect vulnerability" issue.
+
+********************* open redirect vulnerability issue example  *************
+If any application redirects to a URL that is specified in query-string without verifying whether the URL belongs to
+ current app or not, is called vulnerability issue as attackers may change URL and hack. 
+ 
+ In order to avoid this we should use below code, as it will redirect to only application specific URL.
+ 
+	return Redirect(returnUrl);
+	
+or 
+	if(!string.IsNullEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)){
+		return Redirect(returnUrl);
+	}
+
 

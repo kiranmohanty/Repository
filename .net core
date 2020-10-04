@@ -1110,5 +1110,123 @@ or
 	if(!string.IsNullEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)){
 		return Redirect(returnUrl);
 	}
+********************* Client side validation **************************	
+We need below script files before performing client side validation.
+	jquery.js
+	jquery.validate.js
+	jquery.validate.unobstrusive.js // this js takes serverside validat  and perfoms on client side.
+	
+we need Required, MaxLength etc attributes over class properties that has val rule.	
+
+for required field attribute, a data-val-required="This field is required" attribute will be addedd and bsed on this type of attribute,
+validation is perfomed on client side. We can see this attribute on page source.
+
+Mandatory measures to make in work in all machine:-
+	Browser must support javascript, it should not be disabled.
+	all viladation library are addedd
+	varidation libraries must be loaded for that environment.
+	
+For Unique email id validation, its advised to perfom on server sise and code looks as below.
+
+[AcceptVerbs("Get","Post")] //any user before login , will send a Get request
+[AllowAnonymous]	// allow user to access this action while creating account
+public async Task<IActionResult> IsEmailInUse(string emailId){
+	var user = userManager.FindByEmailAsync(emailId);
+	if(user){
+		return Json($"Email " emailId " is already in use.");
+	}
+	else{
+		return Json(true); //email id doen not exist
+	}
+}
+
+Add Remote attribute over Email property and then on input validation change, IsEmailInUse() method will be called. 
+Else validation will be performed on submit button click.
+
+[Required]
+[EmailAddress]
+[Remote( action: "IsEmailInUse", controller: "Account")]
+public string Email {get; set;}
+
+********************* custom validation *******************
+We can define our own custom validation rules in specific scenarios. Example- only user of spaecific domain can register themselves.
+Below are the steps to create it.
+
+using System.ComponentModel.DataAnotation;
+public class ValidEmailDomainAttribute : ValidationAttribute
+{
+	private string domainName;
+	public ValidEmailDomainAttribute(string allowedDomain){
+		this.domainName = allowedDomain; //in order to loosely couple domain 
+	}
+	public override bool IsValid(object value){
+		return base.IsValid(value);
+	}
+}
+
+
+[Required]
+[EmailAddress]
+[ValidEmailDomainAttribute(allowedDomain: "@gmail.com" , ErrorMessage= "Invalid domain user"]
+public string Email { get; set; }
+
+Here ErrorMessage property is from ValidationAttribute class.
+
+********************* Extend IdentityUser in .net core **************************** 
+In case if we want extra properties like City, Mobile number etc, we have to extend IdentityUser class.
+	public class AppUser: IdentityUser {
+		public string PhoneNo {get; set;}
+	}
+In order to reflect this extra property on database, we should run our migration. But beore that we should link our AppDbContext class
+with AppUser. We can do that as below. Without this change, PhoneNo column will not be added in database. 
+
+	//old
+	public class AppDbContext : IdentityDbContext {}
+
+	//current code
+	public class AppDbContext : IdentityDbContext<AppUser> {}
+
+then we have to do migration by following below commands.
+Add-Migration IdentityUserExtend
+update-database
+
+user info is stored in dbo.AspNetUser table and roles info are stored in dbo.AspNetRoles.
+
+*************************** Creating Roles in ASP.Net ***********************************
+In case we wish to add Roles to our application, We can to that by using framework based RoleManager service. Below are the steps.
+1. Inject RoleManager in required construstor. 
+	using Microsoft.ASPNetCore.Identity;
+	public class HomeController : Controller{
+		private RoleManager<IdentityRole> _roleManager;
+		public HomeController(RoleManager<IdentityRole> roleManager){
+			
+		}
+		
+		[HttpPost]
+		public IActionResult CreateRole(CreateRoleViewModel model){
+			if(model.IsValid){
+				var role = new IdentityRole(){ // EF in build Role class
+					role.Name= model.Role;
+				}
+				
+				IdentityResult result = roleManager.CreateAsync(role);
+				if(result.Succeded){
+					return RedirectToAction("index", "Home");
+				}
+				else{
+					//loop through all errors in result.Error 
+				}
+			}
+			
+			return View();
+		}
+	}
+2. ViewModel 
+	public class CreateRoleViewModel {
+		public string Role {get; set;}
+	}
+	
+	
+3. define UI to create application specific Role	
 
 

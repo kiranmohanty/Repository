@@ -1,0 +1,15 @@
+************** PIVOT **********
+
+select * from (
+select * from (
+select t1.dept , t1.CodesCount as 'Todatl tests', isnull( t3.value1, 0) as 'value1',  t3.TestDate 
+from table1 t1
+left outer join table2 t2 on t2.Dept  =  t1.Dept
+left outer join table3  t3 on t2.UserName = t3.UserName
+) t
+pivot (
+sum(value1)
+for TestDate in ( [2020-06-10],[2020-06-09], [2020-05-10],[2020-07-10] ) // t3.TestDate  column values
+) as pivot_table
+) result
+order by dept;

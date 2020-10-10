@@ -326,4 +326,6 @@ Advantage:-
   3.It doesn't impact the loading of the next page
   4.In addition, the code is simpler to write than any of the older techniques!
   
-  
+28. What happens when we add  "Controller" folder instead of adding "Controllers" folder to an empty project ?
+   We will get build error when we try to inherit any application controller class from  "Controller" class. 
+   Error will look like this  "Controller is a namespace but used like a class"

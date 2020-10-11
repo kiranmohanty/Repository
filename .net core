@@ -12,7 +12,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     // Add entity framework SQL connection.
     services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
     services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -77,7 +77,7 @@ Adding services to the services container makes them available within your appli
     3. Configures logging service.        
 
 -----------------------------Middleware------------------------------------------------------------
-It consists of multiple delegates, that gets executed one by one. If any condition failed, it will not execute next pipeline delegate.
+It consists of multiple delegates, that gets executed one by one. If any condition fails, it will not execute next pipeline delegate.
 Response will be sent back once that delegate is executed. This mechanism is called short-circuit pipeline.
 
 app.Run() method (in startUp-> configure method) :- each http response will be generated based on this anonymous method logic 
@@ -101,7 +101,7 @@ app.Run() method (in startUp-> configure method) :- each http response will be g
 
 ************************  Introduction ***************
 .net core sdk is installed on development machine and is required to build and run an app.
-.net core runtime is required on staging/ production machine and is reuired to run deployment of .net packaged project.
+.net core runtime is required on staging/ production machine and is required to run the deployed .net project.
 
 * .csproj can be edited directly without unloading the project, in .net code.
 * All files that are defined under project are by default part of the project. Hence .csproj does not hold any reference of files and folders.
@@ -181,13 +181,13 @@ Startup.cs
            Image folder
            css folder
            javascript folder
-* app.FileServer():-  serves a request with static file where user requests aa static file with specific path.
-* app.UseDeveloperExceptionPage(); :- If application has default age enabled and exception , browser will dispaly default page instead 
+* app.FileServer():-  serves a request with static file where user requests a static file with relative path.
+* app.UseDeveloperExceptionPage(); :- If application has default page enabled and exception occures, browser will dispaly default page instead 
                                      of displaying exception.
                                      code:- 
                                        app.FileServer();
                                        app.UseDeveloperExceptionPage();
-          It shows iinformation about 
+          It shows information about 
                                    1. exception details
                                    2. query string
                                    3. cookies
@@ -198,7 +198,7 @@ Startup.cs
 2. Staging
 3. Production
 
-In staging & production environemnt minified javascripts are loaded in order to improve performance. 
+In staging & production environment minified javascripts are loaded in order to improve performance. 
 setting up environment :-
    launchsettings.json 
         environmentvaribale {
@@ -225,9 +225,9 @@ Startup.cs
 *  services.AddMvc() is the dependency injection container. It should be injected before using "UseMvcWithDeafultRoute()" middleware.
 * Difference between service.AddMvc() & service.AddMvcCore()
     AddMvcCore() will add only basic dependencies.
-    AddMvcCore() will add few extra dependencies like JsonFormater service.
+    AddMvc() will add few extra dependencies like JsonFormater service.
 * ViewData - Key value pair object. ViewBag - dynamic type. both defines loosely typed vew.
-* Stronly typed view:- view tightly coupled with model.
+* Strongly typed view:- view tightly coupled with model.
 * Layout view:- is same as master page in ASP.Net and it holds common designs for app . Ex:- header , footer, left/right side navigation.
 * _Layout.cshtml :- "_" (underscore) is intended to say this view should not be rendered by browser directly.
 * RenderBody() is layout view:- will render requested view insterting inside layout view.
@@ -243,17 +243,17 @@ Startup.cs
             }
      Detail.cshtml
            <div> .... </div>
-           @section script {
+           @section scripts {
               <script src="~/js/xyz.js"></script>
              }
-A section in layout view defines a way of adding certain html/ script i nperticular area of view.
+A section in layout view defines a way of adding certain html/ script in perticular area of view.
 
 * _ViewStart.cshtml (under views-> shared folder):- 
     @{
       Layout ="_Layout"
       }
 which will imply _Layout.cshtml as default view for all views.
-* If a "_ViewStart" file exists in sub folder and  app points to that sub folder , then sub folder viewstart will be served by the request.
+* If a "_ViewStart" file exists in sub folder and  app points to that sub folder , then sub folder view start will be served by the request.
     
 ********************************** Dependency injection *****************************    
 * Constructure dependency injection :- injecting any service in constructor .

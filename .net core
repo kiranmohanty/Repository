@@ -248,7 +248,7 @@ Startup.cs
              }
 A section in layout view defines a way of adding certain html/ script in perticular area of view.
 
-* _ViewStart.cshtml (under views-> shared folder):- 
+* _ViewStart.cshtml (under views folder):- 
     @{
       Layout ="_Layout"
       }
@@ -256,15 +256,15 @@ which will imply _Layout.cshtml as default view for all views.
 * If a "_ViewStart" file exists in sub folder and  app points to that sub folder , then sub folder view start will be served by the request.
     
 ********************************** Dependency injection *****************************    
-* Constructure dependency injection :- injecting any service in constructor .
+* Constructor dependency injection :- injecting any service in constructor .
 * way of defining implementation for any interface , so that interface can be injected into the app
     startup.cs 
        ConfigureServices(){
          services.AddSingleton<IEmp, Emp>();         
          
 * AddSingleton:- Only one instance of service is created
-  AddTransient:- a new seervice instance is created as and when a request refers injected class
-  AddScoped:- will generate a service instance per scoppe per request.
+  AddTransient:- a new service instance is created as and when a request refers injected class
+  AddScoped:- will generate a service instance per scope per request.
 
 *************************** Startup.cs middleware methods ********************
 UseDeveloperExceptionPage():- app will load a developer exception page only on dev environment.
@@ -336,7 +336,7 @@ configure routing for UseMvc() middleware
 token based Attribute routing:- it aumatically replaces actual controller/action name in pace in routing URL
 		It's a dynamic way of defining controller/ action name, so that in future if action/ controller name is being changed, we dont need to change routing attribute. 
 	[Route("[controller]")]
-	public class XyzController: Controller{			
+	public class HomeController: Controller{			
 
 		//localhost:2020/Home/Details will point to this action method
 		[Route("[action]")]
@@ -344,7 +344,7 @@ token based Attribute routing:- it aumatically replaces actual controller/action
 	}
 
 *************** include external client side library like bootsrtap ****************
-project-> (right click)-> add Project library => provider as cdnjs-> search for library -> click on add
+project-> (right click) -> add client side library => provider as cdnjs -> search for library -> click on add
 this will add "libman.json" under project node, that holds all external libraries has been added to the project.
 content:- 
  {
@@ -363,10 +363,11 @@ content:-
  }
  
  ********************* Tag helper in .net core ******************
- tag helpers are server side component which are used to generate html on server. its similar to HtmlHelper in MVC.
-How to import :_ include below code on top of cshtml
+Tag Helpers enable server-side code to participate in creating and rendering HTML elements in Razor files. its similar to HtmlHelper in MVC.
+How to import :- include below code on top of cshtml
 //* refers to include all tag helprers 
 //Microsoft.AspNetCore.Mvc.TagHelper namespace
+//add this reference in Views/_ViewImports.cshtml
 @addTagHelper, *, Microsoft.AspNetCore.Mvc.TagHelper
 
 //asp-route-*:- * refers to route parameter name
@@ -376,8 +377,8 @@ app.UseMvc(routes =>{
 	routes.MapRoute("Default", "{Controller}/{action}/{id?}"
 });
 
- tag helpers are better than usual mvc route defination. Because in future, incase we change our route defination, tag helpers will 
- work as earlier , but tipical MVC approach will lead to 404 error. in order to make them work, we need to change all mvc route references.
+ tag helpers are better than usual mvc route defination. Because in future, in case we change our route defination, tag helpers will 
+ work as earlier , but typical MVC approach will lead to 404 error. in order to make them work, we need to change all mvc route references.
  Ex:-
  app.UseMvc(routes =>{
 	routes.MapRoute("Default", "xyz/{Controller}/{action}/{id?}"
@@ -386,13 +387,13 @@ app.UseMvc(routes =>{
 <a href="xyz/Home/details/1">View</a> // must update route path
 
 ********* Image tag helper
-usually once a page is loaded, images are stored in browser cache. so if a image has been changed in server, it would still load cashed one until 
+Usually once a page is loaded, images are stored in browser cache. so if a image has been changed in server, it would still load cached one until 
 browser is closed or cache is cleared. If we disable browser cache, then each & everytime a server call will be made for loading image.
 
-Insead of doing so, one can use image tag helper in .net core.
+Instead of doing so, one can use image tag helper in .net core.
 ex- <img class="img" src="/img/noimage.png" asp-append-verion="true"/>
 Here tag helper appends a hash code along with image path in html src. if the hash value is same as before when a page is reloaded, then
-image is read from browser cache else a server call is made to fetch image details.
+image will be loaded from browser cache else a server call is made to fetch image details.
 
 ***** Environmental tag helprers *****************
 Layout.cshtml
@@ -413,7 +414,7 @@ to Home/Create action with HttpPost verb, if no controller or action is added ex
 Ex:- 
 @Model Employee
 <form asp-controller="Home" asp-action="SaveData" method="POST">
-	<label asp-for="Name"></label> //asp-for for label will be converted to HTML for and when user clicks on this label , Name text fox will get focus
+	<label asp-for="Name"></label> //asp-for for label will be converted to HTML for and when user clicks on this label , Name text box will get focus
 	<input asp-for="Name" /> //Name is a property of Employee class
 	<select asp-for="Department" asp-items="HTML.GetEnumSelectList<Dept>()"></select>
 </form>
@@ -425,7 +426,7 @@ asp-items - will generate options for the dropdown element
 
 ****************** Model binding in core **************
 Binding request data to action method parameter:- .net core MVC binds request data to controller action method parameter by name.
- If any parameter name in request object and action parameter name is not same, MVC cant map the value.
+ If any parameter name in request object and in action parameter name does not match, MVC can't map the value.
 
 Url= Home/Index/2?name=xyz
 Public string Index(string id, string name){
@@ -449,7 +450,7 @@ Public string Index(string id, string name){
 }
 
 .net core model binding looks into below objects for populating action parameter when a request is rased.
-	1. Form values (forst preference)
+	1. Form values (first preference)
 	2. Route Values
 	3. QueryString
 
@@ -513,8 +514,8 @@ AddTransient- a new instance of DI service/class is created whenever a service i
 
 ********************** Entity framework *******************************************
 Advantages 
-	ORM(Object relational mapper)- database tables r mapped as objects
-	lighweight, extensible and open source
+	ORM(Object relational mapper)- database tables are mapped as objects
+	lightweight, extensible and open source
 	work cross platform
 	Microsofts official data access platform
 
@@ -538,7 +539,7 @@ apsettings.json
  AppDbContext is a class that represents database and it must inherit DBContext class.
  AddDBContext:- any time a AppDbContext instance is requested, application will create a new instance of it.
  AddDBContextPool:- it is similar to database connection pulling. 
-					any time a AppDbContext instance is requested, first application will check if any connection is availablein pull.
+					any time a AppDbContext instance is requested, first application will check if any connection is available in pull.
 					if so, it returns that instance else returns a new instance.
 options.UseSqlServer():- will let application know that we are going to use SQL database. Accepts connectionString name.
 server=(localdb)\\MSSQLLocalDB :- Application will create a local SQL DB in VS server explorer.		
@@ -551,16 +552,15 @@ ORM is a programming technique that is used to covert data between two incompati
 EF (Enity framework is an example of ORM)
 
 Advantage of EF over ADO.Net :-
-It eliminates the need of writing codes such as database connection, data fetch, any kind of data update.
-Hence EF is called as code first approach. ADO.Net is a technique of database first approach 
-beacase database & table must be present before application executes it. In case we have database already and
+It eliminates the need of writing codes such as database connection, data fetch, any kind of data update. Hence EF is called as code first approach. 
+ADO.Net is a technique of database first approach, beacase database & table must be present before application executes it. In case we have database already and
 we are planning to build an application, the we should go with database first approach.
 
-In case if we wish to go with database first approach with EF, we will haev to include Database Provider plugins (from NuGet).
+In case if we wish to go with database first approach with EF, we will have to include a middle layer called Database Provider plugins (from NuGet).
 This Database Provider model is a communicating agent between EF and actual database (SQL/ Oracle).
 
 ******************** Repository pattern ******************
-Its an abstraction pattern of data access layer. It hide how data is beinged saved or retrived to the outer layer.			
+Its an abstraction pattern of data access layer. It hides how data is being saved or retrived to the outer layer.			
 Ex:-
  IRepository
   Add

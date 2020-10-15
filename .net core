@@ -425,7 +425,7 @@ HTML.GetEnumSelectList<Dept>()- will convert enum items to list of string
 asp-items - will generate options for the dropdown element
 
 ****************** Model binding in core **************
-Binding request data to action method parameter:- .net core MVC binds request data to controller action method parameter by name.
+Binding request data to action method parameter :- .net core MVC binds request data to controller action method parameter by name.
  If any parameter name in request object and in action parameter name does not match, MVC can't map the value.
 
 Url= Home/Index/2?name=xyz
@@ -479,7 +479,7 @@ public class Employee{
 	[MaxLength(50, ErrorMessage= "Name can't exceed 50 characters")]
 	public string Name;
 	
-	[RegularExpression(@"^[a-zA-z0-9_.]{1,}@[a-zA-z0-9_.].(com||in)$", ErrorMessage= "Invalid Email format")]
+	[RegularExpression(@"^[a-zA-z0-9_.]{1,}@[a-zA-z0-9_.].(com|in)$", ErrorMessage= "Invalid Email format")]
 	[Display(Name= "Office Email")]
 	public string EmailId;
 }
@@ -487,7 +487,7 @@ public class Employee{
 Public IActionResult Submit(Employee emp){
 	if(ModalState.IsValid){
 		//save code
-		return RedirectToAction("Details", new {id: "saved id"};
+		return RedirectToAction("Details", new {id: savedId};
 	}	
 	return View();
 }
@@ -517,7 +517,11 @@ Advantages
 	ORM(Object relational mapper)- database tables are mapped as objects
 	lightweight, extensible and open source
 	work cross platform
-	Microsofts official data access platform
+	Microsoft's official data access platform
+
+install packages
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.SqlServer
 
  Startup.cs
  using Microsoft.EntityFrameworkCore;
@@ -525,13 +529,13 @@ Advantages
 	_config= config;
   }
   public void ConfigureService(IServiceCollection services){
-		services.AddDBContext<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb"))
+		services.AddDBContext<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionString("SqlDb"))
 		or 
-		services.AddDBContextPool<AppDbContext>((options => options.UseSqlServer(_config.GetConnectionStrin("SqlDb"))
+		services.AddDBContextPool<AppDbContext>((options => options.UseSqlServer(_config.GetConnectionString("SqlDb"))
 	}
 apsettings.json
 		{
-			"ConnectionSTrings":{
+			"ConnectionStrings":{
 				"SqlDB":"server=(localdb)\\MSSQLLocalDB;database=DBName;Trusted_Connection=True"
 			}
 		}
@@ -548,7 +552,7 @@ Trusted_Connection/Integrated Security are same and either or can be used in con
 
 ********************* Creating local SQL DB (in SQL server object explorer) in entity framework *****************
 ORM- Object relational mapping.
-ORM is a programming technique that is used to covert data between two incompatible systems. ex- c# & SQL
+ORM is a programming technique that is used to convert data between two incompatible systems. ex- c# & SQL
 EF (Enity framework is an example of ORM)
 
 Advantage of EF over ADO.Net :-
@@ -560,7 +564,7 @@ In case if we wish to go with database first approach with EF, we will have to i
 This Database Provider model is a communicating agent between EF and actual database (SQL/ Oracle).
 
 ******************** Repository pattern ******************
-Its an abstraction pattern of data access layer. It hides how data is being saved or retrived to the outer layer.			
+It's an abstraction pattern of data access layer. It hides how data is being saved or retrived to the outer layer.			
 Ex:-
  IRepository
   Add

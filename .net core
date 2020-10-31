@@ -602,7 +602,7 @@ Ex:-
  
  Advantage of repo pattern:-
 	cleaner code
-	loosely coupled (application can point to any other repository if its changed only in startup.cs file)
+	loosely coupled (application can point to any other repository when its changed only in startup.cs file)
 	
 ********************** Entity framework core database migration using command *****************
 suppose we wish to create a local SQL database in VS and we have our DbContext class and DbSet properties , then we should follow below steps.
@@ -629,7 +629,7 @@ public class AppDbContex: DbContext{
 	}
 }
 
-after defining code, we have run bellow commands in package manager console.
+after defining code, we have to run bellow commands in package manager console.
 Add_migration migrationName1 => another file named migrationName1 will be created under migration folder with latest changes.
 update_database => will update database with default initial value.
 

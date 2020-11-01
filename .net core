@@ -707,7 +707,7 @@ public ActionResult Create(EmpViewModel model){
 
 ?? operator:- The null-coalescing operator ?? returns the value of its left-hand operand if it isn't null;
 			  otherwise, it evaluates the right-hand operand and returns its result.
-			  Ex:- int? a=null; Console.WriteLine( a ?? 20); //output 20 but a is still null
+			  Ex:- int? a = null; Console.WriteLine( a ?? 20); //output 20 but a is still null
 ??= operator:-when lefthand variable is null it assigns RHS value to LHS variable.
 			  Ex - int? a=null; Console.WriteLine( a ??= 20); //output 20 Console.WriteLine( a); // 20
 			  
@@ -766,16 +766,16 @@ How to handle 404 error?
 	when we use this code, any requested URL if does not match any route, then current request status code is marked as
 	302 (URI has been changed temporarily) . Then the http request pipeline issues another get request which changes URL to "Error/404".
 	Then ErrorController logic prepares response.
-	Here 2 round trips happen , one response with 302 sta code and other with 404.
+	Here 2 round trips happen , one response with 302 static code and other with 404.
 	It redirects a pipeline to Error/404 when any URL is ot found.
 	
 app.UseStatusCodePagesWithReExecute("Error/404")
 	When we use this code, if any URL is not found as per our route config, UseMVC middleware resonsonds 404 and response reaches UseStaticFiles()
 	middleware. It just passes response to UseStatusCodePagesWithReExecute() middleware. This middleware finds response code as 404 and hence issues
 	Error/404 request. Here HTTP pipeline does not send any response to browser/ end client. It starts executing Error/404 again. Once 404 action responds,
-	http pipeline send response back to client/browser with status code 404.
-	Here only 1 round trip happens , one response with status code 404.
-	It reexecutes a pipeline.
+	http pipeline sends response back to client/browser with status code 404.
+	Here only 1 round trip happens, one response with status code 404.
+	It re-executes a pipeline.
 
 ***************************** Global exception handling ******************
 app.UseExceptionHandler("/Error"); will execute ErrorController with Error Route attribute.
@@ -798,24 +798,24 @@ appsettiings.json
  "Microsoft" value can be "Information" /"warning"
 Enable above settings, in order to see .Net core default logging action. 
 .Net core has 2 logging provider services.
-	1. Console logging provider- it logs info on console when project is ran via command prompt.
-	2. Debug logging provider- it logs info on output window of VS when project is ran via VS  in debug mode
-This logs are auto generated, because WebHost.CreateDefaltBuilder() method internally calls ConfigureLogging() method( framwork label logging mehod).
+	1. Console logging provider - it logs info on console when project runs via command prompt.
+	2. Debug logging provider - it logs info on output window of VS when project runs via VS  in debug mode
+This logs are auto generated, because WebHost.CreateDefaultBuilder() method internally calls ConfigureLogging() method( framwork label logging mehod).
 What all information it shoulg log, that we have to define in "Logging" section of appsettiings.json.
 
-We can log our custom infor using ILogger provider.
+We can log our custom info using ILogger provider.
 using Microdoft.Extentions.Logging;
 
-public class ErrorController : Controller{
+public class ErrorController : Controller {
 	private readonly ILogger<ErrorController> _logger;
 
 	//ILogger<ErrorController> is defined here so that all logs for ErrorController will be grouped together 
 	public ErrorController(ILogger<ErrorController> logger){
-		this._logger=logger;
+		this._logger = logger;
 	}
 	public IActionResult Error(string url){
 		//$ is used for string interpolation
-		_logger.LogError($"Requested URL {url}" not found");
+		_logger.LogError($"Requested URL {url} not found");
 		//_logger.LogInformation or _logger.LogWarning etc
 	}
 	
@@ -823,7 +823,7 @@ public class ErrorController : Controller{
 
 
 ****************** Logging to a file in ASP.Net core using NLog ***************
-download and install NLog.We.AspNetCore from NuGet package.
+download and install NLog.Web.AspNetCore from NuGet package.
 Add a text file in project folder and name it as NLog.config.txt.
 
 ****************** .Net core Identity *******************************
@@ -863,24 +863,24 @@ Steps to add Identity to our project
 	}
 	
 	Then we have to run migration command in order to create SQL Identity tables.
-	package manager console=> add-migration IdentityUpdate
-							  update-database // in order to reflect migration changes on database
+	package manager console=> add_migration IdentityUpdate
+				  update_database // in order to reflect migration changes on database
     
 	On command successful execution, we will see below tables in SQL database.							  
 		dbo.AspNetUser, dbo.AspNetRole, dbo.AspNetUserLogin etc tables.
 		
 ******************* Register new user using Asp.Net core Identity ********		
 	[Required]
-	[DataType(DataType.Password)] //in order not to show any character while typing in password field
+	[DataType(DataType.Password)] //in order not show any character while typing in password field
 	public string Password;
 	
 New user can be registered by defining register/account	routing related code.
 
 ******************** Inbuilt Identity User manager & signin manager services **********************
-UserManager<IdentityUser> :- is used to create/update/delete a user info. In order to use this service we have inject this into AccountController.
-	Its methods :- CreateAsync, UpdateAsync, DeleteAsync etc.
+UserManager<IdentityUser> :- is used to create/update/delete a user info. In order to use this service we have to inject this into AccountController.
+	      Its methods :- CreateAsync, UpdateAsync, DeleteAsync etc.
 SignInManager<IdentityUser> :- This service is useful for allowing a user to signin. This also need to be injected in controller.
-	Its Methods:- SignedInAsync, SignedOutAsync, IsSignedIn etc..
+	        Its Methods :- SignedInAsync, SignedOutAsync, IsSignedIn etc..
 	
 	public class AccountController {
 		private UserManager<IdentityUser> _userManager;
@@ -895,7 +895,7 @@ SignInManager<IdentityUser> :- This service is useful for allowing a user to sig
 		public async Task<IActionResult> Register(RegisterViewModel model) {
 			if(ModelState.IsValid){ //if valid info, save user
 				var user = new IdentityUser();
-				user.Name = model.Name;//... copy all values
+				user.Name = model.Name; //... copy all values
 				
 				//pass IdentityUser and password info for creating user.
 				//once record is created in database, password is hashed before storing in DB
@@ -924,7 +924,7 @@ SignInManager<IdentityUser> :- This service is useful for allowing a user to sig
 	must contain at least one upper case character
 	must contain at least one number
 	
-In order to define our own password rule , we must change configurion as below.
+In order to define our own password rule, we must change configurion as below.
 This can be achieved using services.configure method or by using service.AddIdentity method. 
 	startup.cs
 	public void ConfigureSerives(IServiceCollection services){
@@ -934,8 +934,8 @@ This can be achieved using services.configure method or by using service.AddIden
 		});
 	}
 	Or
-	public void ConfigureServices(IServiceCollection service){		
-		service.AddIdentity<IdentityUser, IdentityRole>(option => {
+	public void ConfigureServices(IServiceCollection services){		
+		services.AddIdentity<IdentityUser, IdentityRole>(option => {
 			option.Password.RequiredLength =8;
 			option.Password.RequiredUniqueChars =3;
 		})
@@ -951,7 +951,7 @@ _Logout.cshtm
 	@inject SignInManager<IdentityUser> signinManager; // for injecting any service
 	<div>
 		//IsSignedIn method expects instance of ClaimsPrinciple, which is defined in User property of RazorPageBase class
-		//User property is from RazorPageBase class, hence no external namespace import is not needed.
+		//User property is from RazorPageBase class, hence no external namespace import is needed.
 		@if(signinManager.IsSignedIn(User) {
 			<li class="nav">
 				// we should define a logout action as POST. If we define as GET, with image load request, user might get logged out.
@@ -991,15 +991,15 @@ Post request for submitting login details for validation and post login view .
 		public  bool RememberMe {get; set;} // if true , create a peristent cookie or else a session cookie
 	}
 	
-	public class AccountController : Controller{
+	public class AccountController : Controller {
 		[HttpGet]
 		public IActionResult Login() {
 			return view();
 		}
 		
 		[HttpPost]
-		public async Task<IActionResult> Login(LoginViewModel model){
-			if(ModelState.IsValid){
+		public async Task<IActionResult> Login(LoginViewModel model) {
+			if(ModelState.IsValid) {
 				//Here isPersistent is related to login cookie, lockOutOnFailure is for locking account in case of invalid login details
 				SignInResult result = await signinManager.PasswordSignInAsync(userName: model.EmailId,
 				password: model.Password, isPersistent: model.RememberMe, lockOutOnFailure: false);
@@ -1025,7 +1025,7 @@ wish to remove peristent cookie, then we will have to logout from the browser.
 
 **************** Autherization in .net core ***********************************
 Authentication is the process of identifying who the user is. 
-Autherization is the process of identifying what the user can and can't do. 
+Authorization is the process of identifying what the user can and can't do. 
 
 We can achieve Autherization by decorating Autherize attibure over any action. If any un-Autherized user tries to access 
 any Autherized action, application will redirect the user to Login page and here url will look like

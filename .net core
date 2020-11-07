@@ -929,15 +929,15 @@ This can be achieved using services.configure method or by using service.AddIden
 	startup.cs
 	public void ConfigureSerives(IServiceCollection services){
 		services.Configure<IdentityOption>(option => {
-			option.Password.RequiredLength =8;
-			option.Password.RequiredUniqueChars =3;
+			option.Password.RequiredLength = 8;
+			option.Password.RequiredUniqueChars = 3;
 		});
 	}
 	Or
 	public void ConfigureServices(IServiceCollection services){		
 		services.AddIdentity<IdentityUser, IdentityRole>(option => {
-			option.Password.RequiredLength =8;
-			option.Password.RequiredUniqueChars =3;
+			option.Password.RequiredLength = 8;
+			option.Password.RequiredUniqueChars = 3;
 		})
 		.AddEntityFrameworkStores<AppDbContext>(); //in order to allow Identity class to access user info from our database
 	}
@@ -974,11 +974,11 @@ AccountController.cs
 	}
 	
 	
-For Login action, we need 2 actions in controller. one is Get request for login page view and the other on is 
+For Login action, we need 2 actions in controller. one is Get request for login page view and the other one is 
 Post request for submitting login details for validation and post login view .
 	
-	using microsoft.ComponentModel.DataAnotation;
-	public class LoginViewModel{
+	using Microsoft.ComponentModel.DataAnotation;
+	public class LoginViewModel {
 		[Required]
 		[EmailAddress]
 		public string EmailId {get; set;}
@@ -1037,7 +1037,7 @@ using Microsoft.AspNetCore.Authentication;
 public IActionResult Create(){
 }
 
-When we apply Autherize attribute on Controller, non of the controller action is accessible for a non-autherized user. 
+When we apply Autherize attribute on Controller, non of the controller action is accessible for a un-autherized user. 
 In this case , if we wish to allow un-Autherized user to index page, we should decorate it with AllowAnonymous attribute.
 
 [Autherize]
@@ -1077,8 +1077,8 @@ Additional to Authenticated user authentication another 3 types of Authenticatio
 	3. Policy based
 	
 ********************* Redirect to original URL after login (72) ***************
-When user tried to access any autherized page without logging in, app redirects user to log in page and the url may look like below
-baseUrl/Account/Login?ReturnUrl=home/edit/1 (assuming pre-login url was home/edit/1 ). Now once user logsin, we shouldredirect him to 
+When user tried to access any autherized page without logging in, app redirects user to login page and the url may look like below
+baseUrl/Account/Login?ReturnUrl=home/edit/1 (assuming pre-login url was home/edit/1 ). Now once user logsin, we should redirect him to 
 home/edit/1 url instread of any default Url. This can be achieved using below code.
 
 Add returnUrl parameter to Login() action in order to read returnUrl query-string parameter.
@@ -1108,9 +1108,6 @@ If any application redirects to a URL that is specified in query-string without 
  
  In order to avoid this we should use below code, as it will redirect to only application specific URL.
  
-	return Redirect(returnUrl);
-	
-or 
 	if(!string.IsNullEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)){
 		return Redirect(returnUrl);
 	}
@@ -1118,11 +1115,11 @@ or
 We need below script files before performing client side validation.
 	jquery.js
 	jquery.validate.js
-	jquery.validate.unobstrusive.js // this js takes serverside validat  and perfoms on client side.
+	jquery.validate.unobstrusive.js // this js takes server side validate and perfoms on client side.
 	
-we need Required, MaxLength etc attributes over class properties that has val rule.	
+we need Required, MaxLength etc attributes over class properties that has validation rule.	
 
-for required field attribute, a data-val-required="This field is required" attribute will be addedd and bsed on this type of attribute,
+For required field attribute, a data-val-required = "This field is required" attribute will be addedd and based on this type of attribute,
 validation is perfomed on client side. We can see this attribute on page source.
 
 Mandatory measures to make in work in all machine:-
@@ -1130,7 +1127,7 @@ Mandatory measures to make in work in all machine:-
 	all viladation library are addedd
 	varidation libraries must be loaded for that environment.
 	
-For Unique email id validation, its advised to perfom on server sise and code looks as below.
+For Unique email id validation, its advised to perfom on server side and code looks as below.
 
 [AcceptVerbs("Get","Post")] //any user before login , will send a Get request
 [AllowAnonymous]	// allow user to access this action while creating account
@@ -1153,7 +1150,7 @@ Else validation will be performed on submit button click.
 public string Email {get; set;}
 
 ********************* custom validation *******************
-We can define our own custom validation rules in specific scenarios. Example- only user of spaecific domain can register themselves.
+We can define our own custom validation rules in specific scenarios. Example- only user of specific domain can register themselves.
 Below are the steps to create it.
 
 using System.ComponentModel.DataAnotation;
@@ -1181,7 +1178,7 @@ In case if we want extra properties like City, Mobile number etc, we have to ext
 	public class AppUser: IdentityUser {
 		public string PhoneNo {get; set;}
 	}
-In order to reflect this extra property on database, we should run our migration. But beore that we should link our AppDbContext class
+In order to reflect this extra property on database, we should run our migration. But before that we should link our AppDbContext class
 with AppUser. We can do that as below. Without this change, PhoneNo column will not be added in database. 
 
 	//old
@@ -1191,18 +1188,18 @@ with AppUser. We can do that as below. Without this change, PhoneNo column will 
 	public class AppDbContext : IdentityDbContext<AppUser> {}
 
 then we have to do migration by following below commands.
-Add-Migration IdentityUserExtend
-update-database
+Add_Migration IdentityUserExtend
+update_database
 
 user info is stored in dbo.AspNetUser table and roles info are stored in dbo.AspNetRoles.
 
 *************************** Creating Roles in ASP.Net ***********************************
-In case we wish to add Roles to our application, We can to that by using framework based RoleManager service. Below are the steps.
+In case we wish to add Roles to our application, We can do that by using framework based RoleManager service. Below are the steps.
 1. Inject RoleManager in required construstor. 
 	using Microsoft.ASPNetCore.Identity;
-	public class HomeController : Controller{
+	public class HomeController : Controller {
 		private RoleManager<IdentityRole> _roleManager;
-		public HomeController(RoleManager<IdentityRole> roleManager){
+		public HomeController(RoleManager<IdentityRole> roleManager) {
 			
 		}
 		

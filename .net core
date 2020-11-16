@@ -608,13 +608,13 @@ Ex:-
 suppose we wish to create a local SQL database in VS and we have our DbContext class and DbSet properties , then we should follow below steps.
 
 open VS => View => Package Manager Console => type get-help about_entityframeworkcore
- => add_migration migrationName => update_database
+ => add-migration migrationName => update-database
 
-add_migration migrationName :- will create a migration folder in our project. Then will create database and table definations that 
+add-migration migrationName :- will create a migration folder in our project. Then will create database and table definations that 
 are defined in AppDbContex:DbContext. Here SqlDb will create database with name same as connection string name.
 If we have DbSet<Employee> EmployeeTable property,  then application will create a table named EmployeeTable. 
 
-update_database:- once we execute this command, both database and all tables that are already defined in AppDbContex will be created.
+update-database:- once we execute this command, both database and all tables that are already defined in AppDbContex will be created.
 We can see this database in SQL Server object explorer in VS.
 
 *********************** How can we initialize data for few tables along with database migration (seed data) ****************************
@@ -630,8 +630,8 @@ public class AppDbContex: DbContext{
 }
 
 after defining code, we have to run bellow commands in package manager console.
-Add_migration migrationName1 => another file named migrationName1 will be created under migration folder with latest changes.
-update_database => will update database with default initial value.
+Add-migration migrationName1 => another file named migrationName1 will be created under migration folder with latest changes.
+update-database => will update database with default initial value.
 
 We can move this default initialization code to an extention class as below.
 
@@ -863,8 +863,8 @@ Steps to add Identity to our project
 	}
 	
 	Then we have to run migration command in order to create SQL Identity tables.
-	package manager console=> add_migration IdentityUpdate
-				  update_database // in order to reflect migration changes on database
+	package manager console=> add-migration IdentityUpdate
+				  update-database // in order to reflect migration changes on database
     
 	On command successful execution, we will see below tables in SQL database.							  
 		dbo.AspNetUser, dbo.AspNetRole, dbo.AspNetUserLogin etc tables.
@@ -1188,8 +1188,8 @@ with AppUser. We can do that as below. Without this change, PhoneNo column will 
 	public class AppDbContext : IdentityDbContext<AppUser> {}
 
 then we have to do migration by following below commands.
-Add_Migration IdentityUserExtend
-update_database
+Add-Migration IdentityUserExtend
+update-database
 
 user info is stored in dbo.AspNetUser table and roles info are stored in dbo.AspNetRoles.
 

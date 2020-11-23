@@ -66,3 +66,9 @@ unsafe-perm in lifecycle true while running npm witth webpack:-
 import IdentityDbContext class in project 
        should install below packages in project
               using Microsoft.AspNetCore.Identity
+
+********* Unable to resolve service for type 'Microsoft.AspNetCore.Identity.SignInManager while injecting in AccountController 
+In StartUp.cs we need to register our application specific user class that inherits from IdentityUser class.
+Ex-
+     services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>(); 

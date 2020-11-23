@@ -72,3 +72,27 @@ In StartUp.cs we need to register our application specific user class that inher
 Ex-
      services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>(); 
+
+*********** How to add bootstrap in .net core *************
+ {
+      "library": "twitter-bootstrap@4.5.3",
+      "destination": "lib/bootstrap/"
+}
+
+Add above code in libman.json
+
+*** how application can point to bootstrap plugin ***********
+Make sure "lib" folder is inside "wwwroot" folder.
+In _LayoutView.cshtml page we should add below code 
+<header>
+  <environment include="Developmemnt">    
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+  </environment>
+</header>
+
+************ How to add custom class to HTML.TextFor helper
+@Html.TextBoxFor(model => model.UserName, new { @class = "form-control input_user" })
+
+
+

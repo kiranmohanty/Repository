@@ -94,5 +94,8 @@ In _LayoutView.cshtml page we should add below code
 ************ How to add custom class to HTML.TextFor helper
 @Html.TextBoxFor(model => model.UserName, new { @class = "form-control input_user" })
 
+******* unable to make api call after using asp-controller & asp-action
+a form tag must be decorated over the html section with method = "POST"
+
 
 

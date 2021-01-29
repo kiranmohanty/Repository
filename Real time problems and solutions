@@ -97,5 +97,14 @@ In _LayoutView.cshtml page we should add below code
 ******* unable to make api call after using asp-controller & asp-action
 a form tag must be decorated over the html section with method = "POST"
 
+********************** URL encoding *********************************
+string baseUrl= "https://localhost:44390/home/UrlTest/";
+string parameter = "test f/u";
+Uri.EscapeDataString(parameter) will encode forward slash "/" that is present in parameter.
+o/p- "https://localhost:44390/home/UrlTest/test%20f%2Fu"
 
+System.Web.HttpUtility.UrlEncode(parameter)
+o/p- "https://localhost:44390/home/UrlTest/test+f%2fu" // will encode "/" to "%2f" and space to "+" which browsers don't understand. 
 
+System.Web.HttpUtility.UrlPathEncode(baseUrl + parameter)
+o/p- "https://localhost:44390/home/UrlTest/test%20f/u" // will not encode "/"

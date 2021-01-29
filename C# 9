@@ -1,0 +1,34 @@
+*********** Record types ********* 
+immutable data- value can't be changed over time. Ex- value type
+mutable- value can be changed. Ex- reference type
+
+When "record" type is used, it creates an immutable object. It's properties behave as readonly.
+Ex:-
+public record Person
+{
+    public string LastName { get; }
+    public string FirstName { get; }
+
+    public Person(string first, string last) => (FirstName, LastName) = (first, last);
+}
+
+is equivalent to
+
+public class Person
+{
+    public readonly string LastName { get; }
+    public readonly string FirstName { get; }
+
+    public Person(string first, string last) => (FirstName, LastName) = (first, last);
+}
+
+"record" type is similar to type class. It supports inheritance.
+public record Teacher : Person   //Person is of type record
+{
+}
+
+"record" type can be sealed too.
+public sealed record Student : Person
+{
+}
+

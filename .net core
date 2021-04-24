@@ -1230,4 +1230,72 @@ In case we wish to add Roles to our application, We can do that by using framewo
 	
 3. define UI to create application specific Role	
 
+part 82- Role based authorization
+ // User must have either Admin or User role access
+[Authorize( Roles = "Admin, User")]
+public class AdminController: Controller
+{
+}
+
+ // User must have Admin and User role access
+[Authorize( Roles = "Admin")]
+[Authorize( Roles = "User")]
+public class AdminController: Controller
+{
+}
+
+
+[Authorize( Roles = "Admin, User")]
+public class AdminController: Controller
+{
+  public Actionesult xyz(){} // Any Admin or User role user can access it
+  
+  
+  [Authorize( Roles = "Admin")] // only Admin user can access it
+  public Actionesult xyz(){}
+}
+
+
+************* Delete Identity role *********
+var role = await roleManager.FindByIdAsync(id);
+var result = await roleManager.DeleteAsync(role);
+if(result.Succeeded)
+    {
+	   // role delete success 
+	   //respective action 
+	}
+	else{
+	  foreach(var error in result.Errors){
+	     ModelState.AddModelError(error.Description);
+	  }
+	}
+
+********** On delete No Action  ******************
+Cascading referential integrity constraint allows to define the action that MSSQL should perform when user deletes a Primary key 
+that has reference to another table as Foreign Key.
+ 
+ MSSQL cascade actions -
+	No Action
+	Cascade (default) - table column defination will have Foreign key defined and  <On Delete Cascade> action 
+	Set Null
+	Set Default
+	
+In EF if we delete parent table data (PK), by default system will delete FK record(s) as well . 	
+
+If we dont wish to delete parent record if there are any child records, then we should set property "OnDelete" as "No Action".
+Ex:-
+protected override void OnModelCreating( DbModelBuilder modelBuilder )
+      {
+
+         modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+	  /// Menu - child table
+	  // Status- FK
+     modelBuilder.Entity<Menu>()
+        .HasRequired( f => f.Status )
+        .WithRequiredDependent()
+        .WillCascadeOnDelete( false );     
+
+      }
+	  
 

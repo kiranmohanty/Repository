@@ -1297,5 +1297,188 @@ protected override void OnModelCreating( DbModelBuilder modelBuilder )
         .WillCascadeOnDelete( false );     
 
       }
+******************  Role based authorization *******************
+ // User must have either Admin or User role access
+[Authorize( Roles = "Admin, User")]
+public class AdminController: Controller
+{
+}
+
+ // User must have Admin and User role access
+[Authorize( Roles = "Admin")]
+[Authorize( Roles = "User")]
+public class AdminController: Controller
+{
+}
+
+
+[Authorize( Roles = "Admin, User")]
+public class AdminController: Controller
+{
+  public Actionesult xyz(){} // Any Admin or User role user can access it
+  
+  
+  [Authorize( Roles = "Admin")] // only Admin user can access it
+  public Actionesult xyz(){}
+}
+
+
+************* Delete Identity role *********
+var role = await roleManager.FindByIdAsync(id);
+var result = await roleManager.DeleteAsync(role);
+if(result.Succeeded)
+    {
+	   // role delete success 
+	   //respective action 
+	}
+	else{
+	  foreach(var error in result.Errors){
+	     ModelState.AddModelError(error.Description);
+	  }
+	}
+
+********** On delete No Action  ******************
+Cascading referential integrity constraint allows to define the action that MSSQL should perform when user deletes a Primary key 
+that has reference to another table as Foreign Key.
+ 
+ MSSQL cascade actions -
+	No Action
+	Cascade (default) - table column defination will have Foreign key defined and  <On Delete Cascade> action 
+	Set Null
+	Set Default
+	
+In EF if we delete parent table data (PK), by default system will delete FK record(s) as well . 	
+
+If we dont wish to delete parent record if there are any child records, then we should set property "OnDelete" as "No Action".
+Ex:-
+protected override void OnModelCreating( DbModelBuilder modelBuilder )
+      {
+
+         modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+	  /// Menu - child table
+	  // Status- FK
+     modelBuilder.Entity<Menu>()
+        .HasRequired( f => f.Status )
+        .WithRequiredDependent()
+        .WillCascadeOnDelete( false );     
+
+      }
 	  
+	  
+**************** Custom error page  ***********	  
+app.UseExceptoinHandler("/Error"); // error page Error.cshtml
+
+************ Model binding does not work for a form with form loop ******************
+In .net core, when we bind data as below
+foreach(var item in @Model){
+    <label asp-for="@item.Name"> Name</label>
+	<input type="text" asp-for="@item.Name" />
+ }
+ framework generated HTML as below.
+
+<label asp-for="role_Name"> Name</label> 
+<input type="hidden" id="role_Name" />   // label asp-for and hidden field id matches
+<input type="text" asp-for="role_Name" />
+
+<label asp-for="role_Name"> Name</label> 
+<input type="hidden" id="role_Name" />   
+<input type="text" asp-for="role_Name" />
+
+Here both list item blocks has same id. so when user clicks on any label, only first textbox gets focus.
+Instead of foreach , if we use for loop, then page source would look like as below .
+
+
+ for(int i=0; i< Model.Count; i++){
+    <label asp-for="@Model[i].Name"> Name</label>
+	<input type="text" asp-for="@Model[i].Name" />
+ }
+
+<label asp-for="[0].Name"> Name</label> 
+<input type="hidden" id="[0].Name" />   // label asp-for and hidden field id matches
+<input type="text" asp-for="role_Name" />
+
+<label asp-for="[1].Name"> Name</label> 
+<input type="hidden" id="[1].Name" />   
+<input type="text" asp-for="role_Name" />
+
+Here, since id's are unique , any label click would get respective textbox focus.
+
+**************** Add or remove user claims   ***********
+namespace System.Security.Claims;
+table- ASPNetUserClaims
+
+   new Claim("ClaimName","ClaimValue");
+   
+   ex - new Claim("Create Role","Create Role");
+   
+   var claims = userManagerService.GetClaims(user);
+
+************ Claims based Authorization  ****************************
+In order to enable claims based authorization, first we should register a policy like below.
+
+services.AddAuthorization(options =>
+    {
+	    //This policy will be applied to all employees who has valid "EmployeeNumber"
+		// RequireClaim() will check for property value on current identity. 
+        options.AddPolicy("EmployeeOnly", policy => policy.RequireClaim("EmployeeNumber").RequireClaim("secondMandatoryClaim"));
+		
+		//Any request that has "EmployeeNumber" as 1/2/3/4/5 in current identity, then the user is authorized .
+		options.AddPolicy("Founders", policy =>
+                          policy.RequireClaim("EmployeeNumber", "1", "2", "3", "4", "5"));
+    });
+
+Then apply the policy over any action or controller 
+[Authorize(Policy = "EmployeeOnly")]
+public IActionResult AnyAction()
+{
+    return View();
+}
+
+So if a logged in user has required claim, then only he can access the action(s), otherwise access will be denied. 
+
+* Autherization can be performed either via Policy based ([Authorize(Policy = "xyz) or Role based ([Authorize(Roles = "EmployeeOnly). 
+
+*
+ [Authorize(Roles = "Admin")]
+ public class HomeController : Controller{
+    [Authorize(Policy = "EmployeeOnly")]
+    public IActionResult AnyAction()
+     {
+        return View();
+     }
+ }
+ 
+ Here in order to access AnyAction() action user must belong to "Admin" Role group and must satisfy  "EmployeeOnly" policy
+ (i.e it must have "EmployeeNumber" defined in claims table 
+ 
+ ****************** Roles based authorization vs Claims based authorization  *********************************
+ Autherizatioin determines what the logged in user can or can't do.
+ 
+ * Roles based authorization is also called as Roles based access control (RBAC)
+ * Claims based authorization is also called as Claims based access control (CBAC)
+ * A Role is a claim with type "Role" (User.Claims.Where(c=> c.Type == ClaimTypes.Role) will return user roles.)
+ * A claim is a name value collection that holds a piece of information about the user (like EmployeeNumber). Claims are policy based.
+ * To include a pocily using Role 
+   services.AddAuthorization(options =>
+    {
+	    // any user who belongs to either "Admin" or "Test"
+        options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin,Test")); 			
+    });
+ 
+ * Claimed based authorization is recommended to use as it can support external claims (ex- authorization via facebook).
+ * Role based authorization is supported in .Net core for backward compatibility.
+ 
+ ************* Autherizatioin in view ***********************
+ in .cshtml
+ 
+ @using Microsoft.AspNetCore.Autherizatioin
+ @inject IAuthorizationService authService
+ 
+ //if a user belongs to given policy, display below html section
+ @if((await authService.AutherizeAsync(User, "EmployeeOnlyPolicy").Succeeded) { 
+  // required HTML
+ }
+ 
+ 
 

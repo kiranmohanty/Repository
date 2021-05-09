@@ -1480,5 +1480,69 @@ So if a logged in user has required claim, then only he can access the action(s)
   // required HTML
  }
  
+   ************* Change access denied route  ***********
+ public void ConfigureService(IServiceCollection services){
+     //set application cookie
+     services.ConfigureApplicationCookie(options => {
+        //set access denied path
+        options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+     });
+ }
  
+ ************************ Claim Type & Claim value in Policy Based Authorization  **************************************
+ AspNetUserClaims table.
+ 
+//Policy based Authorization
+services.AddAuthorization(options =>
+            {
+                //loggedin user who has "Edit_User" claim (stored in AspNetUserClaims) , only can  access User/EditUser
+                //User/EditUser action is decorated as [Authorize(Policy = "EditUserPolicy")]
+                //irrespective of cliam value, as long as the user has this policy, user is authorized
+                options.AddPolicy("EditUserPolicy", policy => policy.RequireClaim("Edit_User"));
+
+                //user must have "Delete_User" claim and its value must be "delete"
+                options.AddPolicy("EditUserPolicy", policy => policy.RequireClaim("Delete_User", "delete"));
+            });
+
+** we can add a claim with value for a user as below.            
+public void UpdateClaim(User, user){
+   userManager.AddClaimAsync(user, new System.Security.Claims.Claim("Delete_User", "delete")); // claim name & value can be set from UI as well
+}
+
+** claim based Auth view
+
+@*Enable claim based authorization html view*@
+
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authService
+@if ((await authService.AuthorizeAsync(User, "EditUserPolicy")).Succeeded)
+{
+    <button class="edit-user">Edit</button>
+}
+ 
+ ** Claim value as list 
+ 
+ //specify a list of values for policy
+options.AddPolicy("AllowedCountries", policy => policy.RequireClaim("Country", "India", "USA", "UK", "Nepal"));
+
+** ClaimType/ ClaimName is case insensitive where as Claimvalue comparision is case sensitive. 
+ 
+**************  Creating custom authorization policy using function  *******************
+** Multiple authorization terms
+
+//user must have belongs to "Admin" & "SuperAdmin" role and must have "Administation" claim as "true"
+// all 3 conditions are mandatory
+options.AddPolicy("AdministationPolicy", policy =>
+policy.RequireRole("Admin")
+.RequireRole("SuperAdmin")
+.RequireClaim("Administation", "true")
+);
+
+** Custom policy
+
+ //A user is either a "SuperAdmin" or a "Admin" with "Hospitality" claim
+ options.AddPolicy("HospitalityPolicy", policy => policy.RequireAssertion(p =>
+  p.User.IsInRole("SuperAdmin") || (p.User.IsInRole("Admin") && p.User.HasClaim("Hospitality", "true"))
+ ));
+
 

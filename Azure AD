@@ -1,0 +1,116 @@
+************* Introduction to Azure AD ********************
+******* Add custom domain to Azure AD Lab ************
+  Azure Active directory -> Custom domain name (left pane) -> Add custom domain -> input custom daomain name 
+  -> Add daomain -> copy destination or point to address ->
+  switch to GoDaddy DNS manager -> Add new DNS record -> <type - TXT, Host -@, TXT value - paste the key> -> save record
+  -> switch to Azure -> Verify (DNS record)-> set given domain "xyz.com" as Primary-> Yes -> Custom domain is added to Azure AD.
+  
+  
+********* Azure Authentication ***************
+Main function of Azure AD is to authenticate user credential whenever user signs into a new device / service/ application.
+* Authentication in Azure AD includes
+		Self service password Reset
+		Multi factor authentication
+		Passwordless authentication <only for helpdesk people who can reset user password. System would allow them to login without password>
+		
+* Azure maintains banned password list in AD. If any users tries to give that password, AD won't accept such passwords.
+  It is configurable under "Custom banned password".
+* Custom password policy can be used to further protection against weak password.
+* Passwordless auth mode , user biomentrics is used via "Windows Hello for bussiness", "FIDO2 security key".  
+
+************* Enable Self service password Reset Lab ************* 		
+AD custom domain home -> Password reset (left pane) -> selft service password reset enable -> Selected -> choose group -> select -> save
+Authentication methods (left pane)-> select Mobile/ Email -> save 
+Registration (left pane)-> no of days that user need to reconfirm -> 90 -> save
+
+
+*********** MFA lab ********************
+Azure Active directory-> User (left pane)-> multi factor authentication (top menu)-> select user -> Enable -> Enable MFA 
+
+****** Create & Manage user *****************
+Once user is authenticated, Azure AD authorizes the user in order to determine AD resource access. 
+*Users can be defined in 3 ways
+	1. Could identity
+	2. Directly synchronised identity
+	3. Guest user 
+	
+* In Azure portal , user can have either "Azure AD user" or "External Azure AD user" in cloud identity .
+
+
+** gap****
+************ Create group Lab ********
+AD custom domain home -> Groups (left pane)-> New group-> select Group (security/ office 365)-> select security->
+input group name, group desciption ,for owners select "Admin" -> Create
+
+*** Create user Lab **************
+AD custom domain home -> Users (left pane)-> New user-> input "User Name", "Name", Password (auto generate/ manual)
+, Input intial password if password mode is manual , Select Group (Marketing group), select usage location (as US/UK)-> Create
+
+************ Azure AD B2B service ****************
+* Azure AD B2B is used to share application and services with guest users.
+* Any external user/ organization trying to access Azure AD, may or may not have Azure AD account and still they can access.
+* B2B uses an email invitation & redemption process (like NIMs) in order to authenticate any external user.
+* By using B2B service, we don't need to manage external account or password details.
+* Any guest user can be added to Azure AD via Azure AD portal (provided user had Admin permission)
+* App owner (for NIMs) or group owner (for external user group) can be asigned to manage guest user accounts.
+* If external user is only interested in free Azure AD features, then licensing is not required. but if wants to access licensing
+  features, then we can add 5 users / license. 
+
+****** Add a guest/external user Lab ************  
+Azure active directory-> Users(left pane)-> New Guest User (top pane)-> Ensure "Invite user" is selected->
+input Name, Email, forename , surname and personal message ("NIMs invitation")-> Invite (an email would be sent to the user)
+
+***** Azure AD B2C (bussiness to consumer) service *****************************
+B2C enables sign on to Azure AD apps using social acounts/ enterprise accounts/ local accounts. By doing so we can enhance user login 
+experience with our own brand. 
+* B2C uses standard based protocols for authentication . Ex- OpenId connect, OAuth2, SAML
+* Azure B2C allows 50,000 active users per month. 
+* In Azure AD B2C , a tenant represents the organization and a B2C tenant is different from Azure AD tenant. 
+	
+***** Azure AD B2C lab **********
+Left Menu on home page->  Services-> Subscription -> click organization name (GN subscription) -> Resource Providers
+ -> Confirm Microsoft.AzureActiveDirectory is registered.
+ 
+Home-> Create a resource -> Search for "azure Active directory b2c"-> security "azure Active directory b2c"-> Plans-> 
+Create (tenant deployemnet will start here)-> click "Create new Azure AD B2B tenant"-> 
+input organization name, initial domain -> select resource group -> Next : Review+ create -> Create- >a success msg would be shown
+
+
+********* Azure AD domain services (ADDS) ************
+Azure AD domain services are managed version of traditional on-prem Azure AD. It offers domain join, group policy, LDAP, 
+NTLM authentication. It does   not require any deployemnet of domain controls. 
+* It works with existing Azure AD tenant. Example-
+		- compatable with cloud only Azure AD tenants.
+		- compatable with Azure AD tenants that are in sync with on-prem AD.
+		- Users synced into Azure AD from on-prem , can be found in Azure AD services.
+*When ADDS is deployed, a managed domain is created on virtual network that adds to windows server domain controllers in VM.
+ Not one can access those windows server domain controllers. Only Azure manages it on its own. 
+ 
+* When we add resources to Azure AD, ADDS can sync those details but if we add resources in ADDS , Azure AD will not have those 
+details. So it's always adviced to add resources to Azure AD and let it sync to ADDS on it's own.
+* ADDS is tightly integrated with Azure AD. Hence ADDS can sync AD users automatically.
+* External accounts that are linked to Azure AD , will not be available in ADDS. 
+* It allows us to deploy applications that rely on windows integrated authentication.
+* Since ADDS includes multiple domain controllers, the managed domain is always available. Never goes for downtime.
+* ADDS can work in standard alone.
+
+************** Comparing identity solution **************
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	

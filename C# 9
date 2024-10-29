@@ -1,13 +1,13 @@
 *********** Record types ********* 
-immutable data- value can't be changed over time. Ex- value type
+immutable data- value can't be changed over time. Ex- value type and string
 mutable- value can be changed. Ex- reference type
 
-When "record" type is used, it creates an immutable object. It's properties behave as readonly.
-Ex:-
+"record" type is basically used to create an immutable object. It's properties behave as readonly.
+Ex:- <"init;" used instead of "set;">
 public record Person
 {
-    public string LastName { get; }
-    public string FirstName { get; }
+    public string LastName { get; init; } = default!
+    public string FirstName { get; init; } = default!
 
     public Person(string first, string last) => (FirstName, LastName) = (first, last);
 }
@@ -22,13 +22,156 @@ public class Person
     public Person(string first, string last) => (FirstName, LastName) = (first, last);
 }
 
-"record" type is similar to type class. It supports inheritance.
-public record Teacher : Person   //Person is of type record
-{
-}
+However, record type can be used to create muttable object as well (same as class).
 
-"record" type can be sealed too.
+public record Person
+{
+    public string FirstName { get; set; } = default!;
+    public string LastName { get; set; } = default!;
+};
+
+** It can be used as Positional syntax for property definition if the obejct is defined as record (not class).
+		EX- Person p = new ("First Name", "Last Name");
+** Value equality for record type 	- if we compare two record objects, if both of them has same set of properties and their values , then equal operator would consider them as identical.
+
+** An immutable property of a record instance can be made mutable by using a "with" expression. The result of a with expression is a shallow copy of original object.
+Ex- 
+public record Person(string FirstName, string LastName)
+{
+    public string[]   { get; init; } //imuutable property as "init" is defined instead of "set"
+}
+Person person1 = new("Nancy", "Davolio") { PhoneNumbers = new string[1] };
+person2 = person1 with { PhoneNumbers = new string[1] }; //PhoneNumbers property is set as muttable.
+ 
+** "record" type is similar to type class. It supports inheritance. But Neither record can inherit a class nor a class can inherit a record.
+public abstract record Person(string FirstName, string LastName);
+public record Teacher(string FirstName, string LastName, int Grade)
+    : Person(FirstName, LastName);
+public record Student(string FirstName, string LastName, int Grade)
+    : Person(FirstName, LastName);
+
+**"record" type can be sealed too.
 public sealed record Student : Person
 {
 }
 
+**** Init only setter
+Make any poperty to behave as readonly and can be initialized via constructor only.
+
+public class WeatherObservation
+{
+    public DateTime RecordedAt { get; init; }
+	public WeatherObservation(DateTime recordedAt){
+	    RecordedAt= recordedAt;
+	}
+	
+}	
+
+********* Top-level statements
+Top-level statements remove unnecessary extra codes and it can compile only required lines . 
+Ex- 
+using System;
+
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+    }
+}
+
+can be replaced by 
+using System;
+
+Console.WriteLine("Hello World!");
+
+** Only one file in your application may use top-level statements. If the compiler finds top-level statements in multiple source files, it's an error.
+** Top-level statements are great for small console programs and utilities.
+  EX- Azure functions
+  
+*************** Pattern matching enhancements 
+.Type patterns match an object matches a particular type
+.Parenthesized patterns enforce or emphasize the precedence of pattern combinations
+.Conjunctive and patterns require both patterns to match
+.Disjunctive or patterns require either pattern to match
+.Negated not patterns require that a pattern doesn't match
+.Relational patterns require the input be less than, greater than, less than or equal, or greater than or equal to a given constant.  
+Ex- 
+public static bool IsLetter(this char c) =>
+    c is >= 'a' and <= 'z' or >= 'A' and <= 'Z';
+."and" has higher precedence than "or"	
+**Relational patterns- <, >, <=, or >=
+The right-hand part of a relational pattern must be a constant expression.
+Ex-
+static string GetCalendarSeason(DateTime date) => date.Month switch
+{
+    >= 3 and < 6 => "spring",
+    >= 6 and < 9 => "summer",
+    >= 9 and < 12 => "autumn",
+    12 or (>= 1 and < 3) => "winter",
+    _ => throw new ArgumentOutOfRangeException(nameof(date), $"Date with unexpected month: {date.Month}."),
+};
+**Logical patterns- not, and, and or
+Precedence and order of checking- 
+.not
+.and
+.or
+**************Fit and finish features
+omit the type in a new expression when the created object's type is already known
+Ex- private List<WeatherObservation> _observations = new();
+	Func<int, string, bool> isTooLong = (int x, string s) => s.Length > x;
+
+******** ModuleInitializer attribute************
+.ModuleInitializer attribute marks a method that the runtime calls when the assembly loads.
+
+.The ModuleInitializer attribute can only be applied to a method that:
+
+Is static.
+Is parameterless.
+Returns void.
+Is accessible from the containing module, that is, internal or public.
+Isn't a generic method.
+Isn't contained in a generic class.
+Isn't a local function.
+
+Ex- 
+using System.Runtime.CompilerServices;
+
+internal class ModuleInitializerExampleModule
+{
+    public static string? Text { get; set; }
+
+    [ModuleInitializer]
+    public static void Init1()
+    {
+        Text += "Hello from Init1! ";
+    }
+
+    [ModuleInitializer]
+    public static void Init2()
+    {
+        Text += "Hello from Init2! ";
+    }
+}
+using System;
+
+internal class ModuleInitializerExampleMain
+{
+    public static void Main()
+    {
+        Console.WriteLine(ModuleInitializerExampleModule.Text);
+        //output: Hello from Init1! Hello from Init2!
+    }
+}
+
+Here, Init1() & Init2() will be called before Main().
+
+
+--------------------------Microservices --------------------
+1. N-tier monolothic architecture
+2. Service oriented architecture
+3. Microservices
+	

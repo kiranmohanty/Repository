@@ -1,0 +1,69 @@
+
+
+//Find text in shared path and copy files
+using System.IO.Compression;
+using System.Text;
+
+var searchString = "CN00829299";
+string outputPath = @"C:\Users\devk1m\Downloads\TTGX982312";
+string[] files = Directory.GetFiles(@"C:\Users\devk1m\Downloads\devk1m\", "*.zip", SearchOption.AllDirectories);
+foreach (string file in files)
+{
+    ZipArchive zipArchive = ZipFile.OpenRead(file);
+    zipArchive.ExtractFilesContaining(searchString, outputPath);
+}
+
+
+string[] txtFiles = Directory.GetFiles(outputPath, "*.txt",SearchOption.AllDirectories);
+StringBuilder sb = new StringBuilder();
+foreach (string file in txtFiles)
+{
+    string[] lines = File.ReadAllLines(file);
+    foreach(string line in lines)
+    {
+        if (line.Contains(searchString))
+        {
+            sb.Append(line + Environment.NewLine);
+        }
+    }
+}
+File.WriteAllText(Path.Join(outputPath, "output.txt"), sb.ToString());
+
+Console.WriteLine("done");
+
+
+public static class ZipArchiveEntryExt
+{
+    public static IEnumerable<string> GetLines(this ZipArchiveEntry e)
+    {
+        using (var stream = e.Open())
+        {
+            using (var sr = new StreamReader(stream))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                    yield return line;
+            }
+        }
+    }
+}
+
+public static class ZipArchiveExt
+{
+    public static IEnumerable<string> FilesContain(this ZipArchive arch, string target)
+    {
+        foreach (var entry in arch.Entries.Where(e => !e.FullName.EndsWith("/")))
+            if (entry.GetLines().Any(line => line.Contains(target)))
+                yield return entry.FullName;
+    }
+
+    public static void ExtractFilesContaining(this ZipArchive arch, string target, string extractPath)
+    {
+        if (!extractPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+            extractPath += Path.DirectorySeparatorChar;
+
+        foreach (var entry in arch.Entries.Where(e => !e.FullName.EndsWith("/")))
+            if (entry.GetLines().Any(line => line.Contains(target)))
+                entry.ExtractToFile(Path.Combine(extractPath, entry.Name));
+    }
+}

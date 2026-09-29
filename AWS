@@ -1,0 +1,115 @@
+How to host a app in AWS with private RDS
+
+1.Create VPC (Virtual Private Cloud)
+  VPC gives an isolated network in AWS where subnets, routing and network can have controlled access
+2.Create Subnet
+  A subnet is a smaller network segment inside my VPC.
+  Ex- Public Subnet for ALB
+      Private/Application Subnet for ECS Fargate
+      Private DB Subnet for RDS
+3.Create Security Groups
+    ALB-SG - Load balancer security group 
+        Controls traffic coming into my Application Load Balancer
+        (inbound request port- HTTP 80,Source: Internet / 0.0.0.0/0)
+    ECS-SG - ECS Security Group
+        Controls traffic going to my ECS application containers.
+        TCP 8080, Source: ALB-SG
+    RDS-SG - RDS Security Group
+        Controls access to my database
+        TCP 3306, Source: ECS-SG
+
+
+So far request flow model
+Internet
+   |
+   | HTTP 80
+   v
+  ALB
+   |
+   | TCP 8080
+   v
+ ECS
+   |
+   | DB port (TCP 3306)
+   v
+ RDS
+
+
+4.Create IAM roles
+    Create the required ECS task execution role to pull image from ECR and send logs to CloudWatch.
+    The ECS task needs an IAM execution role so that AWS can pull my container image from ECR and send container logs to CloudWatch.
+
+    ECS Task
+   |
+   +----> ECR
+   |       Pull Docker image
+   |
+   +----> CloudWatch
+           Send container logs
+
+5.Create CloudWatch Log Group
+    This is where my ECS container logs will be centralized.
+    Ex- /aws/ecs/my-application
+6.Create SNS topic
+    SNS is responsible for sending notifications when my CloudWatch alarm is triggered.
+    Ex - aws-assignment-alerts
+
+    CloudWatch Alarm
+       |
+       v
+      SNS
+       |
+       v
+     Email
+7.Create ECR Repository (Elastic Container Registry)
+    ECR is AWS's managed Docker image registry. I use it to store my application's Docker image
+
+    Local machine
+     |
+     | docker build
+     v
+    Docker image
+     |
+     | docker push
+     v
+    ECR
+8. Create ECS Cluster (Elastic Container Service)
+    ECS can run containers using Fargate or EC2, with Fargate being serverless
+9. Create ECS Task Definition
+    A task definition describes how ECS should run my Docker container
+
+    Confiiguration
+    Task Definition
+       |
+       +-- Image: ECR
+       +-- CPU
+       +-- Memory
+       +-- Port: 8080
+       +-- Logging: CloudWatch
+       +-- Execution Role
+10.Create Application Load Balancer
+    The ALB provides the public entry point to my application and distributes HTTP requests to healthy ECS tasks
+    Port 80, attach ALB- ALB-SG
+11.Create Target Group
+    The target group identifies where the ALB should send application traffic and performs health checks on the targets
+    ALB
+     |
+     | HTTP
+     v
+    Target Group
+     |
+     | Port 8080
+     v
+    ECS Tasks
+12.Create ECS Service
+    ECS service as the component responsible for running, stopping, managing and scaling containers
+    Navigate to your ECS cluster and create a service
+    Cluster
+     ↓
+    Task Definition
+     ↓
+    Fargate Service
+     ↓
+    Desired task count
+  
+    

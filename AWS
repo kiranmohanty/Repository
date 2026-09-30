@@ -103,6 +103,7 @@ Internet
     ECS Tasks
 12.Create ECS Service
     ECS service as the component responsible for running, stopping, managing and scaling containers
+    The ECS service maintains my desired number of running tasks. It also integrates the ECS tasks with my load balancer.
     Navigate to your ECS cluster and create a service
     Cluster
      ↓
@@ -111,5 +112,32 @@ Internet
     Fargate Service
      ↓
     Desired task count
-  
+13.Configure networking for ECS
+    Choose
+      VPC
+      Subnets
+      ECS-SG
+14.Verify ECS Task
+      Navigate to ECS -> cluster -> service -> Task
+      verify Task status = RUNNING and Target group Status = HEALTHY
+15. Test ALB
+      Copy the ALB DNS name - http://<ALB-DNS>
+16.Create DB Subnet Group
+      A DB subnet group tells RDS which subnets it is allowed to place the database in
+      Create RDS -> Subnet Groups ->  DB Subnet Group
+17.Create RDS
+      The database is deployed into private networking and its security group only allows connections from the ECS security group
+      RDS → Create database
+      Configure below properties 
+      Database
+       |
+       +-- Private subnet
+       +-- RDS-SG
+       +-- Automated backups
+       +-- Backup retention
+18.Save the RDS Endpoint
+      Once RDS is created, get RDS endpoint
+19.Add DB connection string in .Net App
+
+
     

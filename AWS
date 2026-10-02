@@ -138,6 +138,41 @@ Internet
 18.Save the RDS Endpoint
       Once RDS is created, get RDS endpoint
 19.Add DB connection string in .Net App
+      Add ECS task Environment variable to store DB connection string and then update the ECS version.
+20. Validate the complete workflow
+      App flow
+      Browser
+       |
+       | HTTP :80
+       v
+      ALB
+       |
+       | :8080
+       v
+      ECS Fargate Container
+       |
+       | DB connection
+       v
+      RDS
+
+    Logging Flow
+      ECS Container
+         |
+         | logs
+         v
+      CloudWatch Logs
+
+    Image 
+      ECR
+       |
+       | Docker image
+       v
+      ECS Fargate
+
+21. ECS scalling
+    The ECS service maintains the desired number of tasks. When we increase the desired count from one to two, ECS starts another Fargate task.
+    Then check ECS => Task, you should be able to see 2 tasks running.
+    The ALB target group can then distribute requests among healthy tasks.
 
 
     

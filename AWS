@@ -169,10 +169,188 @@ Internet
        v
       ECS Fargate
 
-21. ECS scalling
+21. ECS scaling
     The ECS service maintains the desired number of tasks. When we increase the desired count from one to two, ECS starts another Fargate task.
     Then check ECS => Task, you should be able to see 2 tasks running.
     The ALB target group can then distribute requests among healthy tasks.
+22. Cloud Watch Monitoring (Create CloudWatch Dashboard)
+    CloudWatch gives me centralized monitoring of my infrastructure instead of checking every service individually.
 
+    Create a dashboard containing metrics for
+      ECS
+       ├── Service metrics
+       └── Task/container metrics
+
+      RDS
+       ├── CPU
+       ├── Connections
+       └── other relevant metrics
+23.Create CloudWatch Alarm
+    The alarm should trigger an SNS email notification.
+    Flow
+    AWS Metric
+    |
+    v
+    CloudWatch Alarm
+    |
+    v
+    SNS Topic
+    |
+    v
+    Email
+24.Enable ECS Container Insights
+    Container Insights provides additional ECS task and container-level monitoring information.
+    Go to ECS-> Enable "ECS Container Insights"
+25.Verify CloudWatch Logs
+    Instead of logging only inside the container, we should centralize the container logs in CloudWatch so they remain accessible for troubleshooting.
+    Go to  CloudWatch  → Log groups  → ECS log group
+
+Above steps will create ECS and RDS manually and we can access URL in browser. Now we can create the same infrastructure using CloudFormation (infrastructure as code).
+
+
+* CloudFormation template
+1.Create CloudFormation template
+    Cloud formation should create below items via code
+    CloudFormation
+      |
+      +-- VPC
+      +-- Subnets
+      +-- Security Groups
+      +-- IAM roles
+      +-- ECR
+      +-- ECS Cluster
+      +-- ECS Task Definition
+      +-- ECS Service
+      +-- ALB
+      +-- Target Group
+      +-- RDS
+      +-- CloudWatch
+2.Add Parameters
+    Instead of hard-coding environment-specific values, we should parameterize the infrastructure so the same template can be reused with different configurations.
+    Parameters
+     |
+     +-- Region
+     +-- ECS Task CPU
+     +-- ECS Task Memory
+     +-- RDS instance size
+3.Create Change Set
+    Creaet the template -> review it -> Deploy
+
+
+Template code example
+
+
+
+----Summary----------
+------Components summary----------
+1. ECR- "Docker image is stored in ECR."
+2. ECS - "ECS Fargate pulls the image and runs it as a task."
+3. ALB - "The ALB exposes the application through HTTP and forwards requests to healthy ECS tasks."
+4. RDS -"The application connects to RDS, which is deployed in a private subnet and is not publicly accessible."
+5. Security -"The ALB accepts internet traffic, ECS accepts traffic only from the ALB, and RDS accepts database traffic only from ECS."
+6. Logging - "ECS container logs are sent to CloudWatch."
+7. Monitoring - "CloudWatch monitors ECS and RDS, and alarms can send notifications through SNS."
+8. Scaling - "We can increase the ECS desired task count and ECS launches additional Fargate tasks."
+9. Infrastructure as Code - "Finally, We can reproduce the infrastructure using CloudFormation."
+
+-------- Complete creation order------------
+PHASE 1 — FOUNDATION
+────────────────────────────────
+
+1. VPC
+2. Subnets
+3. Security Groups
+      ├── ALB-SG
+      ├── ECS-SG
+      └── RDS-SG
+4. IAM ECS Task Execution Role
+5. CloudWatch Log Group
+6. SNS Topic + Email Subscription
+
+
+PHASE 2 — APPLICATION RESOURCES
+────────────────────────────────
+
+7. ECR Repository
+8. Build Docker Image
+9. Push Image → ECR
+10. ECS Cluster — Fargate
+11. ECS Task Definition
+12. ALB
+13. Target Group
+
+
+PHASE 3 — CONNECT APPLICATION
+────────────────────────────────
+
+14. ECS Service
+15. Connect ECS Service → Target Group
+16. Connect ALB → Target Group
+17. Configure ECS networking/security groups
+18. Start ECS Task
+19. Verify Target = HEALTHY
+20. Open ALB DNS in browser
+
+
+PHASE 4 — DATABASE
+────────────────────────────────
+
+21. RDS DB Subnet Group
+22. RDS MySQL/PostgreSQL
+23. Private subnet
+24. RDS-SG
+25. Automated backups
+26. Note RDS endpoint
+
+
+PHASE 5 — APPLICATION → DATABASE
+────────────────────────────────
+
+27. Store/configure DB parameter
+28. Update ECS task configuration
+29. Create new Task Definition revision
+30. Update ECS Service
+31. Verify application → RDS
+
+
+PHASE 6 — SCALING
+────────────────────────────────
+
+32. Change desired count
+33. ECS launches additional task
+34. Verify both tasks
+35. Verify ALB distributes traffic
+
+
+PHASE 7 — MONITORING
+────────────────────────────────
+
+36. CloudWatch Dashboard
+37. ECS metrics
+38. RDS metrics
+39. CloudWatch Alarm
+40. SNS notification
+41. ECS Container Insights
+42. CloudWatch centralized logs
+
+
+PHASE 8 — CLOUDFORMATION
+────────────────────────────────
+
+43. Create CloudFormation template
+44. VPC/network resources
+45. Security groups
+46. ECR
+47. ECS
+48. ALB
+49. RDS
+50. Parameters
+51. Create Change Set
+52. Review
+53. Deploy
+54. Verify stack
+
+
+    
 
     

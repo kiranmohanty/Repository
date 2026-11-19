@@ -1,0 +1,48 @@
+1. What is Cross-Site Scripting?
+XSS (Cross-Site Scripting) is a security vulnerability in which an attacker injects malicious JavaScript code into a trusted website.
+
+This can potentially allow attackers to:
+- Steal sensitive information accessible to the page.
+- Perform actions on behalf of a logged-in user.
+- Modify the page content.
+- Redirect users to malicious websites.
+- Access application data that the victim is authorized to see.
+
+How an XSS attack happens
+1. Attacker
+   
+   Submits malicious JavaScript through a comment form.
+2. Angular / .NET API
+   
+   Application accepts and stores the input.
+3. Database
+   
+   Malicious content is stored.
+4. Victim's browser
+   
+   Application displays the content as executable HTML.
+5. JavaScript executes
+   
+   The attack runs in the victim's browser under your application's origin.
+
+Types of XSS attacks
+There are three major types:
+Type	How it works	Example
+Stored XSS	Malicious script is saved in a database and executed when another user views it.	Comments, messages
+Reflected XSS	Malicious input comes through a request and is immediately reflected in the response.	Search URL parameters
+DOM-based XSS	Client-side JavaScript handles untrusted data unsafely and injects it into the DOM.	URL fragment inserted using innerHTML
+
+
+How to prevent XSS in Angular + .NET Core
+1. Angular - interpolation ({{obj.name}})
+2. .NET Core: Validate input and encode output
+
+Security measure	    Purpose
+Content Security      Policy (CSP)	Restricts which scripts and resources the browser can load or execute.
+HttpOnly cookies	    Prevent JavaScript from reading authentication cookies.
+Secure cookies	      Ensure cookies are sent over HTTPS.
+SameSite cookies	    Helps mitigate cross-site request forgery (CSRF), not XSS itself.
+Input validation	    Rejects invalid data based on expected formats and business rules.
+HTML sanitization	    Removes dangerous markup when rich HTML is required.
+Avoid eval()	        Prevents unsafe dynamic JavaScript execution.
+HTTPS	                Protects data in transit; does not itself prevent XSS.

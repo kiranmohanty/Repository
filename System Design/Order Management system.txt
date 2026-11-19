@@ -1,0 +1,397 @@
+1. High-level architecture diagram
+  Oder Management Microservice
+  Product MS
+  Inventory MS
+  Payment MS
+  Delivery MS
+  Notification MS
+
+2.UI flow and technology stack
+1. Product Listing
+
+Angular 18 · TypeScript · RxJS
+
+Browse products, product details, prices, stock availability.
+
+2. Cart & Checkout
+
+Angular Reactive Forms · Validators
+
+Select quantity, validate cart, confirm delivery address.
+
+3. Payment Selection
+
+Angular · Payment integration
+
+UPI, cards, net banking, payment gateway redirect/SDK.
+
+4. Order Tracking
+
+Angular · REST API · Polling or SignalR
+
+Order received, payment pending, confirmed, shipped, delivered.
+
+Frontend technology stack
+Technology	Purpose
+Angular 18	UI framework
+TypeScript	Type-safe frontend
+Angular Material	UI components
+RxJS	Asynchronous data streams
+Reactive Forms	Checkout validation
+Angular Router	Navigation
+MSAL Angular	Microsoft Entra authentication
+HTTP Interceptors	JWT handling, errors, correlation IDs
+Signal / RxJS state	UI state management
+SignalR	Real-time order updates, if needed
+
+3.Microservices and their responsibilities
+Microservice	Responsibilities	Technology
+Order Service	Create order, manage order lifecycle, orchestrate workflow, confirm/cancel order	ASP.NET Core Web API, SQL
+Product Service	Product details, price, category, product metadata	ASP.NET Core Web API, SQL, Redis cache
+Inventory Service	Available stock, reservations, release reservation, stock adjustments	ASP.NET Core Web API, SQL
+Payment Service	Payment initiation, payment status, gateway integration, refund	ASP.NET Core Web API, SQL
+Delivery Service	Shipment creation, tracking, dispatch, delivery updates	ASP.NET Core Web API, SQL
+Notification Service	Email, SMS, push notifications for order lifecycle events	.NET Worker Service, Azure Service Bus
+
+3.1 Order Service — workflow orchestrator
+The Order Service is responsible for coordinating the complete business workflow.
+
+Responsibilities:
+- Create orders and order items.
+- Maintain order lifecycle/status.
+- Coordinate Inventory and Payment services.
+- Handle payment success/failure events.
+- Initiate compensating actions.
+- Trigger delivery creation after order confirmation.
+- Provide order details and tracking APIs.
+Possible order states:
+
+Created → InventoryReserved → PaymentPending → Confirmed → Shipped → Delivered
+
+Failure states:
+
+Rejected, PaymentFailed, Cancelled, RefundPending, Refunded
+
+Order Service owns:
+- Order
+- OrderItem
+- OrderStatusHistory
+
+3.2 Product Service
+Responsible for maintaining product catalogue information.
+
+Responsibilities:
+- Product information.
+- Product descriptions and images.
+- Product category.
+- Price and product metadata.
+- Product availability summary, if exposed as a read model.
+
+Caching:
+
+Frequently accessed product details can be cached using Azure Redis. Product cache invalidation can be driven by product update events.
+
+Important: Product Service should not be responsible for reserving stock. Inventory is a separate business capability.
+
+3.3 Inventory Service
+Inventory is one of the most critical services because concurrent requests can result in overselling.
+
+Responsibilities:
+- Maintain available quantity.
+- Reserve inventory for an order.
+- Release inventory.
+- Handle reservation expiration.
+- Update stock after shipment or cancellation.
+
+Example inventory model:
+ProductId	Total	Reserved	Available
+Laptop-101	100	15	85
+
+Reservation logic:
+UPDATE Inventory
+SET AvailableQuantity = AvailableQuantity - @Quantity,
+    ReservedQuantity = ReservedQuantity + @Quantity
+WHERE ProductId = @ProductId
+  AND AvailableQuantity >= @Quantity;
+
+If affected rows = 0, the reservation failed.
+
+Reservation records should contain:
+- ReservationId
+- OrderId
+- ProductId
+- Quantity
+- Status
+- CreatedAt
+- ExpiresAt
+Reservations can expire automatically if payment is not completed within the configured time.
+
+3.4 Payment Service
+Responsibilities:
+- Initiate payment.
+- Integrate with payment gateway.
+- Handle UPI, card, net banking.
+- Process gateway callbacks/webhooks.
+- Store payment transactions.
+- Manage payment status.
+- Initiate refunds.
+Payment states:
+
+Initiated → Pending → Succeeded / Failed
+
+Refund states:
+
+RefundInitiated → RefundPending → Refunded / RefundFailed
+
+Payment Service should use idempotency keys to prevent duplicate charges.
+
+If the payment gateway times out, don't assume payment failed. Reconcile with the payment provider before retrying the charge.
+
+3.5 Delivery Service
+Responsibilities:
+- Create shipment after order confirmation.
+- Assign logistics provider.
+- Manage tracking number.
+- Update shipment status.
+- Integrate with external delivery providers.
+Delivery lifecycle:
+
+Created → Packed → Dispatched → InTransit → Delivered
+
+Delivery updates can be received through provider webhooks or polling and published to Service Bus.
+
+3.6 Notification Service
+Responsibilities:
+- Email order confirmation.
+- SMS payment status.
+- Delivery updates.
+- Cancellation notifications.
+- Retry failed notification attempts.
+This service should be independent of the core order transaction. A notification failure must not cause a successful order to fail.
+
+4. Communication between microservices
+Use a hybrid communication model.
+Synchronous communication — REST APIs
+Use REST when the calling service needs an immediate response to proceed.
+
+Examples:
+- Order Service → Product Service: validate product and retrieve price.
+- Order Service → Inventory Service: reserve inventory and get reservation result.
+- Order Service → Payment Service: initiate payment.
+Asynchronous communication — Azure Service Bus
+Use messaging for operations that do not require the caller to wait for immediate completion.
+
+Examples:
+Event / command	Consumer
+PaymentSucceeded	Order Service
+PaymentFailed	Order Service
+OrderConfirmed	Delivery Service, Notification Service
+ReleaseInventory	Inventory Service
+InventoryReleased	Order Service
+ShipmentCreated	Order Service, Notification Service
+DeliveryStatusUpdated	Order Service, Notification Service
+
+5. Handling distributed transactions — Saga Pattern
+There is no single database transaction spanning Order, Inventory, and Payment services.
+
+Instead, the business workflow is managed through a Saga.
+Step	Action	If it fails
+1	Create order	Return failure
+2	Reserve inventory	Reject order
+3	Initiate payment	Release inventory
+4	Payment succeeds	Confirm order
+5	Order confirmation fails temporarily	Retry confirmation
+6	Inventory reservation expires	Reconcile payment
+7	Payment already succeeded but order cannot complete	Refund payment
+
+In this architecture, Order Service acts as the Saga orchestrator.
+
+Compensating actions:
+- Payment failure → release inventory.
+- Inventory reservation expired → reconcile payment.
+- Payment succeeded but order cannot be fulfilled → refund.
+- Shipment creation failure → retry shipment creation; order remains confirmed.
+Compensation is not a rollback of a distributed SQL transaction. It is a separate business operation that reverses the effect of a previous operation.
+
+6. Reliability and fault tolerance
+Retry policy
+For transient failures:
+- Retry a configured number of times.
+- Use exponential backoff.
+- Add jitter to avoid synchronized retries.
+- Avoid retrying non-transient failures.
+- Ensure operations are idempotent.
+Circuit breaker
+Use circuit breakers for external dependencies and downstream API calls.
+
+For example, if Payment Gateway is unavailable:
+- Stop sending repeated requests temporarily.
+- Fail fast or return a pending state.
+- Allow a recovery window.
+- Test the dependency again after the circuit transitions to half-open.
+Transactional Outbox
+Each service publishing an event should persist the business change and its event in one local transaction.
+This avoids losing messages if the application crashes after a database commit.
+Idempotent consumers
+Every event should have a unique EventId.
+
+The consumer maintains a ProcessedMessages table with a unique constraint on EventId.
+
+Business update + processed EventId must be committed in the same database transaction.
+
+This handles duplicate message delivery.
+Dead-letter queue
+Messages that repeatedly fail processing should be moved to DLQ.
+
+The operations team can:
+- Inspect the failure.
+- Correct the root cause.
+- Replay the message safely.
+
+7. Scalability and performance
+Horizontal scaling
+Services should be independently deployable and scalable.
+
+For example, during a promotional sale:
+- Product Service receives high read traffic → scale product API instances.
+- Order Service receives increased order requests → scale order API.
+- Payment Service has limited throughput due to payment provider constraints → scale cautiously and use concurrency limits.
+- Inventory Service experiences high contention on popular products → optimize atomic database updates and consider partitioning where necessary.
+- Notification Service experiences a backlog → scale consumers based on Service Bus queue length.
+
+Caching
+Use Redis for data that is frequently read and relatively stable:
+- Product details.
+- Product categories.
+- Configuration.
+- Possibly user/cart read data.
+Avoid using a cache as the authoritative source for inventory reservation. Stock must be validated and reserved by Inventory Service against its authoritative data store.
+
+Database scaling
+- Appropriate indexes.
+- Connection pooling.
+- Query optimization.
+- Read replicas for read-heavy workloads where supported and appropriate.
+- Partitioning when data volume and access patterns justify it.
+- Avoid unnecessary cross-service database joins.
+
+8. Security architecture
+- Microsoft Entra ID authentication.
+- OAuth 2.0 / OpenID Connect.
+- JWT validation.
+- Role-based authorization (RBAC).
+- Attribute-based authorization (ABAC) when contextual access rules are needed.
+- API Gateway authentication and rate limiting.
+- Managed Identity for service-to-service access to Azure resources.
+- Secrets stored in Azure Key Vault.
+- TLS for communication.
+- Encryption at rest.
+- Payment details handled by a compliant payment provider; avoid storing raw card details.
+
+9. Observability and monitoring
+Use Application Insights and Azure Monitor.
+
+Capture:
+- Request latency.
+- HTTP status codes.
+- Service failures.
+- Dependency failures.
+- SQL execution performance.
+- Queue length.
+- DLQ count.
+- Retry count.
+- Payment failure rate.
+- Order completion rate.
+- Inventory reservation failures.
+Use a correlation ID / trace ID across services.
+
+10. Deployment and infrastructure
+Component	Azure technology
+Frontend	Azure Static Web Apps / Azure App Service
+API Gateway	Azure API Management
+Container orchestration	AKS
+Container image storage	Azure Container Registry
+Database	Azure SQL
+Cache	Azure Managed Redis
+Messaging	Azure Service Bus
+Authentication	Microsoft Entra ID
+Secrets	Azure Key Vault
+Monitoring	Application Insights + Azure Monitor
+CI/CD	Azure DevOps / GitHub Actions
+Infrastructure as Code	Terraform / Bicep
+
+A service can be deployed independently using a CI/CD pipeline:
+
+A service can be deployed independently using a CI/CD pipeline:
+
+Developer Push
+    ↓
+Build
+    ↓
+Unit Tests
+    ↓
+Integration Tests
+    ↓
+Docker Build
+    ↓
+Push to ACR
+    ↓
+Deploy to AKS
+    ↓
+Health Check
+    ↓
+Traffic Routing
+
+11. Architecture highlights to mention in an interview or blog
+These are the points that demonstrate architectural thinking rather than just technology knowledge.
+1. Separation of concerns
+
+Product, inventory, payment, order, and delivery have independent business responsibilities.
+
+2. Data ownership
+
+Each microservice owns its database and controls changes to its data. No direct cross-service DB updates.
+
+3. Consistency
+
+Use Saga orchestration for cross-service workflows and compensating transactions for failures.
+
+4. Reliability
+
+Transactional Outbox, retries, DLQ, idempotency, timeouts, circuit breakers.
+
+5. Concurrency
+
+Atomic inventory reservation to prevent overselling.
+
+6. Scalability
+
+Independently scale services based on workload, CPU, latency, and queue backlog.
+
+7. Security
+
+Entra ID, JWT, RBAC, Managed Identity, Key Vault.
+
+8. Observability
+
+Distributed tracing and correlation IDs across services.
+
+9. User experience
+
+Asynchronous payment and order processing, with polling or SignalR for status updates.
+
+10. Trade-offs
+
+Microservices offer independent deployment and scaling but increase operational complexity, network failure scenarios, and consistency challenges.
+
+12. Architecture decisions and trade-offs
+Decision	Reason
+Microservices	Independent business capabilities, scaling, deployments and fault isolation
+Order orchestration	Easier to manage complex order workflow and compensation centrally
+REST + messaging	Immediate validation with asynchronous processing
+Azure SQL	Relational transactions and structured business data
+Service Bus	Durable messaging, retries, DLQ, decoupling
+Redis	Reduce repeated reads and latency
+Polling initially	Simpler implementation for order status
+SignalR when required	Real-time user updates
+Atomic SQL reservation	Prevent race conditions without unnecessarily introducing distributed locks

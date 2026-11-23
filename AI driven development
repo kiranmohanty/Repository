@@ -1,0 +1,41 @@
+What is AI?
+Artificial Intelligence is the broad field of building systems that can perform tasks that normally require human intelligence.
+
+Different types of AI
+1.Machine Learning (ML)
+  Systems learn patterns from data rather than relying only on hard-coded rules.
+2.Deep Learning
+  Uses multi-layer neural networks to learn complex patterns. Example: Image recognition, speech recognition.
+3.Generative AI
+  Generates new content such as text, code, images, audio, and video.
+
+flowchart TD
+    A[Artificial Intelligence] --> B[Machine Learning]
+    B --> C[Deep Learning]
+    C --> D[Large Language Models]
+    D --> E[Generative AI Applications]
+
+How does an LLM actually work?
+1. Your text is converted into tokens.
+2. Those tokens are processed by a neural network (typically Transformer architecture).
+3. It calculates probabilities for possible next tokens.
+4. It selects a token.
+5. It continues generating token by token until the response is complete.
+
+Token	      A piece of text, word, part of word, or character
+Model	      The trained neural network
+Parameters	Learned numerical values (weights) within the model
+Training	  Process of learning patterns from data
+Inference	  Using the trained model to generate an answer
+Context window	    Amount of input/output context the model can process
+Temperature	        Controls randomness in generation
+Hallucination	      Model generates information that sounds correct but is false
+Transformer	        Neural network architecture used by many modern LLMs
+Attention	          Mechanism that helps the model relate different parts of the input
+
+
+Prompt Engineering
+    Prompt engineering is the art of providing instructions and context so the model produces more useful results.
+
+
+

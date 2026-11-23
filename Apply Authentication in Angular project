@@ -1,0 +1,118 @@
+------setup authentication using Angular and MSAL---------------
+npm install @azure/msal-browser @azure/msal-angular
+export const environment = {
+  clientId: 'YOUR-ANGULAR-CLIENT-ID',
+  authority: 'https://login.microsoftonline.com/YOUR-TENANT-ID',
+  apiScope: 'api://YOUR-API-CLIENT-ID/access.api'
+};
+
+
+import { MsalService } from '@azure/msal-angular';
+
+constructor(private msalService: MsalService) {}
+
+login() {
+    this.msalService.loginRedirect({
+        scopes: [
+            'api://YOUR-API-CLIENT-ID/access.api'
+        ]
+    });
+}
+
+The browser is redirected to: login.microsoftonline.com
+The user authenticates.
+After successful authentication, Entra returns the appropriate tokens through the MSAL flow.
+
+With MSAL Angular, you normally configure an HTTP interceptor so that MSAL obtains/acquires the token and attaches it to matching API requests.
+
+JWT token
+{
+  "aud": "api-client-id",
+  "iss": "https://login.microsoftonline.com/...",
+  "sub": "123456",
+  "name": "Kiran",
+  "preferred_username": "kiran@example.com",
+  "roles": [
+    "Admin"
+  ],
+  "scp": "access.api",
+  "exp": 1790000000
+}
+
+
+API side
+dotnet add package Microsoft.Identity.Web
+
+
+Program.cs
+using Microsoft.Identity.Web;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddAuthentication()
+    .AddMicrosoftIdentityWebApi(
+        builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+appsettings.json
+{
+  "AzureAd": {
+    "Instance": "https://login.microsoftonline.com/",
+    "TenantId": "YOUR-TENANT-ID",
+    "ClientId": "YOUR-API-CLIENT-ID"
+  }
+}
+
+
+
+[Authorize(Roles = "Admin")]
+[RequiredScope("access.api")]
+[HttpDelete("{id}")]
+public IActionResult DeleteUser(int id)
+{
+    return Ok();
+}
+
+
+import {
+  MsalInterceptorConfiguration
+} from '@azure/msal-angular';
+
+import { InteractionType } from '@azure/msal-browser';
+
+export function MSALInterceptorConfigFactory():
+  MsalInterceptorConfiguration {
+
+  const protectedResourceMap =
+    new Map<string, Array<string>>();
+
+  protectedResourceMap.set(
+    'https://localhost:5001/api',
+    ['api://MY-API-CLIENT-ID/access_as_user']
+  );
+
+  return {
+    interactionType: InteractionType.Redirect,
+    protectedResourceMap
+  };
+}
+
+
+providers: [
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: MsalInterceptor,
+    multi: true
+  }
+]
+
+
+
+

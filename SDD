@@ -1,0 +1,117 @@
+
+----------SDD (Spec driven development)-------------
+1.Divide complete feature into sub functional requirements (FR-01, FR-02)
+2.Should consider non-functional requirements like- performance, security, scalability, reliability 
+3.Define Business rules - constraints that must always be followed
+4.define API specifiactions- like its verb type, url, input and output format, response status code etc
+5.database specification
+6.Acceptance criteria
+
+
+
+Step 1 – Requirement gathering
+
+Human
+
+Understand the business requirement and clarify ambiguities.
+
+Step 2 – Generate specification
+
+Human + AI
+
+Use AI to prepare functional requirements, API contracts, business rules and acceptance criteria. Review and approve them.
+
+Step 3 – Technical design
+
+Human + AI
+
+Define architecture, database design, component responsibilities and integration contracts.
+
+Step 4 – Task generation
+
+AI
+
+Break the specification into small implementation tasks.
+
+Step 5 – Code generation
+
+AI + Developer
+
+Generate code task by task, following the approved design.
+
+Step 6 – Validation
+
+AI + Developer
+
+Run tests, perform code reviews and check implementation against acceptance criteria.
+
+
+
+A practical SDD repository could look like this:
+MyProject/
+│
+├── .github/
+│   ├── copilot-instructions.md
+│   │
+│   └── instructions/
+│       ├── dotnet.instructions.md
+│       ├── api.instructions.md
+│       └── testing.instructions.md
+│
+├── specs/
+│   └── order-management/
+│       ├── requirements.md
+│       ├── design.md
+│       ├── api-contract.yaml
+│       ├── data-model.md
+│       ├── acceptance-criteria.md
+│       └── tasks.md
+│
+├── src/
+│   ├── Order.API/
+│   ├── Order.Application/
+│   ├── Order.Domain/
+│   └── Order.Infrastructure/
+│
+└── tests/
+    ├── Order.UnitTests/
+    └── Order.IntegrationTests/
+	
+You can define project-wide instructions in .github/copilot-instructions.md
+# Project Instructions
+
+## Technology Stack
+- .NET 8
+- C#
+- ASP.NET Core Web API
+- SQL Server
+- Azure Service Bus
+
+## Coding Standards
+- Follow SOLID principles.
+- Use dependency injection.
+- Use async/await for I/O operations.
+- Use CancellationToken where appropriate.
+- Avoid business logic inside controllers.
+- Use constructor injection.
+- Use structured logging.
+
+## Architecture
+- Follow layered architecture.
+- Domain must not depend on Infrastructure.
+- Application layer contains use cases.
+- Infrastructure implements external dependencies.
+
+## Testing
+- Write unit tests for business logic.
+- Write integration tests for APIs.
+- Include failure scenarios.
+- Validate idempotency.
+
+
+
+Instructions tell Copilot how to behave.
+Prompts tell Copilot what to do in a particular conversation.
+Skills teach Copilot how to perform a particular task or workflow.
+Agents define who performs the task and what responsibilities they have.
+Tools allow an agent to interact with external systems or execute operations.	

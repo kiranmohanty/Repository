@@ -37,5 +37,75 @@ Attention	          Mechanism that helps the model relate different parts of the
 Prompt Engineering
     Prompt engineering is the art of providing instructions and context so the model produces more useful results.
 
+Effective prompt formula
+Role + Context + Task + Constraints + Output format
 
+Role: Who should the AI act as?
+Context: What is the situation?
+Task: What exactly do you want?
+Constraints: What must it follow/avoid?
+Output: How should the answer be presented?
+
+Zero-shot prompting- prompt without any example
+Few-shot prompting- prompt with 1 or more example
+Chain-of-thought / reasoning prompting - Reasoning prompting is a technique where you give an AI a task that requires it to work through multiple steps instead of immediately producing an answer.
+System instructions - System instructions are the highest-level instructions that define how an AI model should behave, what role it should follow, and what rules or constraints it must obey. Ex- Instruction file, skill file etc
+Context engineering - Add context for better prompting 
+Structured output - Structured output means instructing an AI model to generate its response in a predefined format
+Iterative prompting - Iterative prompting is a technique where you progressively refine an AI's response by providing additional instructions, feedback, corrections, or context across multiple interactions.
+
+
+GitHub Copilot
+Code completion-	Suggests code while typing
+Chat-	Answer questions about code
+Inline- chat	Edit code in context
+Agent mode-	Execute multi-step coding tasks
+Context-	Uses relevant project files/instructions
+Code review assistance-	Find potential bugs/improvements
+MCP integrations-	Connect to external tools/data
+
+Copilot modes
+1.Ask mode - You ask questions. Copilot answers or explains; it generally doesn't make changes automatically.
+2.Edit mode - You ask it to modify code, often with specific files or code context.
+3.Agent mode - You give it a task; it can inspect the codebase, plan, edit multiple files, run commands or tests where supported, and iterate.
+4.Plan mode- to plan a feature implementation
+
+How to use Copilot effectively in your real project
+practical developer workflow
+1.Understand: Ask Copilot to explain the existing architecture and flow.
+2.Plan: Ask for an implementation plan before coding.
+3.Implement: Build one component/service at a time.
+4.Test: Generate unit tests and edge cases.
+5.Review: Ask it to identify security, performance and concurrency issues.
+6.Validate: Run builds, tests, inspect diffs and verify the logic yourself.
+
+
+
+Copilot context
+Context may include:
+- Current file
+- Selected code
+- Open files
+- Referenced files
+- Repository structure
+- Instructions files
+- Conversation history
+- Tools and integrations available to it
+
+
+Instruction files- 
+You can give Copilot persistent project-level instructions.
+Ex - path .github/instructions.md
+# Project Guidelines
+
+- Use .NET 8.
+- Follow the existing microservice architecture.
+- Use dependency injection.
+- Prefer async/await for I/O operations.
+- Use structured logging.
+- Follow REST API conventions.
+- Do not introduce new NuGet packages without approval.
+- Write unit tests for business logic.
+- Follow existing naming conventions.
+- Do not expose secrets in logs.
 

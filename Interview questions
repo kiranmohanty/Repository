@@ -46,3 +46,98 @@ Input validation	    Rejects invalid data based on expected formats and business
 HTML sanitization	    Removes dangerous markup when rich HTML is required.
 Avoid eval()	        Prevents unsafe dynamic JavaScript execution.
 HTTPS	                Protects data in transit; does not itself prevent XSS.
+
+**HTTP status codes
+Informational responses (100 – 199)
+Successful responses (200 – 299)
+Redirection messages (300 – 399)
+Client error responses (400 – 499)
+Server error responses (500 – 599)
+
+200 OK
+201 Created
+202 Accepted
+204 No Content
+206 Partial Content
+301 Moved Permanently
+302 Found
+307 Temporary Redirect
+308 Permanent Redirect
+400 Bad Request
+401 Unauthorized
+402 Payment Required
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+408 Request Timeout
+413 Content Too Large
+414 URI Too Long
+415 Unsupported Media Type
+429 Too Many Requests (rate limiting)
+500 Internal Server Error
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway Timeout
+
+
+**What is content negotiation ?
+Content Negotiation is a mechanism in REST APIs where the client and server agree on the format of the request or response data.
+Client send "Accept: application/json" in header.
+what type of data present in request body - "Content-Type: application/json" .
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddControllers(options =>
+    {
+        // Return 406 if requested format isn't supported
+        options.ReturnHttpNotAcceptable = true;
+    })
+    .AddXmlSerializerFormatters(); // register XML format. json format is registered by default
+
+
+**Difference Run(), Map(), and Use() in .Net core
+Use()	Adds middleware to the pipeline. allows you to execute some logic before and after the next middleware.
+Map()	Creates a separate pipeline for a matching path
+Run()	Adds terminal middleware
+
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("Before middleware");
+
+    await next();
+
+    Console.WriteLine("After middleware");
+});
+
+Map() creates a separate middleware pipeline based on the request path.
+app.Map("/admin", adminApp =>
+{
+    adminApp.Run(async context =>
+    {
+        await context.Response.WriteAsync("Admin section");
+    });
+});
+
+Map() branches based on a URL path.
+MapWhen() branches based on a custom condition (predicate) on HttpContext.
+
+app.MapWhen(
+    context => context.Request.Headers.ContainsKey("X-Custom-Header"),
+    branch =>
+    {
+        branch.Run(async context =>
+        {
+            await context.Response.WriteAsync("Custom header found");
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
